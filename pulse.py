@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-General Pulse - Your loyal AI companion
+P.U.L.S.E. - Prime Uminda's Learning System Engine
+Your loyal AI companion
 Main application entry point
 """
 
@@ -58,7 +59,7 @@ async def main():
     global pulse_agent
 
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="General Pulse - Your loyal AI companion")
+    parser = argparse.ArgumentParser(description="P.U.L.S.E. - Prime Uminda's Learning System Engine")
     parser.add_argument("--simulate", action="store_true", help="Simulate AI responses (for testing)")
     parser.add_argument("--user", type=str, default="uminda", help="User identifier")
     parser.add_argument("--memory", type=str, default="pulse_memory.db", help="Path to memory database")
@@ -73,11 +74,12 @@ async def main():
     # Print a beautiful initialization header
     if not debug_mode:
         print("""
-+----------------------------------------------------------+
-|                                                          |
-|              INITIALIZING GENERAL PULSE                  |
-|                                                          |
-+----------------------------------------------------------+
+╭──────────────────────────────────────────────────────────╮
+│                                                          │
+│              INITIALIZING P.U.L.S.E.                     │
+│         Prime Uminda's Learning System Engine            │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
         """)
 
     # Apply hardware optimizations
@@ -233,17 +235,26 @@ async def main():
 
 def print_welcome_message():
     """Print welcome message"""
-    welcome_message = """
-    +----------------------------------------------------------+
-    |                                                          |
-    |                     GENERAL PULSE                        |
-    |                                                          |
-    |              Your loyal AI companion                     |
-    |                                                          |
-    +----------------------------------------------------------+
+    # Get current time to determine greeting
+    current_hour = datetime.now().hour
+    greeting = "Good morning"
+    if 12 <= current_hour < 18:
+        greeting = "Good afternoon"
+    elif current_hour >= 18:
+        greeting = "Good evening"
 
-    Hey there, brdh! I'm Pulse, your loyal AI companion.
-    I'm here to help you with coding, freelancing, and leveling up in life!
+    # In a real implementation, you would get actual pending tasks
+    # For now, we'll use a placeholder
+    pending_tasks = 3
+
+    welcome_message = f"""
+    ╭──────────────────────────────────────────╮
+    │ Prime Uminda's Learning System Engine    │
+    │ ver 2.1 | Memory: 6.1/8GB | CPU: 55%     │
+    ╰──────────────────────────────────────────╯
+
+    {greeting} Uminda. P.U.L.S.E. systems nominal.
+    {pending_tasks} pending tasks. Shall we begin?
 
     The CLI UI is now starting. Type 'help' to see available commands.
 
@@ -257,8 +268,8 @@ def print_welcome_message():
     - enable offline mode: Switch to offline mode using Ollama
     - disable offline mode: Switch back to online mode
 
-    You can also just chat with me naturally! Try saying "hi bruv!" or
-    asking me a question like "what's the latest in AI?"
+    You can also just chat with me naturally! Try asking me a question
+    like "what's the latest in AI?" or "help me with my project".
 
     Let's build something epic together!
     """
