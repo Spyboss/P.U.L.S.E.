@@ -1,8 +1,8 @@
-# General Pulse
+# P.U.L.S.E.
 
 <p align="center">
-  <strong>Your Loyal AI Companion</strong><br>
-  Helping you with coding, freelancing, and leveling up in life!
+  <strong>Prime Uminda's Learning System Engine</strong><br>
+  Your Loyal AI Companion for coding, freelancing, and leveling up in life!
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
 
 ## Overview
 
-General Pulse is a powerful AI assistant designed to be your loyal companion, helping you with coding, freelancing, and personal growth. Inspired by JARVIS from Iron Man, it combines multiple AI models, a robust memory system, and a personality that adapts to your needs and preferences, with a special focus on anime-inspired motivation and hustle-coding mindset.
+P.U.L.S.E. (Prime Uminda's Learning System Engine) is a powerful AI assistant designed to be your loyal companion, helping you with coding, freelancing, and personal growth. Inspired by J.A.R.V.I.S. (Just A Rather Very Intelligent System) from Iron Man, it combines multiple AI models, a robust memory system, and a personality that adapts to your needs and preferences, with a special focus on anime-inspired motivation and hustle-coding mindset.
 
 ## Features
 
@@ -33,7 +33,7 @@ General Pulse is a powerful AI assistant designed to be your loyal companion, he
 
 ### AI Crew System
 
-General Pulse uses a dynamic AI crew system where multiple specialized AI models work together:
+P.U.L.S.E. uses a dynamic AI crew system where multiple specialized AI models work together:
 
 - **Mistral-Small**: The crew leader, orchestrating other models and maintaining a personal relationship with you
 - **DeepSeek**: Troubleshooting expert for diagnosing errors and providing DevOps fixes
@@ -77,6 +77,9 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 
 ## Recently Implemented
 
+🚀 **Rebranding to P.U.L.S.E.** - Renamed from General Pulse to P.U.L.S.E. (Prime Uminda's Learning System Engine)
+🎨 **New CLI Header** - Updated CLI header with system vitals and version information
+💬 **New Welcome Message** - Implemented time-aware welcome message with pending tasks
 🚀 **Mistral-Small Integration** - Replaced Gemini with Mistral-Small (24B parameters) as the main brain
 🛡️ **Enhanced Error Handling** - Improved retry logic and error reporting for API calls
 🔍 **Neural Router Updates** - Updated neural router to use Mistral-Small for routing decisions
@@ -105,8 +108,8 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/general-pulse.git
-cd general-pulse
+git clone https://github.com/Spyboss/P.U.L.S.E..git
+cd P.U.L.S.E.
 ```
 
 2. Install dependencies
@@ -212,7 +215,7 @@ github username/repo commit message file: path/to/file.py
 ### Project Structure
 
 ```
-General Pulse/
+P.U.L.S.E./
 ├── configs/           # Configuration files
 │   ├── models.yaml    # Model configurations
 │   └── hardware.yaml  # Hardware optimizations
@@ -299,7 +302,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Comprehensive documentation is available in the [docs](docs) directory:
 
-- [Usage Guide](docs/USAGE_GUIDE.md) - Detailed instructions on how to use General Pulse
+- [Usage Guide](docs/USAGE_GUIDE.md) - Detailed instructions on how to use P.U.L.S.E.
 - [AI Crew](docs/AI_CREW.md) - Information about the AI crew system
 - [Architecture](docs/ARCHITECTURE.md) - Overview of the system architecture
 - [Error Handling](docs/ERROR_HANDLING.md) - Comprehensive error handling and monitoring

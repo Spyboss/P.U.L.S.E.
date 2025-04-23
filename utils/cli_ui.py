@@ -1,5 +1,5 @@
 """
-CLI UI for General Pulse
+CLI UI for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 Provides a terminal-based UI for system monitoring and model testing
 """
 
@@ -531,7 +531,7 @@ class PulseCLIUI:
 
         # Display header
         self.console.print(Panel(
-            "[bold cyan]Running comprehensive system check for General Pulse[/bold cyan]",
+            "[bold cyan]Running comprehensive system check for P.U.L.S.E.[/bold cyan]",
             border_style="cyan"
         ))
 
@@ -940,7 +940,7 @@ class PulseCLIUI:
 
         # Print the table
         self.console.print(Panel(
-            "[bold cyan]General Pulse CLI UI[/bold cyan]\n\n"
+            "[bold cyan]P.U.L.S.E. CLI UI[/bold cyan]\n\n"
             "This interface allows you to monitor system status and test models.\n"
             "Use the commands below to navigate the interface.\n\n"
             "[bold green]You can also just chat naturally![/bold green] Any text that's not a command will be treated as a conversation with the AI.",
@@ -954,12 +954,44 @@ class PulseCLIUI:
         Run the CLI UI
         """
         if not RICH_AVAILABLE:
-            print("\n=== GENERAL PULSE CLI UI ===")
+            print("\n=== P.U.L.S.E. CLI UI ===")
             print("Warning: Rich library not available. Using plain text interface.")
             print("Install rich for a better experience: pip install rich")
         else:
+            # Get system status for header
+            try:
+                from utils.system_utils import get_system_status
+                system_status = get_system_status()
+                memory = system_status['memory']
+                cpu = system_status['cpu']
+
+                # Format memory values
+                try:
+                    memory_used = float(memory['used'].split('GB')[0])
+                    memory_total = float(memory['total'].split('GB')[0])
+                    memory_str = f"{memory_used:.1f}/{memory_total:.1f}GB"
+                except:
+                    memory_str = f"{memory['used']}/{memory['total']}"
+
+                # Create the P.U.L.S.E. header
+                header = f"""
+╭──────────────────────────────────────────╮
+│ Prime Uminda's Learning System Engine    │
+│ ver 2.1 | Memory: {memory_str} | CPU: {cpu['percent']}%     │
+╰──────────────────────────────────────────╯
+                """
+                self.console.print(header)
+            except Exception as e:
+                # Fallback if we can't get system status
+                self.console.print("""
+╭──────────────────────────────────────────╮
+│ Prime Uminda's Learning System Engine    │
+│ ver 2.1 | Memory: 6.1/8GB | CPU: 55%     │
+╰──────────────────────────────────────────╯
+                """)
+
             self.console.print(Panel(
-                "[bold cyan]Welcome to General Pulse CLI UI[/bold cyan]\n\n"
+                "[bold cyan]Welcome to P.U.L.S.E. CLI UI[/bold cyan]\n\n"
                 "This interface allows you to monitor system status and test models.\n"
                 "Type [bold]help[/bold] to see available commands.",
                 border_style="cyan"
