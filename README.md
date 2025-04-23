@@ -88,6 +88,8 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 🔍 **Ultra-Lightweight Intent Classification** - Implemented MiniLM-based intent classification for minimal memory usage and faster inference
 🤖 **AI Crew System** - Dynamic AI crew with specialized models, each with a specific role and personality
 🧠 **Role-Specific Prompts** - Custom prompts for each AI model to maintain consistent character
+🔄 **Improved Shutdown Process** - Enhanced shutdown process with better error handling and resource cleanup
+🖥️ **Fixed Character Encoding** - Resolved character encoding issues for better compatibility across platforms
 
 ## Getting Started
 
@@ -119,6 +121,23 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your API keys
 ```
+
+4. Download model files
+
+The repository does not include large model files. You can download them from the following sources:
+
+```bash
+# Create a directory for model files
+mkdir -p models/distilbert-intent/models--distilbert-base-uncased/
+
+# Download the model files from Hugging Face
+python -c "from transformers import AutoTokenizer, AutoModel; tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased'); model = AutoModel.from_pretrained('distilbert-base-uncased')"
+
+# Or use the provided script
+python scripts/prep_distilbert.py
+```
+
+Alternatively, you can use the MiniLM classifier which is more lightweight and doesn't require downloading large model files.
 
 ### Usage
 
