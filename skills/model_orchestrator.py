@@ -137,8 +137,8 @@ class ModelOrchestrator:
                     api_key=openrouter_api_key,
                     base_url="https://openrouter.ai/api/v1",
                     default_headers={
-                        "HTTP-Referer": "https://github.com/uminda/general-pulse",
-                        "X-Title": "General Pulse"
+                        "HTTP-Referer": "https://github.com/Spyboss/P.U.L.S.E.",
+                        "X-Title": "P.U.L.S.E."
                     }
                 )
                 logger.info("OpenRouter initialized successfully")
@@ -156,8 +156,8 @@ class ModelOrchestrator:
                             api_key=openrouter_api_key,
                             base_url="https://openrouter.ai/api/v1",
                             default_headers={
-                                "HTTP-Referer": "https://github.com/uminda/general-pulse",
-                                "X-Title": "General Pulse"
+                                "HTTP-Referer": "https://github.com/Spyboss/P.U.L.S.E.",
+                                "X-Title": "P.U.L.S.E."
                             }
                         )
                         logger.info("OpenRouter initialized successfully on retry")
@@ -1458,8 +1458,8 @@ class ModelOrchestrator:
                 api_key=openrouter_api_key,
                 base_url="https://openrouter.ai/api/v1",
                 default_headers={
-                    "HTTP-Referer": "https://github.com/uminda/general-pulse",
-                    "X-Title": "General Pulse"
+                    "HTTP-Referer": "https://github.com/Spyboss/P.U.L.S.E.",
+                    "X-Title": "P.U.L.S.E."
                 }
             )
 
@@ -1525,8 +1525,8 @@ class ModelOrchestrator:
                 api_key=openrouter_api_key,
                 base_url="https://openrouter.ai/api/v1",
                 default_headers={
-                    "HTTP-Referer": "https://github.com/uminda/general-pulse",
-                    "X-Title": "General Pulse"
+                    "HTTP-Referer": "https://github.com/Spyboss/P.U.L.S.E.",
+                    "X-Title": "P.U.L.S.E."
                 }
             )
 

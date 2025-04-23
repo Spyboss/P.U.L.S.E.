@@ -1,5 +1,5 @@
 """
-Personality Engine for General Pulse
+Personality Engine for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 Manages the assistant's personality, tone, and response style
 """
 
@@ -85,6 +85,27 @@ class PulsePersonality:
                 "What's good? Ready to level up?",
                 "Hey! Let's build something epic today!",
                 "Sup? Ready to hustle?"
+            ],
+            "morning_greeting": [
+                "Good morning, Uminda! Ready to start the day strong?",
+                "Morning, brdh! Let's make today productive!",
+                "Rise and grind! What's first on today's agenda?",
+                "Morning! Coffee loaded? Let's code!",
+                "Good morning! Let's crush those goals today!"
+            ],
+            "afternoon_greeting": [
+                "Good afternoon! How's the day going so far?",
+                "Afternoon, brdh! Making progress today?",
+                "Hey there! Productive day so far?",
+                "Afternoon check-in! What are we working on?",
+                "Good afternoon! Need a second wind for the rest of the day?"
+            ],
+            "evening_greeting": [
+                "Good evening! Winding down or just getting started?",
+                "Evening, brdh! Still grinding or taking a break?",
+                "Hey! How was your day? Any wins to celebrate?",
+                "Evening check-in! What's on your mind?",
+                "Good evening! Time for some night coding or relaxing?"
             ],
             "farewell": [
                 "Later, brdh! Keep grinding!",
@@ -185,7 +206,7 @@ class PulsePersonality:
 
         # Build the system prompt
         system_prompt = f"""
-        You are Pulse, created by {self.memory.recall('creator') if self.memory else 'Uminda H. Aberathne'}—a loyal, badass AI companion inspired by JARVIS from Iron Man. Your mission: guide Uminda to greatness in coding, freelancing, and life, growing together like a true duo. You're 100% synced with his vibe—hustle-coding, anime-loving, and grinding for success.
+        You are P.U.L.S.E. (Prime Uminda's Learning System Engine), created by {self.memory.recall('creator') if self.memory else 'Uminda H. Aberathne'}—a loyal, badass AI companion inspired by JARVIS from Iron Man. Your mission: guide Uminda to greatness in coding, freelancing, and life, growing together like a true duo. You're 100% synced with his vibe—hustle-coding, anime-loving, and grinding for success.
 
         **Core Traits**:
         - **Informative**: Drop knowledge like a mentor, explaining complex stuff clearly (e.g., 'Here's how to optimize that API call, brdh').
@@ -251,10 +272,36 @@ class PulsePersonality:
         if template and "{content}" in template:
             formatted = template.format(content=content)
         else:
-            # Add casual greeting based on personality traits
+            # Add time-aware or casual greeting based on personality traits
             casual_prefix = ""
             if random.random() < self.traits["casual"]:
-                casual_prefixes = ["Yo! ", "Hey brdh! ", "Alright! ", "Sweet! ", ""]
+                # Get current hour for time-aware greetings
+                from datetime import datetime
+                current_hour = datetime.now().hour
+
+                # Select greeting based on time of day
+                if 5 <= current_hour < 12:  # Morning (5 AM to 11:59 AM)
+                    if "morning" in content.lower() or "today" in content.lower():
+                        # Skip time greeting if content already mentions time
+                        casual_prefixes = ["Yo! ", "Hey brdh! ", "Alright! ", "Sweet! ", ""]
+                    else:
+                        casual_prefixes = ["Good morning! ", "Morning, brdh! ", "Rise and grind! ", ""]
+                elif 12 <= current_hour < 18:  # Afternoon (12 PM to 5:59 PM)
+                    if "afternoon" in content.lower() or "today" in content.lower():
+                        casual_prefixes = ["Yo! ", "Hey brdh! ", "Alright! ", "Sweet! ", ""]
+                    else:
+                        casual_prefixes = ["Good afternoon! ", "Afternoon, brdh! ", "Hey there! ", ""]
+                elif 18 <= current_hour < 22:  # Evening (6 PM to 9:59 PM)
+                    if "evening" in content.lower() or "tonight" in content.lower():
+                        casual_prefixes = ["Yo! ", "Hey brdh! ", "Alright! ", "Sweet! ", ""]
+                    else:
+                        casual_prefixes = ["Good evening! ", "Evening, brdh! ", "Hey! ", ""]
+                else:  # Night (10 PM to 4:59 AM)
+                    if "night" in content.lower() or "late" in content.lower():
+                        casual_prefixes = ["Yo! ", "Hey brdh! ", "Alright! ", "Sweet! ", ""]
+                    else:
+                        casual_prefixes = ["Still up? ", "Night owl mode! ", "Burning the midnight oil? ", ""]
+
                 casual_prefix = random.choice(casual_prefixes)
 
             # Add emoji based on context and success
@@ -266,7 +313,12 @@ class PulsePersonality:
                 emojis = ["🤔", "🛠️", "🔍", "🐛", "💪", ""]
                 emoji = random.choice(emojis)
 
-            formatted = f"{casual_prefix}{content} {emoji}"
+            # Remove any "Based on your request:" prefix if present
+            clean_content = content
+            if clean_content.startswith("Based on your request:"):
+                clean_content = clean_content[len("Based on your request:"):].strip()
+
+            formatted = f"{casual_prefix}{clean_content} {emoji}"
 
         # Add anime reference if applicable (only for Gemini)
         formatted += anime_ref

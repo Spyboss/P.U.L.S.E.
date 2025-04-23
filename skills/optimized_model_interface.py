@@ -45,8 +45,8 @@ class OptimizedModelInterface:
             base_url="https://openrouter.ai/api/v1",
             timeout=httpx.Timeout(30.0),
             headers={
-                "HTTP-Referer": "https://github.com/uminda/general-pulse",
-                "X-Title": "General Pulse"
+                "HTTP-Referer": "https://github.com/Spyboss/P.U.L.S.E.",
+                "X-Title": "P.U.L.S.E."
             }
         )
 

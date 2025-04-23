@@ -1,5 +1,5 @@
 """
-Neural Router for General Pulse
+Neural Router for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 
 This module provides an intelligent routing system that uses the main brain model to decide
 when to route queries to specialized models based on the query content.
@@ -210,10 +210,16 @@ class NeuralRouter:
                     query=prompt,
                     max_tokens=100  # Short response needed
                 )
-            # No fallback to Gemini anymore, as we've replaced it with Mistral Small
-            # Just log the error and return a default routing decision
+            # If the model_interface doesn't have call_openrouter method, try to use call_mistral
+            elif hasattr(self.model_interface, 'call_mistral'):
+                logger.info("Using call_mistral method for routing decision")
+                response = await self.model_interface.call_mistral(
+                    query=prompt,
+                    max_tokens=100  # Short response needed
+                )
+            # Last resort fallback
             else:
-                logger.error("No routing API method available")
+                logger.error("No routing API method available - model_interface lacks required methods")
                 return "mistral", 0.5
 
             if response and response.get("success", False):
@@ -361,10 +367,16 @@ Keep your explanation concise and focused on the match between the query and the
                     query=prompt,
                     max_tokens=100  # Short explanation
                 )
-            # No fallback to Gemini anymore, as we've replaced it with Mistral Small
-            # Just log the error and return a default explanation
+            # If the model_interface doesn't have call_openrouter method, try to use call_mistral
+            elif hasattr(self.model_interface, 'call_mistral'):
+                logger.info("Using call_mistral method for routing explanation")
+                response = await self.model_interface.call_mistral(
+                    query=prompt,
+                    max_tokens=100  # Short explanation
+                )
+            # Last resort fallback
             else:
-                logger.error("No routing API method available for explanation")
+                logger.error("No routing API method available for explanation - model_interface lacks required methods")
                 # Return a simple explanation
                 strengths = ", ".join(spec.get("strengths", []))
                 return f"This query was routed to {spec['name']} because it appears to involve {strengths}."

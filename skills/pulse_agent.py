@@ -12,6 +12,9 @@ from typing import Dict, List, Any, Optional, Union
 import structlog
 from datetime import datetime
 
+# Import spell correction utility
+from utils.spell_correction import correct_typos, suggest_correction
+
 # Import components
 from utils.context_manager import PulseContext
 from utils.memory_manager import PulseMemory
@@ -138,11 +141,23 @@ class PulseAgent:
         self.conversation_state["last_input"] = user_input
         self.conversation_state["interaction_count"] += 1
 
+        # Check for typos and correct if needed
+        corrected_input, was_corrected = correct_typos(user_input)
+        if was_corrected:
+            self.logger.info(
+                "Corrected typo in user input",
+                original=user_input,
+                corrected=corrected_input
+            )
+            # Use the corrected input for processing
+            user_input = corrected_input
+
         # Log the input
         self.logger.info(
             "Processing user input",
             input_preview=user_input[:50] + "..." if len(user_input) > 50 else user_input,
-            interaction_count=self.conversation_state["interaction_count"]
+            interaction_count=self.conversation_state["interaction_count"],
+            was_corrected=was_corrected
         )
 
         try:
@@ -882,7 +897,7 @@ class PulseAgent:
                 ai_crew_info += f"        - 💰 **{fallback_info['name']}** - {fallback_info['role']} - {fallback_info['description']}\n"
 
         help_text = f"""
-        # 🚀 General Pulse Help
+        # 🚀 P.U.L.S.E. Help
 
         ## 🔧 General Commands
         - `help` - Show this help message
