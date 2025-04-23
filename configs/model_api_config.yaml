@@ -1,0 +1,56 @@
+# Model API Configuration for General Pulse
+# Contains settings for all external AI model APIs
+
+# OpenRouter configuration
+openrouter:
+  enabled: true
+  api_key_env: "OPENROUTER_API_KEY"
+  endpoint: "https://openrouter.ai/api/v1/chat/completions"
+  models:
+    claude: "anthropic/claude-3-sonnet-20240229"
+    grok: "mistralai/mistral-small"
+    deepseek: "deepseek/deepseek-chat"
+    default: "openai/gpt-3.5-turbo"
+
+# Model configurations
+models:
+  claude:
+    enabled: true
+    api_key_env: "CLAUDE_API_KEY"
+    endpoint: "https://api.anthropic.com/v1"
+    description: "Claude AI (Anthropic)"
+    fallback: "gemini"
+  
+  grok:
+    enabled: true
+    api_key_env: "GROK_API_KEY"
+    endpoint: "https://api.xai.com/v1"
+    description: "Grok (xAI)"
+    model_name: "grok-1.5"
+    fallback: "gemini"
+  
+  deepseek:
+    enabled: true
+    api_key_env: "DEEPSEEK_API_KEY"
+    endpoint: "https://api.deepseek.com"
+    description: "DeepSeek AI"
+    model_name: "deepseek-chat"
+    fallback: "gemini"
+  
+  gemini:
+    enabled: true
+    api_key_env: "GEMINI_API_KEY"
+    endpoint: "https://generativelanguage.googleapis.com/v1beta"
+    description: "Gemini (Google)"
+    model_name: "gemini-1.5-pro"
+    fallback: "simulation"
+
+# Simulation fallback settings
+simulation:
+  enabled: true
+  templates:
+    claude: "Claude's simulated response to: {prompt}"
+    grok: "Grok's analysis of market trends for: {prompt}"
+    deepseek: "DeepSeek's code optimization for: {prompt}"
+    gemini: "Gemini's helpful response: {prompt}"
+    default: "AI simulated response to: {prompt}" 

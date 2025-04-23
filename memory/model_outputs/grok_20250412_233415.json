@@ -1,0 +1,10 @@
+{
+  "model": "grok",
+  "prompt": "Hello, this is a test prompt to verify the Grok API key is working.",
+  "response": {
+    "response": "Grok's analysis of market trends for: Hello, this is a test prompt to verify the Grok API key is working.",
+    "model": "grok-1.5",
+    "timestamp": "2025-04-12T23:34:15.447827"
+  },
+  "timestamp": "2025-04-12T23:34:15.451841"
+}

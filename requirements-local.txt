@@ -1,0 +1,8 @@
+# Local model dependencies for low-spec hardware
+# CPU-only versions for PyTorch
+torch>=1.10.0
+transformers>=4.20.0
+accelerate>=0.10.0
+
+# Additional dependencies
+sentence-transformers>=2.2.0

@@ -1,0 +1,22 @@
+Generate {{ language }} code for {{ project_type }}:
+
+Requirements:
+{% for req in requirements %}
+- {{ req }}
+{% endfor %}
+
+Technical specifications:
+- Framework: {{ framework }}
+- API integrations: {{ api_integrations|join(', ') }}
+{% if style_guide %}
+- Style guide: {{ style_guide }}
+{% endif %}
+
+Ensure the code is:
+- Well-documented with comments
+- Follows best practices for {{ language }}
+- Includes error handling
+- Is optimized for performance
+
+Additional context:
+{{ additional_context }}

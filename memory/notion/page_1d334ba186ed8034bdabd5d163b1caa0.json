@@ -1,0 +1,61 @@
+{
+  "object": "page",
+  "id": "1d334ba1-86ed-8034-bdab-d5d163b1caa0",
+  "created_time": "2025-04-12T18:45:00.000Z",
+  "last_edited_time": "2025-04-12T19:29:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "0c2c7b83-a219-4d37-a478-aef5e618544c"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "0c2c7b83-a219-4d37-a478-aef5e618544c"
+  },
+  "cover": {
+    "type": "external",
+    "external": {
+      "url": "https://images.unsplash.com/photo-1527345931282-806d3b11967f?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb"
+    }
+  },
+  "icon": {
+    "type": "external",
+    "external": {
+      "url": "https://www.notion.so/icons/list_lightgray.svg"
+    }
+  },
+  "parent": {
+    "type": "workspace",
+    "workspace": true
+  },
+  "archived": false,
+  "in_trash": false,
+  "properties": {
+    "title": {
+      "id": "title",
+      "type": "title",
+      "title": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Weekly To-do List",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Weekly To-do List",
+          "href": null
+        }
+      ]
+    }
+  },
+  "url": "https://www.notion.so/Weekly-To-do-List-1d334ba186ed8034bdabd5d163b1caa0",
+  "public_url": null,
+  "request_id": "7e958335-4e0e-4bae-a1d8-f266daac2704",
+  "cache_time": "2025-04-13T00:59:43.637696"
+}

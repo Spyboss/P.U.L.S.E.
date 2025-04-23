@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Logs
+*.log
+logs/*.log
+test_run.log
+
+# Environment variables
+.env
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Memory storage
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Backups
+backups/
+*.bak
+
+# Data files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Backup files
+*_backup.json
+context_backup.json
+personality_backup.json
+
+# Large model files
+models/distilbert-intent/model.safetensors
+models/distilbert-intent/models--distilbert-base-uncased/
+models/**/*.safetensors
+models/**/*.bin
+models/**/model.*
+models/**/*.model
+
+# Local configuration
+configs/local_config.yaml

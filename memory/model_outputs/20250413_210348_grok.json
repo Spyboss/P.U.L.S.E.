@@ -1,0 +1,10 @@
+{
+  "model": "grok",
+  "timestamp": "2025-04-13T21:03:48.133466",
+  "prompt": "Why is the sky blue?",
+  "response": {
+    "content": "Interesting request! I can definitely help with that. General Pulse has some great features to address this - would you like me to explain how?",
+    "model": "grok-simulated",
+    "timestamp": "2025-04-13T21:03:48.133466"
+  }
+}

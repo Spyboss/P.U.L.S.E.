@@ -1,0 +1,48 @@
+# Hardware configuration for General Pulse
+# This file defines hardware-specific settings
+
+# Memory settings
+memory:
+  # Memory thresholds in MB
+  low_threshold_mb: 800
+  critical_threshold_mb: 400
+  # SQLite memory settings
+  sqlite_cache_size_kb: 5000
+  sqlite_temp_store: MEMORY # MEMORY, FILE, or DEFAULT
+
+# GPU settings
+gpu:
+  # Whether to use GPU if available
+  enabled: true
+  # Limit GPU memory usage (fraction of total)
+  memory_limit_fraction: 0.5
+  # Enable CUDNN benchmark mode
+  cudnn_benchmark: true
+
+# CPU settings
+cpu:
+  # Maximum number of threads to use
+  max_threads: 4
+  # Thread settings for various libraries
+  omp_num_threads: 4
+  mkl_num_threads: 4
+  # Suppress TensorFlow logging
+  tf_min_log_level: 3
+
+# Storage settings
+storage:
+  # SQLite optimizations
+  sqlite_journal_mode: WAL # WAL, DELETE, TRUNCATE, PERSIST, MEMORY, or OFF
+  sqlite_synchronous: NORMAL # FULL, NORMAL, or OFF
+  # SSD settings (if available)
+  use_ssd_for_temp: true
+  ssd_path: /mnt/ssd
+
+# Logging settings
+logging:
+  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  level: WARNING
+  # Whether to log system status
+  log_system_status: true
+  # System status logging interval in seconds
+  system_status_interval: 300

@@ -1,0 +1,10 @@
+{
+  "model": "claude",
+  "timestamp": "2025-04-14T03:23:18.388666",
+  "prompt": "What is machine learning?",
+  "response": {
+    "content": "I've analyzed your request and can help with that. Would you like more information about General Pulse's capabilities or should we proceed with a specific task?",
+    "model": "claude-simulated",
+    "timestamp": "2025-04-14T03:23:18.387670"
+  }
+}

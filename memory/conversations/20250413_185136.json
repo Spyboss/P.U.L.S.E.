@@ -1,0 +1,56 @@
+{
+  "conversation_id": "20250413_185136",
+  "start_time": "2025-04-13T18:53:36.097764",
+  "messages": [
+    {
+      "role": "user",
+      "content": "github?",
+      "timestamp": "2025-04-13T18:53:36.097764"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:53:36 PM.",
+      "timestamp": "2025-04-13T18:53:36.098775"
+    },
+    {
+      "role": "user",
+      "content": "what is my github? create a new repo for my readme.md",
+      "timestamp": "2025-04-13T18:54:07.634747"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:54:07 PM.",
+      "timestamp": "2025-04-13T18:54:07.642024"
+    },
+    {
+      "role": "user",
+      "content": "how are you?",
+      "timestamp": "2025-04-13T18:54:16.938167"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! I'm Gemini, part of the General Pulse system. I'm ready to assist you with your workflow needs!",
+      "timestamp": "2025-04-13T18:54:16.940401"
+    },
+    {
+      "role": "user",
+      "content": "ask claude to create a quotation template for Gunaardhana motors!",
+      "timestamp": "2025-04-13T18:54:59.273258"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:54:59 PM.",
+      "timestamp": "2025-04-13T18:54:59.279586"
+    },
+    {
+      "role": "user",
+      "content": "deepseek",
+      "timestamp": "2025-04-13T18:55:07.073538"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:55:07 PM.",
+      "timestamp": "2025-04-13T18:55:07.073538"
+    }
+  ]
+}

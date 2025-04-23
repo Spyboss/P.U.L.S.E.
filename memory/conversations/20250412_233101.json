@@ -1,0 +1,16 @@
+{
+  "conversation_id": "20250412_233101",
+  "start_time": "2025-04-12T23:47:19.492245",
+  "messages": [
+    {
+      "role": "user",
+      "content": "what is my github?",
+      "timestamp": "2025-04-12T23:47:19.492245"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm General Pulse, your AI Personal Workflow Ops Assistant. I can help with:\n- Tracking tasks and progress\n- Checking system status\n- Integrating with AI models (Claude, Gemini, DeepSeek)\n- Managing GitHub repositories and issues\n\nYou can chat with me naturally or use direct commands by starting with '/'.",
+      "timestamp": "2025-04-12T23:47:24.235057"
+    }
+  ]
+}

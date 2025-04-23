@@ -1,0 +1,16 @@
+{
+  "conversation_id": "20250413_014324",
+  "start_time": "2025-04-13T01:43:35.500354",
+  "messages": [
+    {
+      "role": "user",
+      "content": "what is the date today?",
+      "timestamp": "2025-04-13T01:43:35.500354"
+    },
+    {
+      "role": "assistant",
+      "content": "Current Date: Sunday, April 13, 2025\nCurrent Time: 01:43:39 AM\nTimezone: Sri Lanka Standard Time",
+      "timestamp": "2025-04-13T01:43:39.424388"
+    }
+  ]
+}

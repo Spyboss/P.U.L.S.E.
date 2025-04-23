@@ -1,0 +1,226 @@
+text,label
+what time is it,time
+what time is it in tokyo,time
+what's the time in new york,time
+current time in london,time
+time in paris,time
+what's the date today,time
+what day is it,time
+current date,time
+today's date,time
+what's the time zone difference between tokyo and new york,time
+convert time from est to pst,time
+what time is it in gmt,time
+local time,time
+current time,time
+what's the time,time
+debug my code,debug
+help me debug this function,debug
+fix this error in my code,debug
+troubleshoot my application,debug
+find the bug in this code,debug
+why is my code not working,debug
+debug this python script,debug
+help me fix this javascript error,debug
+troubleshoot this api issue,debug
+debug my react component,debug
+fix this sql query,debug
+help me debug this algorithm,debug
+troubleshoot my docker container,debug
+fix this compilation error,debug
+debug this typescript error,debug
+write a function to calculate fibonacci,code
+create a python class for user authentication,code
+generate a react component for a login form,code
+write an sql query to join these tables,code
+create a javascript function to sort an array,code
+generate html and css for a responsive navbar,code
+write a unit test for this function,code
+create a rest api endpoint in node.js,code
+generate a dockerfile for this application,code
+write a bash script to automate this task,code
+create a regex pattern to validate email,code
+generate a class diagram for this system,code
+write a function to parse json data,code
+create a database schema for a blog,code
+generate boilerplate code for an express app,code
+what are the latest trends in ai,trends
+what's new in machine learning,trends
+latest developments in blockchain,trends
+current trends in web development,trends
+what's happening in the tech industry,trends
+recent advancements in quantum computing,trends
+latest news in cybersecurity,trends
+emerging trends in mobile development,trends
+what's new in cloud computing,trends
+latest frameworks for frontend development,trends
+current state of devops practices,trends
+emerging programming languages to watch,trends
+latest in data science,trends
+trends in iot development,trends
+what's new in augmented reality,trends
+write a blog post about ai ethics,content
+create content for my website homepage,content
+write a product description for my app,content
+draft an email to my clients,content
+create marketing copy for this service,content
+write a press release for our new feature,content
+generate social media content for my business,content
+write a technical article about microservices,content
+create a tutorial on using react hooks,content
+draft a proposal for this project,content
+write a case study about our successful implementation,content
+create a user guide for my application,content
+write a white paper on blockchain technology,content
+generate a newsletter about industry updates,content
+create a script for my youtube video,content
+explain how transformers work,explain
+explain the concept of recursion,explain
+how does oauth authentication work,explain
+explain the difference between http and https,explain
+how does blockchain technology work,explain
+explain the cap theorem in distributed systems,explain
+how does machine learning work,explain
+explain the concept of dependency injection,explain
+how does public key cryptography work,explain
+explain the difference between sql and nosql,explain
+how does the internet work,explain
+explain the concept of virtual memory,explain
+how does dns resolution work,explain
+explain the difference between rest and graphql,explain
+how does containerization work,explain
+summarize this research paper,summarize
+give me a summary of this article,summarize
+summarize the key points of this document,summarize
+provide a brief overview of this book,summarize
+summarize the main findings of this study,summarize
+give me a tldr of this blog post,summarize
+summarize the conclusions of this report,summarize
+provide a summary of the meeting minutes,summarize
+summarize the plot of this movie,summarize
+give me a brief summary of this presentation,summarize
+summarize the key features of this product,summarize
+provide an executive summary of this proposal,summarize
+summarize the changes in this version,summarize
+give me a summary of the current market situation,summarize
+summarize the requirements for this project,summarize
+help me troubleshoot my docker container,troubleshoot
+solve this error in my deployment,troubleshoot
+troubleshoot my network connection,troubleshoot
+help me solve this database performance issue,troubleshoot
+troubleshoot my api integration,troubleshoot
+solve this memory leak problem,troubleshoot
+help me troubleshoot my authentication system,troubleshoot
+solve this caching issue,troubleshoot
+troubleshoot my continuous integration pipeline,troubleshoot
+help me solve this concurrency problem,troubleshoot
+troubleshoot my kubernetes cluster,troubleshoot
+solve this data inconsistency issue,troubleshoot
+help me troubleshoot my ssl certificate,troubleshoot
+solve this load balancing problem,troubleshoot
+troubleshoot my microservice architecture,troubleshoot
+brainstorm ideas for my new app,brainstorm
+help me come up with features for my product,brainstorm
+brainstorm solutions to this business problem,brainstorm
+generate ideas for my startup,brainstorm
+help me brainstorm marketing strategies,brainstorm
+come up with creative solutions for this challenge,brainstorm
+brainstorm potential names for my company,brainstorm
+help me generate content ideas for my blog,brainstorm
+brainstorm user engagement tactics,brainstorm
+help me come up with a tagline for my brand,brainstorm
+generate ideas for improving user experience,brainstorm
+brainstorm ways to optimize this process,brainstorm
+help me come up with a unique selling proposition,brainstorm
+brainstorm potential revenue streams,brainstorm
+help me generate ideas for my research project,brainstorm
+solve this math problem: 2x + 3 = 7,math
+calculate the derivative of f(x) = x^2 + 3x + 2,math
+solve this system of equations,math
+help me with this calculus problem,math
+calculate the probability of this event,math
+solve this optimization problem,math
+help me understand this statistical concept,math
+calculate the eigenvalues of this matrix,math
+solve this differential equation,math
+help me with this linear algebra problem,math
+calculate the confidence interval for this data,math
+solve this geometry problem,math
+help me understand this number theory concept,math
+calculate the expected value of this random variable,math
+solve this trigonometry problem,math
+what are the ethical implications of ai in healthcare,ethics
+discuss the ethics of data collection,ethics
+ethical considerations in facial recognition,ethics
+what are the ethical issues with autonomous weapons,ethics
+discuss the ethics of algorithmic decision making,ethics
+ethical considerations in genetic engineering,ethics
+what are the ethical implications of social media algorithms,ethics
+discuss the ethics of privacy in the digital age,ethics
+ethical considerations in ai governance,ethics
+what are the ethical issues with predictive policing,ethics
+discuss the ethics of automation and job displacement,ethics
+ethical considerations in biotech research,ethics
+what are the ethical implications of deepfakes,ethics
+discuss the ethics of surveillance technology,ethics
+ethical considerations in content moderation,ethics
+ollama status,ollama
+ollama on,ollama
+ollama off,ollama
+enable offline mode,ollama
+disable offline mode,ollama
+toggle offline mode,ollama
+ollama pull phi,ollama
+check ollama status,ollama
+is ollama running,ollama
+start ollama service,ollama
+stop ollama service,ollama
+restart ollama,ollama
+ollama models,ollama
+check available ollama models,ollama
+ollama pull llama,ollama
+show personality,personality
+adjust creativity to 0.8,personality
+set formality to 0.2,personality
+adjust humor to 0.9,personality
+set technical level to 0.7,personality
+adjust verbosity to 0.5,personality
+show current personality traits,personality
+reset personality to default,personality
+make responses more casual,personality
+adjust personality to be more professional,personality
+set empathy level to high,personality
+adjust personality to be more concise,personality
+make responses more detailed,personality
+set personality to be more creative,personality
+adjust tone to be more friendly,personality
+help,system
+show commands,system
+what can you do,system
+exit,system
+quit,system
+system status,system
+restart,system
+launch cli ui,system
+open dashboard,system
+show interface,system
+display ui,system
+start cli,system
+check system status,system
+show system health,system
+display vitals,system
+search memory for project ideas,memory
+save to memory: meeting with client tomorrow,memory
+recall last conversation about docker,memory
+show recent memories,memory
+remember this code snippet,memory
+forget conversation from yesterday,memory
+search memory for python examples,memory
+save this article to memory,memory
+recall what we discussed about react,memory
+show all memories related to project x,memory
+remember this important deadline,memory
+forget all conversations older than a month,memory
+search memory for design patterns,memory
+save this decision to memory,memory
+recall our brainstorming session,memory

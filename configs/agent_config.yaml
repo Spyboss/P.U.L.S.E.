@@ -1,0 +1,78 @@
+# General Pulse Agent Configuration
+
+agent:
+  name: "General Pulse"
+  version: "0.1.0"
+  description: "AI Personal Workflow Ops Assistant"
+  brain_model: "gemini"  # The model used for intent recognition and core agent functionality
+  fallback_brain: "claude"  # Fallback model if primary brain fails
+
+# AI Model Integration settings
+models:
+  claude:
+    enabled: true
+    api_key_env: "CLAUDE_API_KEY"
+    endpoint: "https://api.anthropic.com/v1"
+    role: "content_generation"
+  
+  grok:
+    enabled: true
+    api_key_env: "GROK_API_KEY"
+    endpoint: "https://api.xai.com/v1"  # xAI-specific endpoint
+    role: "analysis"
+    model_name: "grok-1.5"
+  
+  deepseek:
+    enabled: true
+    api_key_env: "DEEPSEEK_API_KEY"
+    endpoint: "https://api.deepseek.com"  # Updated DeepSeek endpoint
+    role: "code_generation"
+    model_name: "deepseek-chat"  # DeepSeek-V3 model
+  
+  gemini:
+    enabled: true
+    api_key_env: "GEMINI_API_KEY"
+    endpoint: "https://generativelanguage.googleapis.com/v1beta"
+    role: "agent_brain"
+    model_name: "gemini-1.5-pro"
+
+# Integration settings
+integrations:
+  github:
+    enabled: true
+    token_env: "GITHUB_TOKEN"
+  
+  notion:
+    enabled: true
+    token_env: "NOTION_API_KEY"
+    version_env: "NOTION_VERSION"
+
+# Tool settings
+tools:
+  bug_bounty_hunter:
+    enabled: true
+    analysis_model: "deepseek"
+    comment_model: "claude" 
+    supported_extensions: [".py", ".js", ".ts", ".java", ".c", ".cpp", ".cs", ".go", ".rb"]
+  
+  overplanning_detector:
+    enabled: true
+    roast_model: "claude"
+    reasoning_model: "deepseek"
+    daily_task_threshold: 5
+    weekly_task_threshold: 15
+    priority_conflict_threshold: 3
+
+# File paths for resources
+paths:
+  tasks_file: "tasks.md"
+  memory_dir: "memory"
+  skills_dir: "skills"
+  tools_dir: "tools"
+  
+# Logging configuration
+logging:
+  level: "INFO"
+  file: "general_pulse.log"
+  max_size_mb: 10
+  backup_count: 3 

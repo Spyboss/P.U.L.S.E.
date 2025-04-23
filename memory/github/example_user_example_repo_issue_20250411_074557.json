@@ -1,0 +1,11 @@
+{
+  "number": 4,
+  "title": "Test Issue from General Pulse",
+  "body": "This is a test issue created by General Pulse agent testing.",
+  "labels": [
+    "test",
+    "general-pulse"
+  ],
+  "state": "open",
+  "created_at": "2025-04-11T07:45:57.992427"
+}

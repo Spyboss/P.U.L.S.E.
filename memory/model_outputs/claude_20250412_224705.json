@@ -1,0 +1,10 @@
+{
+  "model": "claude",
+  "prompt": "What's the latest in AI?",
+  "response": {
+    "response": "Claude's simulated response to: What's the latest in AI?",
+    "model": "claude-3-sonnet",
+    "timestamp": "2025-04-12T22:47:05.076546"
+  },
+  "timestamp": "2025-04-12T22:47:05.076546"
+}

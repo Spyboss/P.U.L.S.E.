@@ -1,0 +1,10 @@
+{
+  "model": "deepseek",
+  "prompt": "Explain quantum computing",
+  "response": {
+    "content": "I've processed your request and can assist with the technical aspects. General Pulse provides several approaches to solve this problem. Would you like me to outline them?",
+    "model": "deepseek-simulated",
+    "timestamp": "2025-04-13T19:59:40.697293"
+  },
+  "timestamp": "2025-04-13T19:59:40.697293"
+}

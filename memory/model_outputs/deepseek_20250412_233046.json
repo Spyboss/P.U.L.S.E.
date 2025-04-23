@@ -1,0 +1,10 @@
+{
+  "model": "deepseek",
+  "prompt": "Hello, please identify yourself as deepseek in one sentence.",
+  "response": {
+    "response": "DeepSeek's code optimization for: Hello, please identify yourself as deepseek in one sentence.",
+    "model": "deepseek-coder",
+    "timestamp": "2025-04-12T23:30:46.773596"
+  },
+  "timestamp": "2025-04-12T23:30:46.773596"
+}

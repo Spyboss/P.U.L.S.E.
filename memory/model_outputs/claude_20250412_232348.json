@@ -1,0 +1,10 @@
+{
+  "model": "claude",
+  "prompt": "Hello, please identify yourself as claude in one sentence.",
+  "response": {
+    "response": "Claude's simulated response to: Hello, please identify yourself as claude in one sentence.",
+    "model": "claude-3-sonnet",
+    "timestamp": "2025-04-12T23:23:48.657893"
+  },
+  "timestamp": "2025-04-12T23:23:48.661890"
+}

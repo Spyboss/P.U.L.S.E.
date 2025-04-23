@@ -1,0 +1,16 @@
+{
+  "conversation_id": "20250413_182703",
+  "start_time": "2025-04-13T18:27:37.164388",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi! i am Uminda. Your creator, back again with you! how are you?",
+      "timestamp": "2025-04-13T18:27:37.164388"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:27:37 PM.",
+      "timestamp": "2025-04-13T18:27:37.170895"
+    }
+  ]
+}

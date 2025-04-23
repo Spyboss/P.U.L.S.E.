@@ -1,0 +1,43 @@
+# Core dependencies
+python-dotenv>=1.0.0
+structlog>=23.2.0
+pytz>=2023.3
+requests>=2.31.0
+PyYAML>=6.0.1
+
+# AI models
+google-generativeai>=0.3.0
+openrouter>=0.3.0
+transformers>=4.41.0
+torch>=2.1.2
+sentencepiece>=0.1.99
+
+# Database
+# sqlite3 is part of Python standard library
+
+# System utilities
+psutil>=5.9.5
+
+# Async support
+aiohttp>=3.8.5
+httpx>=0.24.0
+
+# Testing
+pytest>=7.4.4
+pytest-asyncio>=0.21.0
+
+# GitHub integration
+PyGithub>=2.1.1
+
+# Optional dependencies
+# For enhanced CLI
+prompt_toolkit>=3.0.43
+rich>=13.7.0
+
+# For optimized inference (optional)
+# optimum>=1.15.0
+# optimum-onnxruntime>=1.15.0
+# onnxruntime>=1.16.3
+
+# For date/time operations
+python-dateutil>=2.8.2

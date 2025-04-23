@@ -1,0 +1,10 @@
+{
+  "model": "grok",
+  "prompt": "how is the whether today?",
+  "response": {
+    "content": "The current date is Sunday, April 13, 2025 and the time is 07:59:18 PM.",
+    "model": "grok-simulated",
+    "timestamp": "2025-04-13T19:59:18.041968"
+  },
+  "timestamp": "2025-04-13T19:59:18.041968"
+}

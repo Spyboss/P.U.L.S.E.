@@ -1,0 +1,10 @@
+{
+  "model": "deepseek",
+  "prompt": "\n            Classify the user query into one of the following intents:\n            - help_intent: User is asking for help or capabilities\n            - datetime_intent: User is asking about the date or time\n            - system_status_intent: User is asking about the system status\n            - github_intent: User is asking about GitHub repositories or actions\n            - content_creation_intent: User wants content to be created\n            - notion_intent: User wants to interact with Notion\n            - task_tracker_intent: User wants to track or manage tasks\n            - model_query_intent: User is directly querying an AI model\n            - greeting_intent: User is saying hello or greeting the agent\n            \n            Query: yes\n            \n            Only respond with the intent name, nothing else.\n            ",
+  "response": {
+    "content": "Hello! DeepSeek at your service. I'm operational and ready to assist with code and technical tasks.",
+    "model": "deepseek-simulated",
+    "timestamp": "2025-04-13T19:59:49.825390"
+  },
+  "timestamp": "2025-04-13T19:59:49.825390"
+}

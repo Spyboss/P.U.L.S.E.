@@ -1,0 +1,10 @@
+{
+  "model": "gemini",
+  "prompt": "Hello, please identify yourself as gemini in one sentence.",
+  "response": {
+    "response": "I am Gemini, a large language model created by Google.\n",
+    "model": "gemini-1.5-pro",
+    "timestamp": "2025-04-12T23:30:48.627687"
+  },
+  "timestamp": "2025-04-12T23:30:48.627687"
+}

@@ -1,0 +1,27 @@
+import asyncio
+from utils.intent_handler import IntentHandler
+
+async def test():
+    # Initialize the intent handler
+    handler = IntentHandler()
+    
+    # Test queries
+    test_queries = [
+        "help",
+        "status",
+        "what is the capital of France?",
+        "write a Python function to calculate factorial",
+        "enable offline mode",
+        "test gemini",
+        "github search repositories"
+    ]
+    
+    print("Testing Intent Handler with MiniLM classifier...")
+    for query in test_queries:
+        intent = await handler.classify(query)
+        print(f"Query: '{query}'")
+        print(f"  Mapped Intent: {intent}")
+        print()
+
+if __name__ == "__main__":
+    asyncio.run(test())

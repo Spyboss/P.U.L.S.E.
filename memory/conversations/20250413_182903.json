@@ -1,0 +1,36 @@
+{
+  "conversation_id": "20250413_182903",
+  "start_time": "2025-04-13T18:29:43.954114",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi! i am Uminda. Your creator, back again with you! how are you?",
+      "timestamp": "2025-04-13T18:29:43.954114"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:29:43 PM.",
+      "timestamp": "2025-04-13T18:29:43.959721"
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2025-04-13T18:29:48.785208"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:29:48 PM.",
+      "timestamp": "2025-04-13T18:29:48.795461"
+    },
+    {
+      "role": "user",
+      "content": "ask deepseek to generate a code snippet to run using run to print hellow worl",
+      "timestamp": "2025-04-13T18:30:35.914292"
+    },
+    {
+      "role": "assistant",
+      "content": "The current date is Sunday, April 13, 2025 and the time is 06:30:35 PM.",
+      "timestamp": "2025-04-13T18:30:35.922517"
+    }
+  ]
+}
