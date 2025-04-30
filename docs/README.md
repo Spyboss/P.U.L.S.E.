@@ -27,6 +27,7 @@ Welcome to the P.U.L.S.E. (Prime Uminda's Learning System Engine) documentation.
 - [Local Models](LOCAL_MODELS.md) - Information about local model usage
 - [Model Mappings](MODEL_MAPPINGS.md) - Model ID mappings and configurations
 - [Model Routing](MODEL_ROUTING.md) - Neural routing between different models
+- [Adaptive Router](ADAPTIVE_ROUTER.md) - Hardware-aware adaptive routing system
 - [Timezone Feature](TIMEZONE_FEATURE.md) - Timezone functionality
 
 ### Feature Modules
@@ -37,11 +38,18 @@ Welcome to the P.U.L.S.E. (Prime Uminda's Learning System Engine) documentation.
 - [Ollama Integration](features/ollama_integration.md) - Integration with Ollama for local models
 - [Optimized Model Interface](features/optimized_model_interface.md) - Optimized interface for AI models
 
+### Personality System
+
+- [Charisma Engine](personality/charisma.md) - Engaging, anime-inspired personality
+- [Self-Awareness Module](personality/self_awareness.md) - System introspection and status reporting
+
 ### Integrations
 
 - [GitHub Integration](integrations/github_integration.md) - Working with GitHub repositories
 - [Notion Integration](integrations/notion_integration.md) - Working with Notion documents
+- [GitHub-Notion Sync](integrations/github_notion_sync.md) - Bidirectional synchronization between GitHub and Notion
 - [OpenRouter Integration](integrations/openrouter_integration.md) - Multi-model AI capabilities
+- [MongoDB Integration](integrations/mongodb_integration.md) - Cloud-based persistent storage
 
 ### Advanced Features
 

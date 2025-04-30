@@ -60,6 +60,17 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
   - Goals and priorities
   - Important interactions
 - **Vector Database**: Uses LanceDB for semantic search and context retrieval
+- **MongoDB Integration**: Stores interactions in MongoDB Atlas for cloud persistence
+- **Chat History Manager**: Provides persistent chat history with memory summarization
+
+### Adaptive Neural Router
+
+- **Hardware-Aware Routing**: Automatically selects models based on available system resources
+- **Neural Intent Classification**: Uses neural networks to determine query intent
+- **Keyword Detection**: Identifies specialized queries through keyword analysis
+- **Memory-Constrained Mode**: Falls back to lightweight models when system resources are limited
+- **Offline Mode Detection**: Automatically switches to local models when internet connectivity is lost
+- **Caching**: Caches routing decisions to reduce overhead and improve response time
 
 ### Personality & Workflow
 
@@ -67,6 +78,16 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 - **Anime-Inspired**: References anime like Jujutsu Kaisen and Solo Leveling for motivation
 - **Goal Tracking**: Reminds you of your goals and helps you stay on track
 - **Self-Awareness Module**: System introspection and status reporting capabilities
+- **Charisma Engine**: Provides engaging, lively responses with anime-inspired wit
+- **Mood Tracking**: Detects and adapts to user mood from conversation context
+
+### GitHub-Notion Integration
+
+- **Bidirectional Sync**: Synchronizes data between GitHub repositories and Notion databases
+- **Memory-Aware Scheduling**: Intelligently schedules sync operations based on system resources
+- **MongoDB Tracking**: Tracks sync status and history in MongoDB Atlas
+- **Error Handling**: Robust error handling for API rate limits and connection issues
+- **Customizable Sync Interval**: Configurable sync interval with adaptive adjustment
 
 ### Hardware Optimization
 
