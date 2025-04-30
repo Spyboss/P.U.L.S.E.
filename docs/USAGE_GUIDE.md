@@ -1,6 +1,6 @@
-# General Pulse Usage Guide
+# P.U.L.S.E. Usage Guide
 
-This guide provides detailed instructions on how to use General Pulse and its AI crew effectively.
+This guide provides detailed instructions on how to use P.U.L.S.E. (Prime Uminda's Learning System Engine) and its AI crew effectively.
 
 ## Getting Started
 
@@ -9,8 +9,8 @@ This guide provides detailed instructions on how to use General Pulse and its AI
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/uminda/general-pulse.git
-   cd general-pulse
+   git clone https://github.com/Spyboss/P.U.L.S.E..git
+   cd P.U.L.S.E.
    ```
 
 2. Install dependencies:
@@ -21,13 +21,12 @@ This guide provides detailed instructions on how to use General Pulse and its AI
 
 3. Set up API keys in a `.env` file:
    ```
-   GEMINI_API_KEY=your_gemini_api_key
    OPENROUTER_API_KEY=your_openrouter_api_key
    ```
 
-### Running General Pulse
+### Running P.U.L.S.E.
 
-Launch General Pulse with:
+Launch P.U.L.S.E. with:
 
 ```bash
 python pulse.py
@@ -124,7 +123,7 @@ ask reasoning solve this complex problem
 
 #### Leader
 
-- `ask gemini [query]`: Ask Gemini, the crew leader
+- `ask mistral-small [query]`: Ask Mistral-Small, the crew leader
 
 #### Specialists
 
@@ -147,7 +146,7 @@ ask reasoning solve this complex problem
 
 ## Personality Customization
 
-General Pulse has a customizable personality that adapts to your preferences:
+P.U.L.S.E. has a customizable personality that adapts to your preferences:
 
 - `show personality`: Show current personality traits
 - `adjust [trait] to [value]`: Adjust a personality trait (0.0 to 1.0)
@@ -195,7 +194,7 @@ Launch the CLI UI with:
 launch cli ui
 ```
 
-This provides a more interactive interface for using General Pulse.
+This provides a more interactive interface for using P.U.L.S.E.
 
 ## Troubleshooting
 
@@ -204,14 +203,14 @@ If you encounter issues:
 1. Check the system status with `status` to verify model availability
 2. Ensure your API keys are correctly set in the `.env` file
 3. Check your internet connection
-4. Try restarting General Pulse
+4. Try restarting P.U.L.S.E.
 5. Check the logs for error messages
 
 ## Getting Help
 
-If you need help with General Pulse:
+If you need help with P.U.L.S.E.:
 
 1. Use the `help` command to see available commands
-2. Ask Gemini for assistance with General Pulse features
+2. Ask Mistral-Small for assistance with P.U.L.S.E. features
 3. Ask DeepSeek to troubleshoot any issues you're experiencing
 4. Refer to the documentation in the `docs` directory

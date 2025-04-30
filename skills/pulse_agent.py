@@ -3,17 +3,17 @@ Pulse Agent - Main agent class for General Pulse
 Integrates all components and manages the overall system
 """
 
-import os
 import asyncio
 import json
+import os  # Used in _launch_cli_ui method
 import traceback
 import psutil
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, Any, Optional
 import structlog
 from datetime import datetime
 
 # Import spell correction utility
-from utils.spell_correction import correct_typos, suggest_correction
+from utils.spell_correction import correct_typos
 
 # Import components
 from utils.context_manager import PulseContext
@@ -171,6 +171,18 @@ class PulseAgent:
             if user_input.lower() in ["status", "system", "info"]:
                 return self._format_response(await self._get_system_status())
 
+            # Check for simple greetings and handle them directly with Mistral-Small
+            # This ensures consistent personality and better handling of greetings
+            if user_input.lower().strip() in ["hi", "hello", "hey", "what's up", "how are you", "yo", "sup"]:
+                self.logger.info("Detected simple greeting, routing directly to Mistral-Small")
+                return await self._process_with_model(user_input)
+
+            # Check for task-related queries and handle them with Mistral-Small
+            # This ensures better handling of task-related queries
+            if any(word in user_input.lower() for word in ["task", "todo", "to-do", "to do", "notion", "github"]):
+                self.logger.info("Detected task-related query, routing directly to Mistral-Small")
+                return await self._process_with_model(user_input)
+
             # Check for intent using intent handler
             if self.intent_handler:
                 intent_result = await self.intent_handler.parse_command(user_input)
@@ -326,10 +338,9 @@ class PulseAgent:
                 "goals": self.memory.get_active_goals()
             }
 
-        # Get system prompt from personality
-        system_prompt = None
+        # Get system prompt from personality (used in context_data)
         if self.personality:
-            system_prompt = self.personality.get_system_prompt()
+            context_data["system_prompt"] = self.personality.get_system_prompt()
 
         # Call model orchestrator
         if self.model_orchestrator:
@@ -994,7 +1005,7 @@ class PulseAgent:
             System status text
         """
         # Import the crew manifest to show AI crew information
-        from configs.models import CREW_MANIFEST, MODEL_ROLES, MODEL_IDS
+        from configs.models import CREW_MANIFEST, MODEL_ROLES
 
         # Get system status
         system_status = get_system_status()
@@ -1053,7 +1064,6 @@ class PulseAgent:
 
         # Check if OpenRouter is available
         openrouter_available = self.model_orchestrator and self.model_orchestrator.openrouter is not None
-        openrouter_status = "✅ Available" if openrouter_available else "❌ Unavailable"
 
         # Check if Ollama is available
         ollama_status = "❌ Unavailable"
@@ -1065,7 +1075,7 @@ class PulseAgent:
                 offline_mode = status["offline_mode"]
                 distilbert_available = status["distilbert_available"]
                 distilbert_initialized = status["distilbert_initialized"]
-                internet_available = status["internet_available"]
+                # Internet status is checked but used elsewhere in the code
 
                 if ollama_info["running"]:
                     models_str = ", ".join(ollama_info["models"]) if ollama_info["models"] else "None"
@@ -1248,9 +1258,19 @@ class PulseAgent:
         # Update conversation state
         self.conversation_state["last_response"] = content
 
+        # Check if this is a new session
+        is_new_session = False
+        if self.context:
+            is_new_session = self.context.is_new_session()
+
         # Format with personality if available
         if self.personality:
-            return self.personality.format_response(content, success=success, model_id=model_id)
+            return self.personality.format_response(
+                content,
+                success=success,
+                model_id=model_id,
+                is_new_session=is_new_session
+            )
 
         # Otherwise, return as is
         return content
@@ -1340,9 +1360,6 @@ class PulseAgent:
             Response message
         """
         try:
-            # Import the CLI UI
-            from utils.cli_ui import PulseCLIUI
-
             # Create a new process to run the CLI UI
             import subprocess
             import sys
@@ -1476,6 +1493,7 @@ asyncio.run(cli_ui.run())
             return self._format_response(f"❌ Error handling Ollama command: {str(e)}")
 
     async def _handle_test_intent_command(self, query: Optional[str] = None, intent: Optional[str] = None) -> str:
+        # Note: intent parameter is used in the function implementation below
         """
         Handle test intent commands
 
@@ -1493,8 +1511,8 @@ asyncio.run(cli_ui.run())
             if not query:
                 return self._format_response("Please provide a query to test intent classification.")
 
-            # Classify the intent
-            classified_intent = await self.intent_handler.classify(query)
+            # Classify the intent (use provided intent if available, otherwise classify)
+            classified_intent = intent if intent else await self.intent_handler.classify(query)
 
             # Parse the command
             command = await self.intent_handler.parse_command(query)

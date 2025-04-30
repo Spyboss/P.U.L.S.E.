@@ -42,8 +42,26 @@ class PulseContext:
         self.metadata = {
             "session_start": datetime.now().isoformat(),
             "interaction_count": 0,
-            "last_updated": datetime.now().isoformat()
+            "last_updated": datetime.now().isoformat(),
+            "last_interaction_time": datetime.now().timestamp()
         }
+
+        # Session tracking
+        self.session_timeout = 300  # 5 minutes in seconds
+
+    def is_new_session(self) -> bool:
+        """
+        Check if the current interaction is part of a new session
+        A new session starts when there's been no interaction for session_timeout seconds
+
+        Returns:
+            True if this is a new session, False otherwise
+        """
+        current_time = datetime.now().timestamp()
+        last_time = self.metadata.get("last_interaction_time", 0)
+        time_diff = current_time - last_time
+
+        return time_diff > self.session_timeout
 
     def update(self, user_input: str, response: str, metadata: Optional[Dict[str, Any]] = None) -> None:
         """
@@ -58,14 +76,24 @@ class PulseContext:
         self.history.append({"role": "user", "content": user_input})
         self.history.append({"role": "assistant", "content": response})
 
+        # Check if this is a new session
+        is_new_session = self.is_new_session()
+
         # Update metadata
         self.metadata["interaction_count"] += 1
         self.metadata["last_updated"] = datetime.now().isoformat()
+        self.metadata["last_interaction_time"] = datetime.now().timestamp()
+
+        # If this is a new session, update the session start time
+        if is_new_session:
+            self.metadata["session_start"] = datetime.now().isoformat()
+            self.logger.info("New session started")
 
         # Combine provided metadata with default metadata
         combined_metadata = {
             "timestamp": datetime.now().isoformat(),
-            "interaction_id": self.metadata["interaction_count"]
+            "interaction_id": self.metadata["interaction_count"],
+            "is_new_session": is_new_session
         }
         if metadata:
             combined_metadata.update(metadata)

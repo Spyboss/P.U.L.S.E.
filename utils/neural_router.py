@@ -178,6 +178,34 @@ class NeuralRouter:
         offline_mode = status.get("offline_mode", False)
         ollama_running = status.get("ollama", {}).get("running", False)
 
+        # Check if this is a command query (one-word commands or system commands)
+        command_patterns = [
+            r"^help$", r"^status$", r"^exit$", r"^quit$", r"^bye$", r"^memory$", r"^dashboard$",
+            r"^version$", r"^test$", r"^clear$", r"^cls$", r"^ollama$",
+            r"^show\s+status$", r"^display\s+status$", r"^get\s+status$",
+            r"^show\s+dashboard$", r"^display\s+dashboard$", r"^open\s+dashboard$",
+            r"^show\s+help$", r"^display\s+help$", r"^get\s+help$",
+            r"^show\s+memory$", r"^display\s+memory$", r"^get\s+memory$",
+            r"^show\s+version$", r"^display\s+version$", r"^get\s+version$",
+            r"^show\s+config$", r"^display\s+config$", r"^get\s+config$",
+            r"^show\s+skills$", r"^display\s+skills$", r"^get\s+skills$", r"^list\s+skills$",
+            r"^ollama\s+status$", r"^ollama\s+on$", r"^ollama\s+off$",
+            r"^enable\s+offline\s+mode$", r"^disable\s+offline\s+mode$",
+            r"^test\s+intent\s+.+$", r"^test\s+.+?\s+.+$"
+        ]
+
+        # Check if the query matches any command pattern
+        is_command = False
+        for pattern in command_patterns:
+            if re.match(pattern, query.lower().strip(), re.IGNORECASE):
+                is_command = True
+                break
+
+        # If this is a command query, route to MiniLM
+        if is_command:
+            logger.info(f"Command query detected, routing to minilm")
+            return "minilm", 1.0
+
         # If we're in offline mode, route to Phi
         if offline_mode or (not await self.model_interface.check_internet() and ollama_running):
             # Even in offline mode, for simple greetings and chat queries, try to use Mistral if internet is available
@@ -190,13 +218,86 @@ class NeuralRouter:
             else:
                 logger.info(f"Offline mode active, routing to phi")
                 return "phi", 1.0
-        else:
-            # If we're online and not in offline mode, never route to phi for these common queries
-            if query.lower().strip() in ["hi", "hello", "hey", "what's up", "how are you"] or \
-               intent == "chat" or intent == "general" or intent == "greeting":
-                logger.info(f"Online mode with chat/greeting, routing to mistral")
-                return "mistral", 1.0
 
+        # If we're online and not in offline mode, use keyword-based routing for specialized models
+        # Import the query type to model mapping
+        from configs.models import QUERY_TYPE_TO_MODEL
+
+        # Check for specialized query types in the query
+        query_lower = query.lower()
+
+        # First, check for explicit "ask X" format (e.g., "ask code how to...")
+        logger.debug(f"Checking for 'ask X' format in query: {query_lower}")
+        ask_match = re.match(r"^ask\s+(\w+)\s+", query_lower)
+        if ask_match:
+            query_type = ask_match.group(1)
+            logger.info(f"Found 'ask {query_type}' format in query")
+
+            # Debug: Print all keys in QUERY_TYPE_TO_MODEL
+            logger.debug(f"Available query types in QUERY_TYPE_TO_MODEL: {list(QUERY_TYPE_TO_MODEL.keys())}")
+
+            # Check if the query type is a direct model name (e.g., "ask deepcoder")
+            if query_type in self.model_specializations:
+                logger.info(f"Detected direct model reference 'ask {query_type}', routing to {query_type}")
+
+                # Cache the result
+                self.routing_cache[cache_key] = {
+                    "model": query_type,
+                    "confidence": 1.0,  # Direct model reference has highest confidence
+                    "timestamp": time.time()
+                }
+
+                return query_type, 1.0
+
+            # Check if the query type is in the QUERY_TYPE_TO_MODEL mapping
+            elif query_type in QUERY_TYPE_TO_MODEL:
+                model = QUERY_TYPE_TO_MODEL[query_type]
+                logger.info(f"Detected 'ask {query_type}' format, routing to {model}")
+
+                # Cache the result
+                self.routing_cache[cache_key] = {
+                    "model": model,
+                    "confidence": 0.9,
+                    "timestamp": time.time()
+                }
+
+                return model, 0.9
+            else:
+                logger.warning(f"Query type '{query_type}' not found in QUERY_TYPE_TO_MODEL mapping")
+
+        # Next, check for keywords in the query
+        for query_type, model in QUERY_TYPE_TO_MODEL.items():
+            # Skip general/simple/chat query types for now
+            if query_type in ["general", "simple", "chat", "greeting", "time"]:
+                continue
+
+            # Check if the query type appears as a word in the query
+            if re.search(r'\b' + query_type + r'\b', query_lower):
+                logger.info(f"Detected keyword '{query_type}' in query, routing to {model}")
+
+                # Cache the result
+                self.routing_cache[cache_key] = {
+                    "model": model,
+                    "confidence": 0.8,
+                    "timestamp": time.time()
+                }
+
+                return model, 0.8
+
+        # If no specialized model was selected, use Mistral-Small as the default
+        logger.info(f"No specialized model detected, routing to mistral")
+
+        # Cache the result
+        self.routing_cache[cache_key] = {
+            "model": "mistral",
+            "confidence": 0.7,
+            "timestamp": time.time()
+        }
+
+        return "mistral", 0.7
+
+        # The code below is kept for reference but not used in the current implementation
+        """
         # Use Mistral-Small (via OpenRouter) to decide which model to route to
         try:
             # Prepare the routing prompt
@@ -244,6 +345,7 @@ class NeuralRouter:
             logger.error(f"Error during neural routing: {str(e)}")
             # Fallback to mistral
             return "mistral", 0.5
+        """
 
     def _create_routing_prompt(self, query: str) -> str:
         """

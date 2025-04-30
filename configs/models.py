@@ -282,9 +282,9 @@ QUERY_TYPE_TO_MODEL = {
     "research": "mistral-small",
 
     # Content creation queries
-    "content": "maverick",  # Updated from llama-content to maverick
-    "creative": "maverick",
-    "write": "maverick",
+    "content": "mistral",  # Use Mistral-Small for content creation
+    "creative": "mistral",  # Use Mistral-Small for creative writing
+    "write": "mistral",    # Use Mistral-Small for writing tasks
 
     # Technical queries
     "technical": "llama-technical",
@@ -367,7 +367,7 @@ CREW_MANIFEST = {
                 "troubleshoot": "deepseek",
                 "docs": "llama-doc",
                 "trends": "mistral-small",
-                "content": "maverick",  # Updated from llama-content to maverick
+                "content": "mistral",  # Use Mistral-Small for content creation
                 "technical": "llama-technical",
                 "brainstorm": "hermes",
                 "ethics": "molmo",  # Updated from olmo to molmo

@@ -1,10 +1,10 @@
-# General Pulse Architecture
+# P.U.L.S.E. Architecture
 
-This document describes the architecture of General Pulse, a loyal AI companion designed to assist with coding, freelancing, and personal growth.
+This document describes the architecture of P.U.L.S.E. (Prime Uminda's Learning System Engine), a loyal AI companion designed to assist with coding, freelancing, and personal growth.
 
 ## Overview
 
-General Pulse is built with a modular architecture that integrates multiple AI models, context management, memory storage, and personality traits. The system is designed to be:
+P.U.L.S.E. is built with a modular architecture that integrates multiple AI models, context management, memory storage, and personality traits. The system is designed to be:
 
 - **Efficient**: Optimized for limited hardware resources
 - **Extensible**: Easy to add new features and capabilities
@@ -14,9 +14,9 @@ General Pulse is built with a modular architecture that integrates multiple AI m
 
 ### AI Crew System
 
-A key feature of General Pulse is its AI crew system, where multiple specialized AI models work together:
+A key feature of P.U.L.S.E. is its AI crew system, where multiple specialized AI models work together:
 
-- **Gemini**: The crew leader, orchestrating other models and maintaining a personal relationship with the user
+- **Mistral-Small**: The crew leader, orchestrating other models and maintaining a personal relationship with the user
 - **DeepSeek**: Troubleshooting expert for diagnosing errors and providing DevOps fixes
 - **DeepCoder**: Code generation specialist for writing, debugging, and optimizing code
 - **Llama-Doc**: Documentation expert for creating clear, concise documentation
@@ -36,7 +36,7 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 
 The Optimized Model Interface manages the AI crew system, where multiple specialized AI models work together:
 
-- **Leader**: Gemini 2.0 Flash Thinking (direct API) - Orchestrates the crew and knows the user personally
+- **Leader**: Mistral-Small (via OpenRouter) - Orchestrates the crew and knows the user personally
 - **Specialists**: Free OpenRouter models for specific tasks, each with a defined role and personality
 - **Paid Fallbacks**: Claude and Grok models available as paid fallbacks
 - **Local Models**: MiniLM for intent classification (with DistilBERT as fallback) and Ollama models for offline operation
@@ -147,7 +147,7 @@ Files:
 
 ## Hardware Optimization
 
-General Pulse is optimized for systems with limited resources:
+P.U.L.S.E. is optimized for systems with limited resources:
 
 - **Memory Management**: Careful memory usage with garbage collection
 - **GPU Optimization**: Limited VRAM usage for GPU acceleration
@@ -169,7 +169,7 @@ Directory: `configs/`
 
 ## Extension Points
 
-General Pulse can be extended in several ways:
+P.U.L.S.E. can be extended in several ways:
 
 1. **New AI Crew Members**: Add new specialized models to the AI crew system
    - Add model definitions to `configs/models.py`
@@ -190,8 +190,7 @@ General Pulse can be extended in several ways:
 
 - **Python 3.8+**: Core language
 - **SQLite**: Memory storage
-- **Google Generative AI**: Gemini API
-- **OpenRouter**: Access to multiple AI models
+- **OpenRouter**: Access to Mistral-Small and other AI models
 - **Transformers**: Local models like DistilBERT
 - **PyTorch**: Deep learning framework for local models
 - **Structlog**: Structured logging

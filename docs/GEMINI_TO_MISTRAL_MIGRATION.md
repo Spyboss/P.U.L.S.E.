@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the migration process from Gemini to Mistral-Small as the main brain for General Pulse. The migration was completed to improve performance, reliability, and to better align with the project's goals.
+This document outlines the migration process from Gemini to Mistral-Small as the main brain for P.U.L.S.E. (Prime Uminda's Learning System Engine). The migration was completed to improve performance, reliability, and to better align with the project's goals.
 
 ## Migration Summary
 
@@ -27,14 +27,14 @@ This document outlines the migration process from Gemini to Mistral-Small as the
 
 ### Model Comparison
 
-| Feature | Gemini | Mistral-Small |
-|---------|--------|---------------|
-| Parameters | Unknown | 24B |
-| Provider | Google | OpenRouter |
-| Context Window | Limited | Larger |
-| Specialized Tasks | General | General |
-| API | Direct | OpenRouter |
-| Cost | Free tier | Free tier |
+| Feature           | Gemini    | Mistral-Small |
+| ----------------- | --------- | ------------- |
+| Parameters        | Unknown   | 24B           |
+| Provider          | Google    | OpenRouter    |
+| Context Window    | Limited   | Larger        |
+| Specialized Tasks | General   | General       |
+| API               | Direct    | OpenRouter    |
+| Cost              | Free tier | Free tier     |
 
 ### Implementation Details
 

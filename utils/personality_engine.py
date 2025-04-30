@@ -240,7 +240,7 @@ class PulsePersonality:
 
         return system_prompt
 
-    def format_response(self, content: str, context: str = "general", success: bool = True, model_id: str = "gemini") -> str:
+    def format_response(self, content: str, context: str = "general", success: bool = True, model_id: str = "gemini", is_new_session: bool = False) -> str:
         """
         Format a response according to the personality
 
@@ -249,6 +249,7 @@ class PulsePersonality:
             context: The response context (tech, creative, etc.)
             success: Whether the operation was successful
             model_id: The model ID (default: gemini)
+            is_new_session: Whether this is a new session (default: False)
 
         Returns:
             Formatted response
@@ -262,19 +263,20 @@ class PulsePersonality:
         templates = self.templates.get(category, [""])
         template = random.choice(templates) if templates else ""
 
-        # Decide whether to add an anime reference - ONLY for Gemini model
+        # Decide whether to add an anime reference - for any model now
         anime_ref = ""
-        if model_id == "gemini":
-            add_anime_ref = random.random() < self.traits["anime_references"]
-            anime_ref = f"\n\n{random.choice(self.anime_references)}" if add_anime_ref else ""
+        add_anime_ref = random.random() < self.traits["anime_references"]
+        anime_ref = f"\n\n{random.choice(self.anime_references)}" if add_anime_ref else ""
 
         # Format the response
         if template and "{content}" in template:
             formatted = template.format(content=content)
         else:
-            # Add time-aware or casual greeting based on personality traits
+            # Add time-aware or casual greeting based on personality traits and session state
             casual_prefix = ""
-            if random.random() < self.traits["casual"]:
+
+            # Only add greeting if this is a new session or randomly with low probability
+            if is_new_session or (random.random() < 0.1 and self.traits["casual"] > 0.5):
                 # Get current hour for time-aware greetings
                 from datetime import datetime
                 current_hour = datetime.now().hour
@@ -320,7 +322,7 @@ class PulsePersonality:
 
             formatted = f"{casual_prefix}{clean_content} {emoji}"
 
-        # Add anime reference if applicable (only for Gemini)
+        # Add anime reference if applicable
         formatted += anime_ref
 
         # Add a goal reminder occasionally

@@ -5,48 +5,49 @@ Your loyal AI companion
 Main application entry point
 """
 
-import os
 import sys
 import asyncio
 import argparse
 import signal
 import traceback
-from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 from dotenv import load_dotenv
 
 # Import components
-from skills.pulse_agent import PulseAgent
+from pulse_core import PulseCore
 from utils.optimization import optimize_for_hardware, get_system_status
 from utils.cli_ui import PulseCLIUI
-from utils.logger import get_logger
+from utils.unified_logger import get_logger, configure_logging
 
-# Get logger from centralized logger module
+# Configure unified logging system
+configure_logging(log_file="logs/pulse.log")
+
+# Get logger from unified logger module
 logger = get_logger("pulse")
 
 # Load environment variables
 load_dotenv()
 
 # Global variables
-pulse_agent = None
+pulse_core = None
 running = True
 
-def signal_handler(sig, frame):
-    """Handle interrupt signals"""
-    global running, pulse_agent
+def signal_handler(sig, frame):  # pylint: disable=unused-argument
+    """Handle interrupt signals (sig and frame params required by signal module)"""
+    global running, pulse_core
     try:
         print("\nShutting down Pulse...")
         running = False
 
-        # Shutdown the pulse agent if it exists
-        if pulse_agent:
+        # Shutdown the pulse core if it exists
+        if pulse_core:
             try:
-                pulse_agent.shutdown()
-                print("Pulse Agent shutdown complete.")
+                asyncio.create_task(pulse_core.shutdown())
+                print("Pulse Core shutdown initiated.")
             except Exception as e:
-                logger.error(f"Error shutting down Pulse Agent: {str(e)}")
+                logger.error(f"Error shutting down Pulse Core: {str(e)}")
                 logger.error(traceback.format_exc())
-                print(f"Error shutting down Pulse Agent: {str(e)}")
+                print(f"Error shutting down Pulse Core: {str(e)}")
     except Exception as e:
         logger.error(f"Shutdown error: {str(e)}")
         logger.error(traceback.format_exc())
@@ -56,7 +57,7 @@ def signal_handler(sig, frame):
 
 async def main():
     """Main application entry point"""
-    global pulse_agent
+    global pulse_core
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="P.U.L.S.E. - Prime Uminda's Learning System Engine")
@@ -121,29 +122,28 @@ async def main():
         print(f"Memory: {memory_str} ({system_status['memory']['percent']}%)")
         print(f"CPU: {system_status['cpu']['percent']}% used")
 
-    # Initialize Pulse Agent
+    # Initialize Pulse Core
     try:
         if debug_mode:
-            print("DEBUG: About to initialize Pulse Agent...")
+            print("DEBUG: About to initialize Pulse Core...")
         else:
-            print("Initializing AI components...")
+            print("Initializing enhanced AI components...")
 
-        pulse_agent = PulseAgent(
+        pulse_core = PulseCore(
             user_id=args.user,
-            memory_path=args.memory,
-            simulate_responses=args.simulate
+            debug_mode=args.debug
         )
 
         if debug_mode:
-            print("DEBUG: Pulse Agent initialized successfully!")
+            print("DEBUG: Pulse Core initialized successfully!")
         else:
-            print("AI components initialized successfully!")
+            print("Enhanced AI components initialized successfully!")
 
-        logger.info("Pulse Agent initialized")
+        logger.info("Pulse Core initialized")
     except Exception as e:
-        print(f"ERROR: Failed to initialize Pulse Agent: {str(e)}")
+        print(f"ERROR: Failed to initialize Pulse Core: {str(e)}")
         print(traceback.format_exc())
-        logger.error(f"Failed to initialize Pulse Agent: {str(e)}")
+        logger.error(f"Failed to initialize Pulse Core: {str(e)}")
         logger.error(traceback.format_exc())
         return 1
 
@@ -157,7 +157,25 @@ async def main():
         else:
             print("Initializing CLI UI...")
 
-        cli_ui = PulseCLIUI(agent=pulse_agent)
+        # Create a more complete adapter for CLI UI to work with PulseCore
+        class PulseCoreAdapter:
+            def __init__(self, core):
+                self.core = core
+                # Add required attributes for CLI UI
+                self.model_orchestrator = core.model_orchestrator
+                self.router = core.router
+                self.memory_manager = core.memory_manager
+                self.history_manager = core.history_manager
+                self.charisma_engine = core.charisma_engine
+
+            async def process_input(self, user_input):
+                return await self.core.process_input(user_input)
+
+            def shutdown(self):
+                asyncio.create_task(self.core.shutdown())
+
+        adapter = PulseCoreAdapter(pulse_core)
+        cli_ui = PulseCLIUI(agent=adapter)
 
         if debug_mode:
             print("DEBUG: CLI UI initialized successfully!")
@@ -190,10 +208,10 @@ async def main():
                 if debug_mode:
                     print(f"DEBUG: Processing input: {user_input}")
 
-                response = await pulse_agent.process_input(user_input)
+                response = await pulse_core.process_input(user_input)
 
                 if debug_mode:
-                    print(f"DEBUG: Got response from agent")
+                    print(f"DEBUG: Got response from core")
 
                 # Print response
                 print(f"\n{response}")
@@ -222,14 +240,14 @@ async def main():
         print(f"\nSorry, I encountered an error in the CLI UI: {str(e)}")
 
     # Shutdown
-    if pulse_agent:
+    if pulse_core:
         try:
-            pulse_agent.shutdown()
-            logger.info("Pulse Agent shutdown complete")
+            await pulse_core.shutdown()
+            logger.info("Pulse Core shutdown complete")
         except Exception as e:
-            logger.error(f"Error shutting down Pulse Agent: {str(e)}")
+            logger.error(f"Error shutting down Pulse Core: {str(e)}")
             logger.error(traceback.format_exc())
-            print(f"Error shutting down Pulse Agent: {str(e)}")
+            print(f"Error shutting down Pulse Core: {str(e)}")
 
     return 0
 
@@ -287,14 +305,14 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         try:
             print("\nShutting down Pulse...")
-            if pulse_agent:
+            if pulse_core:
                 try:
-                    pulse_agent.shutdown()
-                    print("Pulse Agent shutdown complete.")
+                    asyncio.run(pulse_core.shutdown())
+                    print("Pulse Core shutdown complete.")
                 except Exception as e:
-                    logger.error(f"Error shutting down Pulse Agent: {str(e)}")
+                    logger.error(f"Error shutting down Pulse Core: {str(e)}")
                     logger.error(traceback.format_exc())
-                    print(f"Error shutting down Pulse Agent: {str(e)}")
+                    print(f"Error shutting down Pulse Core: {str(e)}")
             print("Shutdown complete.")
             sys.exit(0)
         except Exception as e:

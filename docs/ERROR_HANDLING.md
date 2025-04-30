@@ -1,6 +1,6 @@
 # Error Handling System
 
-This document describes the error handling system implemented in General Pulse.
+This document describes the error handling system implemented in P.U.L.S.E. (Prime Uminda's Learning System Engine).
 
 ## Overview
 
@@ -22,7 +22,7 @@ All error responses follow this standard format:
   "error_type": "error_category",
   "message": "Technical error message for logging",
   "user_message": "User-friendly error message",
-  "status_code": 404,  // Optional HTTP status code
+  "status_code": 404, // Optional HTTP status code
   "detailed_error": "Detailed technical information",
   "operation": "operation_being_performed",
   "timestamp": "2023-04-15T12:34:56"
@@ -40,6 +40,7 @@ Located in `utils/integration_error_handler.py`, this module handles errors from
 - Other third-party service errors
 
 It provides:
+
 - Error classification
 - Standardized error responses
 - Retry logic for transient errors
@@ -56,6 +57,7 @@ Located in `utils/model_error_handler.py`, this module handles errors from AI mo
 - Network errors
 
 It provides:
+
 - Error classification by model type
 - Standardized error responses
 - Retry logic for transient errors

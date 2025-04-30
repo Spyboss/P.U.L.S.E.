@@ -122,12 +122,12 @@ class ModelOrchestrator:
         self.free_models['backup'] = MODEL_IDS['task_automation']
 
         # IMPORTANT: Don't use Gemini through OpenRouter - it's not a valid OpenRouter model
-        # Instead, use a valid OpenRouter model for 'general' fallback
-        self.free_models['general'] = MODEL_IDS['content_creation']  # Use Maverick (Llama) instead of Gemini
+        # Instead, use Mistral-Small for general queries
+        self.free_models['general'] = MODEL_IDS['main_brain']  # Use Mistral-Small for general queries
 
         # Add specific mappings for query types that need special handling
         self.free_models['ethics'] = MODEL_IDS['ethical_ai']  # Use Molmo for ethics
-        self.free_models['content'] = MODEL_IDS['content_creation']  # Use Maverick for content
+        self.free_models['content'] = MODEL_IDS['main_brain']  # Use Mistral-Small for content
 
         openrouter_api_key = self.api_key_manager.get_key("OPENROUTER_API_KEY")
         if OPENROUTER_AVAILABLE and openrouter_api_key:
@@ -184,15 +184,95 @@ class ModelOrchestrator:
         self.model_personality = ModelPersonality()
         logger.info("Model personality manager initialized for personality differentiation")
 
+    def _simulate_response(self, input_text: str) -> Dict[str, Any]:
+        """
+        Simulate a response for testing purposes
+
+        Args:
+            input_text: The user's input text
+
+        Returns:
+            Simulated response dictionary
+        """
+        # Extract model type from input if it starts with "ask "
+        model_type = "mistral"  # Default
+        if input_text.lower().startswith("ask "):
+            parts = input_text.lower().split(" ", 2)
+            if len(parts) >= 2:
+                model_type = parts[1]
+
+        # Create a simulated response based on the model type
+        model_responses = {
+            "code": f"[SIMULATED CODE RESPONSE] Here's a code example for '{input_text}': \n\n```python\ndef example_function():\n    print('This is simulated code')\n    return True\n```",
+            "troubleshoot": f"[SIMULATED TROUBLESHOOTING] The issue with '{input_text}' might be caused by: 1) Incorrect imports, 2) Variable scope issues, 3) Syntax errors.",
+            "docs": f"[SIMULATED DOCUMENTATION] Documentation for '{input_text}':\n\n# API Reference\n## Functions\n- `example_function()`: Returns True and prints a message.",
+            "technical": f"[SIMULATED TECHNICAL EXPLANATION] Technical explanation for '{input_text}': This involves several complex concepts including data structures, algorithms, and system design.",
+            "brainstorm": f"[SIMULATED BRAINSTORMING] Ideas for '{input_text}':\n1. Implement a mobile app\n2. Create a web dashboard\n3. Design an API\n4. Build a recommendation engine",
+            "ethics": f"[SIMULATED ETHICS RESPONSE] Ethical considerations for '{input_text}':\n- Privacy implications\n- Bias and fairness\n- Transparency\n- User consent",
+            "visual": f"[SIMULATED VISUAL DESIGN] Design suggestions for '{input_text}':\n- Use a clean, minimalist interface\n- Implement a dark mode option\n- Use consistent color schemes\n- Ensure accessibility",
+            "reasoning": f"[SIMULATED REASONING] Analysis of '{input_text}':\n1. First, we need to break down the problem\n2. Then identify key constraints\n3. Consider multiple approaches\n4. Evaluate trade-offs",
+            "math": f"[SIMULATED MATH SOLUTION] Mathematical solution for '{input_text}':\nLet x be the unknown variable. We can solve this by applying the quadratic formula: x = (-b ± √(b² - 4ac)) / 2a",
+            "script": f"[SIMULATED SCRIPT OPTIMIZATION] Optimized script for '{input_text}':\n```python\n# Optimized version\nimport functools\n\n@functools.lru_cache(maxsize=128)\ndef optimized_function(x):\n    return x * 2\n```",
+            "mistral": f"[SIMULATED MISTRAL RESPONSE] I'm P.U.L.S.E., your AI companion. Regarding '{input_text}', I'd be happy to help you with that, bruv! What specific information are you looking for?"
+        }
+
+        # Get the appropriate response or use the default
+        content = model_responses.get(model_type, model_responses["mistral"])
+
+        # Return a simulated response
+        return {
+            "success": True,
+            "content": content,
+            "model": f"simulated-{model_type}",
+            "model_type": model_type,
+            "tokens": {"input": len(input_text.split()), "output": len(content.split())}
+        }
+
+    async def shutdown(self) -> None:
+        """
+        Shutdown the model orchestrator and clean up resources
+        """
+        logger.info("Shutting down model orchestrator")
+
+        # Close OpenRouter client if available
+        if hasattr(self, 'openrouter') and self.openrouter:
+            try:
+                # OpenAI client doesn't have a close method, but we can set it to None
+                self.openrouter = None
+                logger.info("OpenRouter client released")
+            except Exception as e:
+                logger.error(f"Error closing OpenRouter client: {str(e)}")
+
+        # Close Mistral client if available
+        if hasattr(self, 'mistral') and self.mistral:
+            try:
+                # OpenAI client doesn't have a close method, but we can set it to None
+                self.mistral = None
+                logger.info("Mistral client released")
+            except Exception as e:
+                logger.error(f"Error closing Mistral client: {str(e)}")
+
+        # Close neural router if available
+        if hasattr(self, 'neural_router') and self.neural_router:
+            try:
+                # Neural router might have a close method in the future
+                if hasattr(self.neural_router, 'close'):
+                    await self.neural_router.close()
+                logger.info("Neural router released")
+            except Exception as e:
+                logger.error(f"Error closing neural router: {str(e)}")
+
+        logger.info("Model orchestrator shutdown complete")
+
     @with_model_error_handling("handle_query")
     async def handle_query(self, input_text: str, context: Dict[str, Any] = None, model_preference: str = None) -> Dict[str, Any]:
         """
-        Handle a user query with the appropriate model
+        Handle a user query by routing it to Mistral-Small (main brain)
 
         Args:
             input_text: The user's input text
             context: Optional context information
-            model_preference: Optional preferred model to use
+            model_preference: Optional preferred model to use (will be used if specified)
 
         Returns:
             Response dictionary with content and metadata
@@ -200,17 +280,18 @@ class ModelOrchestrator:
         if self.simulate_responses:
             return self._simulate_response(input_text)
 
-        # Determine if this is a simple query that can be handled locally
-        query_type = await self._classify_query(input_text)
-
         # Format context for the model
         context_str = await self._format_context(context) if context else ""
 
-        # If a specific model is preferred, try to use it
+        # Log the routing decision
         if model_preference:
             self.logger.info(f"Using preferred model: {model_preference}")
+        else:
+            self.logger.info("No model preference specified, using Mistral-Small (main brain)")
 
-            # For Mistral Small - use OpenRouter
+        # If a specific model is preferred, try to use it
+        if model_preference:
+            # For Mistral Small or Gemini - use Mistral Small via OpenRouter
             if model_preference.lower() == "gemini" or model_preference.lower() == "mistral":
                 # Redirect Gemini requests to Mistral Small
                 if model_preference.lower() == "gemini":
@@ -244,7 +325,12 @@ class ModelOrchestrator:
             elif self.openrouter:
                 # Check if it's a specialized model type
                 if model_preference.lower() in self.free_models:
-                    return await self.query_specialized_model(model_preference.lower(), input_text, context_str)
+                    try:
+                        return await self.query_specialized_model(model_preference.lower(), input_text, context_str)
+                    except Exception as e:
+                        logger.warning(f"Specialized model {model_preference} failed: {str(e)}, falling back to Mistral-Small")
+                        # Fall back to Mistral-Small
+                        return await self._call_mistral(input_text, context_str)
                 # Otherwise try as a specific model name (claude, grok, etc.)
                 else:
                     try:
@@ -255,8 +341,8 @@ class ModelOrchestrator:
                             "agentica": "code",
                             "llama-doc": "docs",
                             "mistral-small": "trends",
-                            "maverick": "content",
-                            "llama-content": "content",
+                            "maverick": "general",  # Updated to use general (which maps to Mistral-Small)
+                            "llama-content": "general",  # Updated to use general (which maps to Mistral-Small)
                             "llama-technical": "technical",
                             "hermes": "brainstorm",
                             "molmo": "ethics",
@@ -270,16 +356,20 @@ class ModelOrchestrator:
                         }
 
                         category = model_categories.get(model_preference.lower(), "general")
-                        return await self.query_specialized_model(category, input_text, context_str)
+                        try:
+                            return await self.query_specialized_model(category, input_text, context_str)
+                        except Exception as e:
+                            logger.warning(f"Preferred OpenRouter model {model_preference} failed: {str(e)}, falling back to Mistral-Small")
+                            # Fall back to Mistral-Small
+                            return await self._call_mistral(input_text, context_str)
                     except Exception as e:
-                        logger.warning(f"Preferred OpenRouter model {model_preference} failed: {str(e)}, falling back to alternatives")
+                        logger.warning(f"Preferred OpenRouter model {model_preference} failed: {str(e)}, falling back to Mistral-Small")
+                        # Fall back to Mistral-Small
+                        return await self._call_mistral(input_text, context_str)
 
         # If no preference or preferred model failed, use the default flow
-        if query_type == "simple" and self.intent_classifier and TRANSFORMERS_AVAILABLE and TORCH_AVAILABLE:
-            # Use local model for simple queries
-            return await self._handle_local_query(input_text)
-
-        # Try Mistral-Small first (main brain)
+        # Always use Mistral-Small for simple queries, including greetings
+        # This ensures consistent personality and better handling of greetings
         if self.mistral:
             try:
                 response = await self._call_mistral(input_text, context_str)
@@ -292,6 +382,8 @@ class ModelOrchestrator:
 
         # Fall back to OpenRouter
         if self.openrouter:
+            # Determine query type for fallback
+            query_type = await self._classify_query(input_text)
             return await self._fallback_to_openrouter(input_text, context_str, query_type)
 
         # If all else fails, return an error
@@ -430,7 +522,7 @@ class ModelOrchestrator:
                 "mistral",  # Use the mistral model ID from OpenRouter
                 input_text,
                 context_str,
-                system_prompt=system_prompt
+                system_prompt
             )
 
             # If the query was successful, return the response
@@ -488,20 +580,20 @@ class ModelOrchestrator:
             # Documentation related
             "docs": ["docs", "explain", "summarize", "write"],
             "explain": ["explain", "docs", "technical", "write"],
-            "summarize": ["summarize", "docs", "write", "content"],
+            "summarize": ["summarize", "docs", "write", "general"],
 
             # Problem solving
             "troubleshoot": ["troubleshoot", "solve", "debug", "technical"],
             "solve": ["solve", "troubleshoot", "research", "technical"],
 
             # Information
-            "trends": ["trends", "research", "content", "write"],
-            "research": ["research", "technical", "trends", "content"],
+            "trends": ["trends", "research", "general", "write"],
+            "research": ["research", "technical", "trends", "general"],
 
             # Content
-            "content": ["content", "write", "creative", "brainstorm"],
-            "creative": ["creative", "content", "write", "brainstorm"],
-            "write": ["write", "content", "creative", "docs"],
+            "content": ["general", "write", "creative", "brainstorm"],
+            "creative": ["general", "content", "write", "brainstorm"],
+            "write": ["general", "content", "creative", "docs"],
 
             # Technical
             "technical": ["technical", "research", "code", "explain"],
@@ -618,7 +710,12 @@ class ModelOrchestrator:
                 model_key = "deepseek"  # Default to deepseek as a fallback
 
         # Get the role-specific prompt
-        system_prompt = get_prompt(model_key)
+        # For Mistral-Small model, always use the "mistral" prompt
+        if model_id == MODEL_IDS.get("main_brain"):
+            system_prompt = get_prompt("mistral")
+            self.logger.info("Using Mistral-specific system prompt for main_brain model")
+        else:
+            system_prompt = get_prompt(model_key)
 
         # Prepare the prompt for token counting and logging
         token_counting_prompt = ""
@@ -836,9 +933,26 @@ class ModelOrchestrator:
                 # Approximate token count
                 self.usage_stats["openrouter"]["tokens"] += len(token_counting_prompt.split()) + len(content.split() if content else [])
 
+                # Check if this is a new session
+                is_new_session = False
+                if hasattr(self, 'rich_context_manager') and self.rich_context_manager:
+                    try:
+                        # Get the context manager from the rich context manager
+                        context_manager = self.rich_context_manager.context_manager
+                        if hasattr(context_manager, 'is_new_session'):
+                            is_new_session = context_manager.is_new_session()
+                            self.logger.info(f"Session status: {'New session' if is_new_session else 'Existing session'}")
+                    except Exception as e:
+                        self.logger.error(f"Error checking session status: {str(e)}")
+
                 # Format the response with model-specific personality
                 if hasattr(self, 'model_personality') and self.model_personality:
-                    formatted_content = self.model_personality.format_response(content, model_id, success=True)
+                    formatted_content = self.model_personality.format_response(
+                        content,
+                        model_id,
+                        success=True,
+                        is_new_session=is_new_session
+                    )
                 else:
                     formatted_content = content
 
@@ -998,44 +1112,46 @@ class ModelOrchestrator:
         return self.usage_stats
 
     @with_model_error_handling("query_specialized_model")
-    async def query_specialized_model(self, query_type: str, input_text: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+    async def query_specialized_model(self, query_type: str, input_text: str, context_str: str = "", system_prompt: str = None) -> Dict[str, Any]:
         """
         Query a specialized model directly based on query type
 
         Args:
             query_type: The type of query/model to use
             input_text: The user's input text
-            context: Optional context information
+            context_str: Optional context information as a string
+            system_prompt: Optional system prompt to use
 
         Returns:
             Response dictionary with content and metadata
         """
+        # For general queries, always use Mistral-Small
+        if query_type == "general":
+            self.logger.info("General query detected, using Mistral-Small as main brain")
+            return await self._call_mistral(input_text, context_str)
+
         if self.simulate_responses:
             return self._simulate_response(input_text)
-
-        # Format context for the model
-        context_str = await self._format_context(context, model_type="openrouter") if context else ""
 
         # Check if we have OpenRouter available
         if not self.openrouter:
             self.logger.warning(f"OpenRouter not available for specialized model query: {query_type}")
-            # Try main_brain as fallback if it's available
-            if "main_brain" in MODEL_IDS and self.openrouter:
+            # Try Mistral-Small as fallback if it's available
+            if self.mistral:
                 try:
-                    model_id = MODEL_IDS["main_brain"]
-                    self.logger.info(f"Falling back to main_brain for specialized query type: {query_type}")
-                    return await self._call_openrouter_model(model_id, input_text, context_str)
+                    self.logger.info(f"Falling back to Mistral-Small for specialized query type: {query_type}")
+                    return await self._call_mistral(input_text, context_str)
                 except Exception as e:
-                    self.logger.error(f"main_brain fallback failed: {str(e)}")
+                    self.logger.error(f"Mistral-Small fallback failed: {str(e)}")
 
             # No fallback to Gemini anymore - it's been replaced by Mistral Small
-            self.logger.warning(f"All OpenRouter models failed for query type: {query_type}")
+            self.logger.warning(f"All models failed for query type: {query_type}")
 
             return {
                 "success": False,
-                "content": f"Sorry, I don't have access to a specialized model for {query_type} queries right now.",
+                "content": f"Sorry, I don't have access to any AI models right now. Please check your API keys and try again later.",
                 "model": "none",
-                "error": "OpenRouter not available"
+                "error": "No models available"
             }
 
         # Map model names to specialized query types
@@ -1045,8 +1161,8 @@ class ModelOrchestrator:
             "agentica": "code",
             "llama-doc": "docs",
             "mistral-small": "trends",
-            "maverick": "content",  # Updated from llama-content to maverick
-            "llama-content": "content",  # Keep for backward compatibility
+            "maverick": "general",  # Updated to use general (which maps to Mistral-Small)
+            "llama-content": "general",  # Updated to use general (which maps to Mistral-Small)
             "llama-technical": "technical",
             "hermes": "brainstorm",
             "molmo": "ethics",  # Updated from olmo to molmo
@@ -1225,8 +1341,14 @@ class ModelOrchestrator:
             }
         except Exception as e:
             self.logger.error(f"Error calling specialized model {model_id} for {query_type}: {str(e)}")
-            # Try the fallback strategy
-            return await self._fallback_to_openrouter(input_text, context_str, query_type)
+            # Try Mistral-Small as fallback
+            self.logger.info(f"Specialized model {model_id} failed, falling back to Mistral-Small")
+            try:
+                return await self._call_mistral(input_text, context_str)
+            except Exception as e2:
+                self.logger.error(f"Mistral-Small fallback failed: {str(e2)}")
+                # If Mistral-Small also fails, try the general fallback strategy
+                return await self._fallback_to_openrouter(input_text, context_str, query_type)
 
     def get_available_models(self) -> Dict[str, List[str]]:
         """
@@ -1556,6 +1678,91 @@ class ModelOrchestrator:
                 "success": False,
                 "error": str(e),
                 "message": f"Error testing main_brain: {str(e)}"
+            }
+
+    async def _call_openrouter_model(self, model_id: str, input_text: str, context_str: str = "", system_prompt: str = None) -> Dict[str, Any]:
+        """
+        Call an OpenRouter model with a query
+
+        Args:
+            model_id: The OpenRouter model ID to use
+            input_text: The user's input text
+            context_str: Optional context information as a string
+            system_prompt: Optional system prompt to use
+
+        Returns:
+            Response dictionary with content and metadata
+        """
+        self.logger.info(f"Calling OpenRouter model {model_id} with query: {input_text[:30]}...")
+
+        # Check if OpenRouter is initialized
+        if not self.openrouter:
+            self.logger.error("OpenRouter not initialized. Cannot call OpenRouter model.")
+            return {
+                "success": False,
+                "content": "OpenRouter is not available. Please check your API key.",
+                "model": model_id,
+                "model_type": "openrouter",
+                "error": "OpenRouter not initialized"
+            }
+
+        # Use default system prompt if none provided
+        if not system_prompt:
+            system_prompt = get_prompt("openrouter")
+
+        # Combine context and input text if context is provided
+        full_input = f"{context_str}\n\n{input_text}" if context_str else input_text
+
+        try:
+            # Prepare messages for the chat completion
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": full_input}
+            ]
+
+            # Call the model
+            response = await asyncio.to_thread(
+                self.openrouter.chat.completions.create,
+                model=model_id,
+                messages=messages,
+                max_tokens=1000
+            )
+
+            # Extract the response content
+            content = response.choices[0].message.content
+
+            # Update usage stats
+            if "openrouter" not in self.usage_stats:
+                self.usage_stats["openrouter"] = {
+                    "calls": 0,
+                    "tokens": 0,
+                    "last_used": None
+                }
+            self.usage_stats["openrouter"]["calls"] += 1
+            self.usage_stats["openrouter"]["last_used"] = datetime.now().isoformat()
+            # Approximate token count
+            self.usage_stats["openrouter"]["tokens"] += len(str(messages).split()) + len(content.split())
+
+            # Format the response with model-specific personality
+            if hasattr(self, 'model_personality') and self.model_personality:
+                formatted_response = self.model_personality.format_response(content, "openrouter", success=True)
+            else:
+                formatted_response = content
+
+            return {
+                "success": True,
+                "content": formatted_response,
+                "model": model_id,
+                "model_type": "openrouter"
+            }
+        except Exception as e:
+            self.logger.error(f"Error calling OpenRouter model {model_id}: {str(e)}")
+            return {
+                "success": False,
+                "content": f"Error calling OpenRouter model: {str(e)}",
+                "model": model_id,
+                "model_type": "openrouter",
+                "error": str(e)
             }
 
     async def check_internet(self) -> bool:

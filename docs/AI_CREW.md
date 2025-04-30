@@ -1,12 +1,12 @@
-# General Pulse AI Crew
+# P.U.L.S.E. AI Crew
 
-General Pulse uses a dynamic AI crew system where multiple specialized AI models work together to provide the best possible assistance. Each model has a specific role and personality, and they can collaborate to solve complex problems.
+P.U.L.S.E. (Prime Uminda's Learning System Engine) uses a dynamic AI crew system where multiple specialized AI models work together to provide the best possible assistance. Each model has a specific role and personality, and they can collaborate to solve complex problems.
 
 ## Crew Structure
 
 The AI crew is structured as follows:
 
-- **Leader**: Gemini is the crew leader, orchestrating the other models and maintaining a personal relationship with the user.
+- **Leader**: Mistral-Small is the crew leader, orchestrating the other models and maintaining a personal relationship with the user.
 - **Specialists**: Each specialist model has a specific role and expertise.
 - **Paid Fallbacks**: These models are available as fallbacks when needed, but require paid API access.
 
@@ -14,7 +14,7 @@ The AI crew is structured as follows:
 
 ### Leader
 
-- **Gemini** - Default Chat - Main orchestrator that knows the user personally and delegates to specialists.
+- **Mistral-Small** - Default Chat - Main orchestrator that knows the user personally and delegates to specialists.
 
 ### Specialists
 
@@ -37,7 +37,7 @@ The AI crew is structured as follows:
 
 ## Query Types and Routing
 
-General Pulse automatically routes queries to the appropriate specialist based on the query type:
+P.U.L.S.E. automatically routes queries to the appropriate specialist based on the query type:
 
 ### Code-related Queries (DeepCoder)
 
@@ -107,7 +107,7 @@ You can interact with the AI crew in several ways:
    ask write a blog post about AI ethics
    ```
 
-3. **Default Queries**: If you don't specify a model or query type, Gemini (the leader) will handle your query.
+3. **Default Queries**: If you don't specify a model or query type, Mistral-Small (the leader) will handle your query.
    ```
    what's the capital of France?
    how do I improve my coding skills?
@@ -119,7 +119,7 @@ The AI crew members are aware of each other and can suggest other specialists wh
 
 - If you ask DeepCoder about troubleshooting a server issue, it might suggest consulting DeepSeek.
 - If you ask Mistral-Small about code optimization, it might suggest DeepCoder.
-- If you ask Gemini about ethical considerations, it might delegate to Olmo.
+- If you ask Mistral-Small about ethical considerations, it might delegate to Olmo.
 
 This collaborative approach ensures you always get the best possible assistance for your specific needs.
 
@@ -127,7 +127,7 @@ This collaborative approach ensures you always get the best possible assistance 
 
 The availability of models depends on your API keys and the current status of the services:
 
-- **Gemini**: Requires a valid Google AI API key.
+- **Mistral-Small**: Requires a valid OpenRouter API key.
 - **OpenRouter Models**: All specialist models require a valid OpenRouter API key.
 - **Paid Fallbacks**: Claude and Grok require paid API access.
 

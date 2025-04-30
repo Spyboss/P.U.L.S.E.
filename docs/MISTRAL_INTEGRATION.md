@@ -2,7 +2,7 @@
 
 ## Overview
 
-General Pulse now uses Mistral-Small (via OpenRouter) as its main brain, replacing the previous Gemini model. This document outlines the integration details, testing procedures, and best practices for working with Mistral-Small.
+P.U.L.S.E. (Prime Uminda's Learning System Engine) now uses Mistral-Small (via OpenRouter) as its main brain, replacing the previous Gemini model. This document outlines the integration details, testing procedures, and best practices for working with Mistral-Small.
 
 ## Model Details
 
@@ -14,7 +14,7 @@ General Pulse now uses Mistral-Small (via OpenRouter) as its main brain, replaci
 
 ## Integration Architecture
 
-Mistral-Small is integrated into General Pulse through the following components:
+Mistral-Small is integrated into P.U.L.S.E. through the following components:
 
 1. **Model Orchestrator**: Manages API calls to Mistral-Small via OpenRouter
 2. **Neural Router**: Routes queries to Mistral-Small or specialized models based on intent
@@ -34,6 +34,7 @@ test main_brain_api_key
 ```
 
 This will:
+
 1. Verify that your OpenRouter API key is valid
 2. Test Mistral-Small with a simple query
 3. Display the response
@@ -47,6 +48,7 @@ python docs/tests/test_main_brain.py
 ```
 
 This script tests:
+
 1. OpenRouter API key validation
 2. Mistral-Small model response
 3. Error handling and timeouts
