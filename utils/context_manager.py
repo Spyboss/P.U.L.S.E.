@@ -1,6 +1,6 @@
 """
-Context Manager for General Pulse
-Manages short-term conversation context and integrates with AugmentCode's context engine
+Context Manager for P.U.L.S.E.
+Manages short-term conversation context and conversation history
 """
 
 import os
@@ -13,14 +13,10 @@ from datetime import datetime
 # Configure logger
 logger = structlog.get_logger("context_manager")
 
-# We're using our own dedicated context engine for the agent
-# No need to import AugmentCode's context engine
-AUGMENT_AVAILABLE = False
-
 class PulseContext:
     """
-    Manages conversation context for General Pulse
-    Combines local deque storage with AugmentCode's context engine
+    Manages conversation context for P.U.L.S.E.
+    Maintains conversation history using a deque for efficient storage and retrieval
     """
 
     def __init__(self, max_length: int = 10, user_id: str = "default_user"):
@@ -102,8 +98,7 @@ class PulseContext:
         if "mood" not in combined_metadata:
             combined_metadata["mood"] = self._infer_mood(user_input)
 
-        # We're using our own dedicated context engine
-        # No need to update AugmentCode
+        # Update the context with the new interaction
 
         # Log the interaction
         self.logger.info(
@@ -128,8 +123,7 @@ class PulseContext:
             "metadata": self.metadata
         }
 
-        # We're using our own dedicated context engine
-        # No need to retrieve from AugmentCode
+        # Return the current context
 
         return context
 

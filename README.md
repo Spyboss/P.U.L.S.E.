@@ -59,14 +59,14 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
   - Projects and interests
   - Goals and priorities
   - Important interactions
-- **AugmentCode Integration**: Leverages AugmentCode's context engine for deeper understanding
+- **Vector Database**: Uses LanceDB for semantic search and context retrieval
 
 ### Personality & Workflow
 
 - **Adaptive Personality**: Adjustable traits like informative, courageous, positive, casual, and strict
 - **Anime-Inspired**: References anime like Jujutsu Kaisen and Solo Leveling for motivation
 - **Goal Tracking**: Reminds you of your goals and helps you stay on track
-- **AI Hustle Army Integration**: Syncs with your AI workflow (Claude, DeepSeek, Grok, Luminar)
+- **Self-Awareness Module**: System introspection and status reporting capabilities
 
 ### Hardware Optimization
 
@@ -383,7 +383,7 @@ Comprehensive documentation is available in the [docs](docs) directory:
 ### Advanced Features
 
 - [AI Commit Messages](docs/advanced/ai_commit_messages.md) - AI-driven commit message generation
-- [Bug Bounty Hunter](docs/advanced/bug_bounty_hunter.md) - AI-powered bug detection
+- [Bug Bounty Hunter](docs/advanced/bug_bounty_hunter.md) - AI-powered bug detection (in development)
 
 ### Development and Testing
 

@@ -46,7 +46,7 @@ Welcome to the P.U.L.S.E. (Prime Uminda's Learning System Engine) documentation.
 ### Advanced Features
 
 - [AI Commit Messages](advanced/ai_commit_messages.md) - AI-driven commit message generation
-- [Bug Bounty Hunter](advanced/bug_bounty_hunter.md) - AI-powered bug detection
+- [Bug Bounty Hunter](advanced/bug_bounty_hunter.md) - AI-powered bug detection (in development)
 
 ### Development and Testing
 

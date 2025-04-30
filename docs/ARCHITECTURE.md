@@ -62,10 +62,10 @@ Files:
 
 ### 2. Context Manager
 
-The Context Manager maintains conversation context and integrates with AugmentCode's context engine:
+The Context Manager maintains conversation context and provides historical context:
 
 - **Short-term Context**: Recent conversation history stored in a deque
-- **AugmentCode Integration**: Deep context understanding without token limits
+- **Vector Database**: Semantic search for relevant historical context
 - **Mood Inference**: Detects user mood from input text
 - **Metadata Tracking**: Stores interaction metadata for better context
 

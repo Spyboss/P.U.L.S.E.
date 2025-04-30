@@ -27,24 +27,28 @@ For a detailed architecture overview, see [ARCHITECTURE.md](ARCHITECTURE.md).
 ### Setup Steps
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/yourusername/general-pulse.git
    cd general-pulse
    ```
 
 2. Create a virtual environment:
+
    ```
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. Install dependencies:
+
    ```
    pip install -r requirements.txt
    ```
 
 4. Set up environment variables:
    Create a `.env` file with the following variables:
+
    ```
    GEMINI_API_KEY=your_gemini_api_key
    OPENROUTER_API_KEY=your_openrouter_api_key
@@ -92,7 +96,7 @@ self.free_models["new_task"] = "new-model-id:free"
 
 ### Context Management
 
-The Context Manager maintains conversation history and integrates with AugmentCode:
+The Context Manager maintains conversation history and provides historical context:
 
 ```python
 # Example: Updating context
@@ -159,7 +163,7 @@ def parse_command(self, text):
 # In skills/pulse_agent.py
 async def _handle_intent(self, intent_result, user_input):
     command_type = intent_result.get("command_type")
-    
+
     # Add handler for new command
     if command_type == "new_command":
         parameter = intent_result.get("parameter")
@@ -213,11 +217,13 @@ def format_response(self, content, context="general", success=True):
 ### Running Tests
 
 Run all tests:
+
 ```
 python -m unittest discover tests
 ```
 
 Run a specific test:
+
 ```
 python -m unittest tests.test_pulse_agent
 ```
@@ -231,6 +237,7 @@ python -m unittest tests.test_pulse_agent
 5. Use assertions to verify behavior
 
 Example:
+
 ```python
 import unittest
 from utils.context_manager import PulseContext
@@ -238,7 +245,7 @@ from utils.context_manager import PulseContext
 class TestPulseContext(unittest.TestCase):
     def setUp(self):
         self.context = PulseContext(max_length=5, user_id="test_user")
-    
+
     def test_update(self):
         self.context.update("Hello", "Hi there!")
         self.assertEqual(len(self.context.history), 2)
