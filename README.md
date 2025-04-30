@@ -77,6 +77,7 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 
 ## Recently Implemented
 
+🗂️ **Codebase Organization** - Organized codebase with proper directory structure, moved test files to tests directory, and organized scripts
 🔒 **Enhanced Identity System** - Implemented robust identity filtering to ensure P.U.L.S.E. maintains its unique identity
 🧠 **Advanced Post-Processing** - Added regex-based post-processing to filter out incorrect model identifications
 💬 **Improved Chat Persistence** - Enhanced session tracking for more natural conversations with fewer repetitive greetings
@@ -84,7 +85,7 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 🚀 **Expanded Specialized Models** - Added more specialized models for different tasks (DeepCoder, Llama-Doc, Kimi, Nemotron, Gemma, Dolphin)
 🧠 **Self-Awareness Module** - Added a self-awareness module for system introspection and status reporting
 ⚡ **Memory Optimization** - Enhanced memory optimization with aggressive cleanup and adaptive scheduling
-🔄 **GitHub-Notion Sync Optimization** - Improved GitHub-Notion sync with memory-aware scheduling
+🔄 **GitHub-Notion Sync** - Added GitHub-Notion synchronization with memory-aware scheduling
 🎭 **Enhanced Charisma Engine** - Updated charisma engine to use the self-awareness module for better personality
 🧪 **Specialized Model Testing** - Added test script for specialized models
 🚀 **Rebranding to P.U.L.S.E.** - Renamed from General Pulse to P.U.L.S.E. (Prime Uminda's Learning System Engine)
@@ -92,9 +93,9 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 💬 **New Welcome Message** - Implemented time-aware welcome message with pending tasks
 🚀 **Mistral-Small Integration** - Replaced Gemini with Mistral-Small (24B parameters) as the main brain
 🛡️ **Enhanced Error Handling** - Improved retry logic and error reporting for API calls
-🔍 **Neural Router Updates** - Updated neural router to use Mistral-Small for routing decisions
-📝 **Intent Classification Improvements** - Modified natural intent handler to use Mistral-Small
-💡 **Testing Infrastructure** - Enhanced testing capabilities for the main brain
+🔍 **Neural Router** - Implemented neural router in dedicated routing module for better query routing
+📝 **Intent Classification** - Added intent preprocessor for better query understanding
+💡 **Testing Infrastructure** - Enhanced testing capabilities with organized test directories
 🧹 **Codebase Cleanup** - Removed duplicate files and consolidated implementations for better maintainability
 ⚡ **Optimized Model Interface** - Enhanced model interface with better memory management and resource optimization
 🚀 **Improved Ollama Integration** - Better Ollama management with automatic startup/shutdown and resource monitoring
@@ -103,6 +104,7 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 🧠 **Role-Specific Prompts** - Custom prompts for each AI model to maintain consistent character
 🔄 **Improved Shutdown Process** - Enhanced shutdown process with better error handling and resource cleanup
 🖥️ **Fixed Character Encoding** - Resolved character encoding issues for better compatibility across platforms
+📊 **Vector Database** - Implemented vector database for semantic search and context retrieval
 
 ## Getting Started
 
@@ -234,56 +236,72 @@ github username/repo commit message file: path/to/file.py
 ```
 P.U.L.S.E./
 ├── configs/           # Configuration files
-│   ├── models.yaml    # Model configurations
-│   └── hardware.yaml  # Hardware optimizations
+│   └── models.py      # Model configurations
+├── context/           # Context management
+│   └── history.py     # Conversation history management
 ├── data/              # Data storage
+│   ├── vector_db/     # Vector database storage
 │   └── *.db           # SQLite database files
 ├── docs/              # Documentation
 │   ├── ARCHITECTURE.md # Architecture overview
-│   ├── USER_GUIDE.md  # User guide
+│   ├── USAGE_GUIDE.md # User guide
 │   ├── DEVELOPER_GUIDE.md # Developer guide
 │   ├── ERROR_HANDLING.md # Error handling documentation
+│   ├── AI_CREW.md     # AI crew system documentation
+│   ├── MISTRAL_INTEGRATION.md # Mistral integration details
+│   ├── advanced/      # Advanced feature documentation
+│   ├── development/   # Development documentation
 │   ├── features/      # Feature documentation
-│   └── integrations/  # Integration documentation
+│   ├── integrations/  # Integration documentation
+│   └── tests/         # Test documentation
+├── integrations/      # External integrations
+│   └── sync.py        # GitHub-Notion synchronization
 ├── logs/              # Log files
 │   └── *.log          # Log files
 ├── memory/            # Memory storage
 │   └── tasks.db       # Task memory database
+├── personality/       # Personality engine
+│   ├── charisma.py    # Charisma engine
+│   └── self_awareness.py # Self-awareness module
+├── routing/           # Query routing
+│   └── router.py      # Neural router
 ├── scripts/           # Utility scripts
-│   ├── tools/         # Tool scripts
-│   └── utils/         # Utility scripts
+│   ├── fix_compatibility.py # Compatibility fixes
+│   ├── fix_numpy.py   # NumPy fixes
+│   ├── fix_pytorch.py # PyTorch fixes
+│   └── test_vector_db.py # Vector database test script
 ├── skills/            # Core agent skills
-│   ├── github_skills.py # GitHub integration skills
-│   ├── optimized_model_interface.py # Optimized model interface
+│   ├── marketplace.py # Skill marketplace
 │   ├── pulse_agent.py # Main agent implementation
-│   ├── model_orchestrator.py # Model management
-│   └── task_memory_manager.py # Task memory management
+│   └── model_orchestrator.py # Model management
 ├── tests/             # Test suite
-│   ├── test_context_manager.py # Context tests
-│   ├── test_memory_manager.py # Memory tests
-│   ├── test_model_mappings.py # Model mapping tests
-│   ├── test_model_routing.py # Model routing tests
-│   ├── test_offline_mode.py # Offline mode tests
-│   └── test_pulse_agent.py # Agent tests
+│   ├── integrations/  # Integration tests
+│   ├── routing/       # Routing tests
+│   ├── skills/        # Skills tests
+│   ├── tools/         # Tools tests
+│   ├── utils/         # Utility tests
+│   └── test_*.py      # Core tests
 ├── tools/             # Integration tools
 │   ├── bug_bounty_hunter.py # Bug bounty hunter
 │   ├── github_integration.py # GitHub integration
 │   └── notion_overplanning_detector.py # Notion overplanning detector
 ├── utils/             # Utility functions
-│   ├── cli_ui.py      # CLI user interface
 │   ├── context_manager.py # Context management
-│   ├── distilbert_classifier.py # DistilBERT intent classifier
-│   ├── execution_flow.py # Execution flow management
-│   ├── intent_handler.py # Intent recognition
-│   ├── memory_manager.py # Memory storage
-│   ├── ollama_manager.py # Ollama service management
+│   ├── intent_preprocessor.py # Intent preprocessing
+│   ├── log.py         # Logging utilities
+│   ├── memory.py      # Memory management
+│   ├── neural_router.py # Neural routing
 │   ├── optimization.py # Hardware optimizations
 │   ├── personality_engine.py # Personality traits
-│   └── task_orchestrator.py # Task orchestration
+│   ├── sqlite_utils.py # SQLite utilities
+│   ├── system_utils.py # System utilities
+│   ├── unified_logger.py # Unified logging
+│   └── vector_db.py   # Vector database utilities
 ├── .env               # Environment variables
 ├── .gitignore         # Git ignore file
 ├── pulse.py           # Main entry point
-├── run_tests.py       # Test runner
+├── pulse_core.py      # Core functionality
+├── cli_ui_launcher.py # CLI UI launcher
 ├── README.md          # This file
 └── requirements.txt   # Python dependencies
 ```
@@ -292,17 +310,23 @@ P.U.L.S.E./
 
 ```bash
 # Run all tests using the test runner script
-python run_tests.py
+python scripts/run_tests.py --all
 
-# Run specific test file
-python run_tests.py tests/test_context_manager.py
+# Run specific test categories
+python scripts/run_tests.py --utils    # Run utility tests
+python scripts/run_tests.py --skills   # Run skills tests
+python scripts/run_tests.py --tools    # Run tools tests
+python scripts/run_tests.py --routing  # Run routing tests
+python scripts/run_tests.py --integrations # Run integration tests
 
 # Run with verbose output
-python run_tests.py --verbose
+python scripts/run_tests.py --verbose
 
-# Or use unittest directly
+# Run specific test file
+python -m unittest tests/utils/test_vector_db.py
+
+# Or use unittest directly for all tests
 python -m unittest discover tests
-python -m unittest tests.test_pulse_agent
 ```
 
 ### Contributing
@@ -319,6 +343,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Comprehensive documentation is available in the [docs](docs) directory:
 
+### Core Documentation
+
 - [Usage Guide](docs/USAGE_GUIDE.md) - Detailed instructions on how to use P.U.L.S.E.
 - [AI Crew](docs/AI_CREW.md) - Information about the AI crew system
 - [Architecture](docs/ARCHITECTURE.md) - Overview of the system architecture
@@ -326,17 +352,44 @@ Comprehensive documentation is available in the [docs](docs) directory:
 - [Mistral Integration](docs/MISTRAL_INTEGRATION.md) - Details about the Mistral-Small integration
 - [Gemini to Mistral Migration](docs/GEMINI_TO_MISTRAL_MIGRATION.md) - Migration process from Gemini to Mistral-Small
 - [Identity System](docs/IDENTITY_SYSTEM.md) - Implementation of robust identity system for P.U.L.S.E.
+- [Developer Guide](docs/DEVELOPER_GUIDE.md) - Guide for developers working on P.U.L.S.E.
 
 ### Feature Documentation
 
 - [AI Crew System](docs/AI_CREW.md) - Dynamic AI crew with specialized models
 - [Identity System](docs/IDENTITY_SYSTEM.md) - Robust identity management with post-processing filters
+- [Chat Persistence](docs/chat_persistence.md) - Enhanced chat persistence implementation
+- [Vector Database](docs/vector_database.md) - Vector database for semantic search
+- [LanceDB Upgrade](docs/lancedb_upgrade.md) - Information about LanceDB integration
+- [Enhancements](docs/ENHANCEMENTS.md) - Planned and implemented enhancements
+- [Local Models](docs/LOCAL_MODELS.md) - Information about local model usage
+- [Model Mappings](docs/MODEL_MAPPINGS.md) - Model ID mappings and configurations
+- [Model Routing](docs/MODEL_ROUTING.md) - Neural routing between different models
+
+### Feature Modules
+
 - [DateTime Functionality](docs/features/datetime_functionality.md) - Date, time, and timezone features
 - [Offline Mode](docs/features/offline_mode.md) - Working offline with Ollama and DistilBERT
+- [Intent Classification](docs/features/intent_classification.md) - Intent classification system
+- [Ollama Integration](docs/features/ollama_integration.md) - Integration with Ollama for local models
+- [Optimized Model Interface](docs/features/optimized_model_interface.md) - Optimized interface for AI models
+
+### Integrations
+
 - [GitHub Integration](docs/integrations/github_integration.md) - Working with GitHub repositories
 - [Notion Integration](docs/integrations/notion_integration.md) - Working with Notion documents
 - [OpenRouter Integration](docs/integrations/openrouter_integration.md) - Multi-model AI capabilities
+
+### Advanced Features
+
 - [AI Commit Messages](docs/advanced/ai_commit_messages.md) - AI-driven commit message generation
+- [Bug Bounty Hunter](docs/advanced/bug_bounty_hunter.md) - AI-powered bug detection
+
+### Development and Testing
+
+- [Contributing](docs/development/contributing.md) - Guidelines for contributing to P.U.L.S.E.
+- [Architecture](docs/development/architecture.md) - Detailed architecture documentation
+- [Roadmap](docs/development/roadmap.md) - Development roadmap
 - [Testing](docs/tests/README.md) - Testing procedures and scripts
 
 ## License
