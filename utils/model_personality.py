@@ -9,6 +9,7 @@ professional.
 import os
 import json
 import random
+import re
 import structlog
 from typing import Dict, Any, Optional, List
 from datetime import datetime
@@ -166,7 +167,7 @@ class ModelPersonality:
         # Otherwise, return the default personality
         return self.model_personalities["default"]
 
-    def format_response(self, content: str, model_id: str, success: bool = True) -> str:
+    def format_response(self, content: str, model_id: str, success: bool = True, is_new_session: bool = False) -> str:
         """
         Format a response according to the model's personality
 
@@ -174,13 +175,21 @@ class ModelPersonality:
             content: Response content
             model_id: Model ID
             success: Whether the operation was successful
+            is_new_session: Whether this is a new session (default: False)
 
         Returns:
             Formatted response
         """
-        # If this is Gemini and we have a personality engine, use it
-        if model_id == "gemini" and self.personality_engine:
-            return self.personality_engine.format_response(content, success=success, model_id=model_id)
+        # First, apply identity filtering to remove any mentions of Mistral Small
+        content = self._filter_identity(content)
+
+        # If this is Gemini or Mistral-Small (main_brain) and we have a personality engine, use it
+        if (model_id == "gemini" or
+            model_id == "mistralai/mistral-small-3.1-24b-instruct:free" or
+            "mistral" in model_id.lower()) and self.personality_engine:
+            formatted_response = self.personality_engine.format_response(content, success=success, model_id=model_id, is_new_session=is_new_session)
+            # Apply identity filtering again after personality formatting
+            return self._filter_identity(formatted_response)
 
         # Otherwise, use the model-specific personality
         personality = self.get_personality(model_id)
@@ -216,7 +225,45 @@ class ModelPersonality:
             reference = random.choice(references)
             formatted += f"\n\n{reference}"
 
-        return formatted
+        # Apply identity filtering before returning
+        return self._filter_identity(formatted)
+
+    def _filter_identity(self, content: str) -> str:
+        """
+        Filter out any mentions of model names or identities that should not be used
+
+        Args:
+            content: The content to filter
+
+        Returns:
+            Filtered content
+        """
+        # List of forbidden identity terms
+        forbidden_terms = [
+            "Mistral Small", "Mistral-Small", "MistralSmall",
+            "Mistral", "General Pulse", "GeneralPulse",
+            "AI crew leader", "AI leader", "OpenRouter"
+        ]
+
+        # Replace any mentions of forbidden terms with "P.U.L.S.E."
+        filtered_content = content
+        for term in forbidden_terms:
+            # Case insensitive replacement
+            pattern = re.compile(re.escape(term), re.IGNORECASE)
+            filtered_content = pattern.sub("P.U.L.S.E.", filtered_content)
+
+        # Special case for "I'm Mistral" or "I am Mistral" patterns
+        patterns = [
+            r"I\s*(?:'m|am)\s*(?:a|an)?\s*(?:AI|assistant|model|LLM|language\s*model)?\s*(?:called|named)?\s*Mistral",
+            r"I\s*(?:'m|am)\s*(?:a|an)?\s*(?:AI|assistant|model|LLM|language\s*model)?\s*(?:called|named)?\s*General\s*Pulse",
+            r"I\s*(?:'m|am)\s*Mistral",
+            r"I\s*(?:'m|am)\s*General\s*Pulse"
+        ]
+
+        for pattern in patterns:
+            filtered_content = re.sub(pattern, "I am P.U.L.S.E.", filtered_content, flags=re.IGNORECASE)
+
+        return filtered_content
 
     def get_system_prompt(self, model_id: str) -> str:
         """
@@ -228,8 +275,10 @@ class ModelPersonality:
         Returns:
             System prompt string
         """
-        # If this is Gemini and we have a personality engine, use it
-        if model_id == "gemini" and self.personality_engine:
+        # If this is Gemini or Mistral-Small and we have a personality engine, use it
+        if (model_id == "gemini" or
+            model_id == "mistralai/mistral-small-3.1-24b-instruct:free" or
+            "mistral" in model_id.lower()) and self.personality_engine:
             return self.personality_engine.get_system_prompt()
 
         # Otherwise, use a model-specific system prompt

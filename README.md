@@ -35,19 +35,19 @@ P.U.L.S.E. (Prime Uminda's Learning System Engine) is a powerful AI assistant de
 
 P.U.L.S.E. uses a dynamic AI crew system where multiple specialized AI models work together:
 
-- **Mistral-Small**: The crew leader, orchestrating other models and maintaining a personal relationship with you
-- **DeepSeek**: Troubleshooting expert for diagnosing errors and providing DevOps fixes
-- **DeepCoder**: Code generation specialist for writing, debugging, and optimizing code
-- **Llama-Doc**: Documentation expert for creating clear, concise documentation
-- **Mistral-Small**: Trends analyst for tracking market and AI trends
-- **Llama-Content**: Content creation specialist for generating engaging content
-- **Llama-Technical**: Technical translation expert for explaining complex concepts
-- **Hermes**: Brainstorming specialist for generating creative ideas
-- **Olmo**: Ethical AI specialist for providing ethical considerations
-- **Phi**: Low-resource specialist optimized for simple queries
-- **MistralAI**: Task automation specialist for streamlining workflows
-- **Claude**: Paid fallback model for complex tasks (requires paid API access)
-- **Grok**: Paid fallback model with real-time knowledge (requires paid API access)
+- **Mistral-Small** (mistralai/mistral-small-3.1-24b-instruct:free): The crew leader, orchestrating other models and maintaining a personal relationship with you
+- **DeepCoder** (agentica-org/deepcoder-14b-preview:free): Code generation specialist for writing, debugging, and optimizing code
+- **DeepSeek** (deepseek/deepseek-r1-zero:free): Troubleshooting expert for diagnosing errors and providing DevOps fixes
+- **Llama-Doc** (meta-llama/llama-4-scout:free): Documentation expert for creating clear, concise documentation
+- **Llama-Technical** (meta-llama/llama-3.3-70b-instruct:free): Technical translation expert for explaining complex concepts
+- **Hermes** (nousresearch/deephermes-3-llama-3-8b-preview:free): Brainstorming specialist for generating creative ideas
+- **Molmo** (allenai/molmo-7b-d:free): Ethical AI specialist for providing ethical considerations
+- **Kimi** (moonshotai/moonlight-16b-a3b-instruct:free): Visual reasoning and design specialist
+- **Nemotron** (nvidia/llama-3.1-nemotron-ultra-253b-v1:free): Advanced reasoning and problem-solving specialist
+- **Gemma** (google/gemma-3-27b-it:free): Mathematical and chemical problem-solving specialist
+- **Dolphin** (cognitivecomputations/dolphin3.0-mistral-24b:free): Script optimization and automation specialist
+- **MiniLM** (local): Ultra-lightweight intent classification for minimal memory usage
+- **Phi** (microsoft/phi-2:free via Ollama): Low-resource specialist for offline operation
 
 Each model has a specific role, personality, and prompt, allowing them to maintain consistent character and collaborate effectively. The system automatically routes queries to the appropriate specialist based on the query type.
 
@@ -77,6 +77,16 @@ Each model has a specific role, personality, and prompt, allowing them to mainta
 
 ## Recently Implemented
 
+🔒 **Enhanced Identity System** - Implemented robust identity filtering to ensure P.U.L.S.E. maintains its unique identity
+🧠 **Advanced Post-Processing** - Added regex-based post-processing to filter out incorrect model identifications
+💬 **Improved Chat Persistence** - Enhanced session tracking for more natural conversations with fewer repetitive greetings
+⚠️ **Fixed LanceDB Compatibility** - Resolved compatibility issues with LanceDB 0.3.0 while maintaining vector search capabilities
+🚀 **Expanded Specialized Models** - Added more specialized models for different tasks (DeepCoder, Llama-Doc, Kimi, Nemotron, Gemma, Dolphin)
+🧠 **Self-Awareness Module** - Added a self-awareness module for system introspection and status reporting
+⚡ **Memory Optimization** - Enhanced memory optimization with aggressive cleanup and adaptive scheduling
+🔄 **GitHub-Notion Sync Optimization** - Improved GitHub-Notion sync with memory-aware scheduling
+🎭 **Enhanced Charisma Engine** - Updated charisma engine to use the self-awareness module for better personality
+🧪 **Specialized Model Testing** - Added test script for specialized models
 🚀 **Rebranding to P.U.L.S.E.** - Renamed from General Pulse to P.U.L.S.E. (Prime Uminda's Learning System Engine)
 🎨 **New CLI Header** - Updated CLI header with system vitals and version information
 💬 **New Welcome Message** - Implemented time-aware welcome message with pending tasks
@@ -164,15 +174,22 @@ Ask a specific AI crew member:
 ```
 ask mistral what's the weather today?
 ask deepcoder to write a Python function to calculate factorial
-ask mistral-small about the latest AI trends
+ask deepseek why my Docker container keeps crashing
 ```
 
 Use specialized query types:
 
 ```
 ask code how to implement a binary search tree
-ask troubleshoot why my Docker container keeps crashing
-ask write a blog post about AI ethics
+ask troubleshoot why my Python script is giving a NameError
+ask docs how to document a REST API
+ask technical how to explain OAuth to a junior developer
+ask brainstorm ideas for a personal finance app
+ask ethics considerations for facial recognition in public spaces
+ask visual how to design a user-friendly dashboard
+ask reasoning how to solve the traveling salesman problem
+ask math how to solve a quadratic equation
+ask script how to optimize a Python script for memory usage
 ```
 
 Check the system status:
@@ -308,10 +325,12 @@ Comprehensive documentation is available in the [docs](docs) directory:
 - [Error Handling](docs/ERROR_HANDLING.md) - Comprehensive error handling and monitoring
 - [Mistral Integration](docs/MISTRAL_INTEGRATION.md) - Details about the Mistral-Small integration
 - [Gemini to Mistral Migration](docs/GEMINI_TO_MISTRAL_MIGRATION.md) - Migration process from Gemini to Mistral-Small
+- [Identity System](docs/IDENTITY_SYSTEM.md) - Implementation of robust identity system for P.U.L.S.E.
 
 ### Feature Documentation
 
 - [AI Crew System](docs/AI_CREW.md) - Dynamic AI crew with specialized models
+- [Identity System](docs/IDENTITY_SYSTEM.md) - Robust identity management with post-processing filters
 - [DateTime Functionality](docs/features/datetime_functionality.md) - Date, time, and timezone features
 - [Offline Mode](docs/features/offline_mode.md) - Working offline with Ollama and DistilBERT
 - [GitHub Integration](docs/integrations/github_integration.md) - Working with GitHub repositories
