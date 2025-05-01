@@ -1034,19 +1034,38 @@ class PulseCLIUI:
         while True:
             try:
                 # Get input using prompt_toolkit if available, otherwise use standard input
-                if PROMPT_TOOLKIT_AVAILABLE:
-                    prompt_text = "[bold cyan]pulse-cli>[/bold cyan] " if RICH_AVAILABLE else "pulse-cli> "
-                    command = await self.prompt_session.prompt_async(prompt_text)
-                    command = command.strip().lower()
-                else:
-                    if RICH_AVAILABLE:
-                        self.console.print("[bold cyan]pulse-cli>[/bold cyan] ", end="")
+                try:
+                    if PROMPT_TOOLKIT_AVAILABLE:
+                        # Use prompt_toolkit for better input handling
+                        prompt_text = "[bold cyan]pulse-cli>[/bold cyan] " if RICH_AVAILABLE else "pulse-cli> "
+                        command = await self.prompt_session.prompt_async(prompt_text)
+                        command = command.strip().lower()
                     else:
-                        print("\npulse-cli> ", end="")
+                        # Use a more reliable approach for standard input
+                        if RICH_AVAILABLE:
+                            self.console.print("[bold cyan]pulse-cli>[/bold cyan] ", end="", flush=True)
+                        else:
+                            print("\npulse-cli> ", end="", flush=True)
 
-                    # Use standard input with flush to ensure prompt is displayed
-                    sys.stdout.flush()
-                    command = input().strip().lower()
+                        # Read directly from stdin to avoid buffering issues
+                        command = ""
+                        while True:
+                            char = sys.stdin.read(1)
+                            if char == '\n':
+                                break
+                            command += char
+
+                        command = command.strip().lower()
+                except EOFError:
+                    # Handle EOF (Ctrl+D)
+                    command = "exit"
+                except KeyboardInterrupt:
+                    # Handle Ctrl+C
+                    if RICH_AVAILABLE:
+                        self.console.print("\n[bold yellow]Operation cancelled.[/bold yellow]")
+                    else:
+                        print("\nOperation cancelled.")
+                    command = ""
 
                 if command == "exit":
                     break
