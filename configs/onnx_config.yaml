@@ -1,4 +1,4 @@
-# ONNX Runtime Configuration for General Pulse
+# ONNX Runtime Configuration for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 # Optimized for 4GB RAM constraints
 
 # Runtime settings
@@ -6,13 +6,13 @@ onnx_runtime:
   # Thread settings (critical for memory usage)
   intra_op_num_threads: 1
   inter_op_num_threads: 1
-  
+
   # Execution mode - sequential is more memory-efficient
   execution_mode: sequential
-  
+
   # Optimization level (1 = basic optimizations)
   optimization_level: 1
-  
+
   # Memory settings
   memory:
     # Hard cap for 4GB systems (in MB)
@@ -28,16 +28,16 @@ onnx_runtime:
 distilbert:
   # Maximum sequence length (reduced from default 512)
   max_length: 128
-  
+
   # Always truncate long inputs
   truncation: true
-  
+
   # Process one sample at a time
   batch_size: 1
-  
+
   # Use half-precision for reduced memory
   precision: fp16
-  
+
   # Disable attention mask reuse
   reuse_attention_mask: false
 
@@ -45,9 +45,9 @@ distilbert:
 system:
   # Memory threshold for fallback to regex (MB)
   memory_threshold: 300
-  
+
   # Maximum model size for 4GB system (MB)
   max_model_size: 200
-  
+
   # Force garbage collection after each inference
-  force_gc: true 
+  force_gc: true

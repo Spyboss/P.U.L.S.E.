@@ -17,6 +17,18 @@
 
 P.U.L.S.E. (Prime Uminda's Learning System Engine) is a powerful AI assistant designed to be your loyal companion, helping you with coding, freelancing, and personal growth. Inspired by J.A.R.V.I.S. (Just A Rather Very Intelligent System) from Iron Man, it combines multiple AI models, a robust memory system, and a personality that adapts to your needs and preferences, with a special focus on anime-inspired motivation and hustle-coding mindset.
 
+## Quick Reference Guide
+
+| If you want to...             | Go to...                                      |
+| ----------------------------- | --------------------------------------------- |
+| **Install P.U.L.S.E.**        | [Installation](#installation)                 |
+| **Use P.U.L.S.E.**            | [Usage](#usage)                               |
+| **Learn about features**      | [Features](#features)                         |
+| **Understand the AI crew**    | [AI Crew System](#ai-crew-system)             |
+| **Explore the documentation** | [Documentation](#documentation)               |
+| **Contribute to development** | [Development](#development)                   |
+| **See recent changes**        | [Recently Implemented](#recently-implemented) |
+
 ## Features
 
 ### Core Capabilities
@@ -257,44 +269,45 @@ github username/repo commit message file: path/to/file.py
 ```
 P.U.L.S.E./
 ├── configs/           # Configuration files
-│   └── models.py      # Model configurations
+│   ├── logging_config.yaml  # Logging configuration
+│   ├── model_api_config.yaml  # Model API configuration
+│   ├── model_roles.yaml  # Model role assignments
+│   ├── personality_traits.yaml  # Personality configuration
+│   └── command_patterns.yaml  # Command recognition patterns
 ├── context/           # Context management
 │   └── history.py     # Conversation history management
 ├── data/              # Data storage
 │   ├── vector_db/     # Vector database storage
-│   └── *.db           # SQLite database files
+│   └── sqlite/        # SQLite database files
 ├── docs/              # Documentation
-│   ├── ARCHITECTURE.md # Architecture overview
-│   ├── USAGE_GUIDE.md # User guide
-│   ├── DEVELOPER_GUIDE.md # Developer guide
-│   ├── ERROR_HANDLING.md # Error handling documentation
-│   ├── AI_CREW.md     # AI crew system documentation
-│   ├── MISTRAL_INTEGRATION.md # Mistral integration details
 │   ├── advanced/      # Advanced feature documentation
 │   ├── development/   # Development documentation
 │   ├── features/      # Feature documentation
 │   ├── integrations/  # Integration documentation
-│   └── tests/         # Test documentation
+│   ├── personality/   # Personality documentation
+│   └── tasks/         # Task management documentation
 ├── integrations/      # External integrations
+│   ├── github_api.py  # GitHub API integration
+│   ├── notion_api.py  # Notion API integration
 │   └── sync.py        # GitHub-Notion synchronization
 ├── logs/              # Log files
 │   └── *.log          # Log files
-├── memory/            # Memory storage
-│   └── tasks.db       # Task memory database
+├── models/            # Model files
+│   ├── distilbert-intent/  # DistilBERT model files
+│   └── keyword_classifier/  # Keyword classifier files
 ├── personality/       # Personality engine
 │   ├── charisma.py    # Charisma engine
-│   └── self_awareness.py # Self-awareness module
+│   └── self_awareness.py  # Self-awareness module
 ├── routing/           # Query routing
 │   └── router.py      # Neural router
 ├── scripts/           # Utility scripts
-│   ├── fix_compatibility.py # Compatibility fixes
-│   ├── fix_numpy.py   # NumPy fixes
-│   ├── fix_pytorch.py # PyTorch fixes
-│   └── test_vector_db.py # Vector database test script
+│   ├── prep_distilbert.py  # DistilBERT preparation
+│   ├── run_tests.py   # Test runner
+│   └── fix_compatibility.py  # Compatibility fixes
 ├── skills/            # Core agent skills
-│   ├── marketplace.py # Skill marketplace
-│   ├── pulse_agent.py # Main agent implementation
-│   └── model_orchestrator.py # Model management
+│   ├── marketplace.py  # Skill marketplace
+│   ├── pulse_agent.py  # Main agent implementation
+│   └── model_orchestrator.py  # Model management
 ├── tests/             # Test suite
 │   ├── integrations/  # Integration tests
 │   ├── routing/       # Routing tests
@@ -303,26 +316,28 @@ P.U.L.S.E./
 │   ├── utils/         # Utility tests
 │   └── test_*.py      # Core tests
 ├── tools/             # Integration tools
-│   ├── bug_bounty_hunter.py # Bug bounty hunter
-│   ├── github_integration.py # GitHub integration
-│   └── notion_overplanning_detector.py # Notion overplanning detector
+│   ├── bug_bounty_hunter.py  # Bug bounty hunter
+│   ├── github_integration.py  # GitHub integration
+│   └── notion_integration.py  # Notion integration
 ├── utils/             # Utility functions
-│   ├── context_manager.py # Context management
-│   ├── intent_preprocessor.py # Intent preprocessing
+│   ├── context_manager.py  # Context management
+│   ├── intent_preprocessor.py  # Intent preprocessing
+│   ├── integration_error_handler.py  # Integration error handling
+│   ├── model_error_handler.py  # Model error handling
+│   ├── error_monitoring.py  # Error monitoring
 │   ├── log.py         # Logging utilities
 │   ├── memory.py      # Memory management
-│   ├── neural_router.py # Neural routing
-│   ├── optimization.py # Hardware optimizations
-│   ├── personality_engine.py # Personality traits
-│   ├── sqlite_utils.py # SQLite utilities
-│   ├── system_utils.py # System utilities
-│   ├── unified_logger.py # Unified logging
+│   ├── neural_router.py  # Neural routing
+│   ├── optimization.py  # Hardware optimizations
+│   ├── system_utils.py  # System utilities
+│   ├── unified_logger.py  # Unified logging
 │   └── vector_db.py   # Vector database utilities
 ├── .env               # Environment variables
+├── .env.example       # Example environment variables
 ├── .gitignore         # Git ignore file
 ├── pulse.py           # Main entry point
 ├── pulse_core.py      # Core functionality
-├── cli_ui_launcher.py # CLI UI launcher
+├── cli_ui_launcher.py  # CLI UI launcher
 ├── README.md          # This file
 └── requirements.txt   # Python dependencies
 ```
@@ -362,56 +377,35 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Documentation
 
-Comprehensive documentation is available in the [docs](docs) directory:
+Comprehensive documentation is available in the [docs](docs) directory. We've organized the documentation into consolidated files for easier navigation.
 
 ### Core Documentation
 
-- [Usage Guide](docs/USAGE_GUIDE.md) - Detailed instructions on how to use P.U.L.S.E.
-- [AI Crew](docs/AI_CREW.md) - Information about the AI crew system
-- [Architecture](docs/ARCHITECTURE.md) - Overview of the system architecture
-- [Error Handling](docs/ERROR_HANDLING.md) - Comprehensive error handling and monitoring
+- [Core Documentation](docs/CORE_DOCUMENTATION.md) - System architecture, error handling, model integration, installation and configuration
+- [Features Documentation](docs/FEATURES_DOCUMENTATION.md) - Core features, advanced features, and functionality
+- [Integrations Documentation](docs/INTEGRATIONS_DOCUMENTATION.md) - GitHub, Notion, MongoDB, OpenRouter, and Ollama integrations
+- [Development Guide](docs/DEVELOPMENT_GUIDE.md) - Setup, coding standards, testing, contributing, and roadmap
+- [Identity and Personality](docs/IDENTITY_AND_PERSONALITY.md) - Identity system, personality engine, and self-awareness
+- [Model Routing System](docs/MODEL_ROUTING_SYSTEM.md) - Adaptive router, neural intent classification, and model mapping
+- [Memory and Persistence](docs/MEMORY_AND_PERSISTENCE.md) - Chat persistence, vector database, and memory management
+
+### User and Installation Guides
+
+- [Installation and Configuration Guide](docs/INSTALLATION_AND_CONFIGURATION.md) - How to install and configure P.U.L.S.E.
+- [User Guide](docs/USER_GUIDE.md) - How to use P.U.L.S.E. and its features
+
+### Development and Planning
+
+- [Roadmap and Future Plans](docs/ROADMAP_AND_FUTURE_PLANS.md) - Comprehensive roadmap and future plans
+- [Implementation Summary](docs/IMPLEMENTATION_SUMMARY.md) - Summary of implementation details
+- [P.U.L.S.E. Rebranding](docs/PULSE_REBRANDING.md) - Information about the rebranding to P.U.L.S.E.
 - [Mistral Integration](docs/MISTRAL_INTEGRATION.md) - Details about the Mistral-Small integration
-- [Gemini to Mistral Migration](docs/GEMINI_TO_MISTRAL_MIGRATION.md) - Migration process from Gemini to Mistral-Small
-- [Identity System](docs/IDENTITY_SYSTEM.md) - Implementation of robust identity system for P.U.L.S.E.
-- [Developer Guide](docs/DEVELOPER_GUIDE.md) - Guide for developers working on P.U.L.S.E.
 
-### Feature Documentation
+### Feature-Specific Documentation
 
-- [AI Crew System](docs/AI_CREW.md) - Dynamic AI crew with specialized models
-- [Identity System](docs/IDENTITY_SYSTEM.md) - Robust identity management with post-processing filters
-- [Chat Persistence](docs/chat_persistence.md) - Enhanced chat persistence implementation
-- [Vector Database](docs/vector_database.md) - Vector database for semantic search
-- [LanceDB Upgrade](docs/lancedb_upgrade.md) - Information about LanceDB integration
-- [Enhancements](docs/ENHANCEMENTS.md) - Planned and implemented enhancements
-- [Local Models](docs/LOCAL_MODELS.md) - Information about local model usage
-- [Model Mappings](docs/MODEL_MAPPINGS.md) - Model ID mappings and configurations
-- [Model Routing](docs/MODEL_ROUTING.md) - Neural routing between different models
-
-### Feature Modules
-
-- [DateTime Functionality](docs/features/datetime_functionality.md) - Date, time, and timezone features
-- [Offline Mode](docs/features/offline_mode.md) - Working offline with Ollama and DistilBERT
-- [Intent Classification](docs/features/intent_classification.md) - Intent classification system
-- [Ollama Integration](docs/features/ollama_integration.md) - Integration with Ollama for local models
-- [Optimized Model Interface](docs/features/optimized_model_interface.md) - Optimized interface for AI models
-
-### Integrations
-
-- [GitHub Integration](docs/integrations/github_integration.md) - Working with GitHub repositories
-- [Notion Integration](docs/integrations/notion_integration.md) - Working with Notion documents
-- [OpenRouter Integration](docs/integrations/openrouter_integration.md) - Multi-model AI capabilities
-
-### Advanced Features
-
-- [AI Commit Messages](docs/advanced/ai_commit_messages.md) - AI-driven commit message generation
-- [Bug Bounty Hunter](docs/advanced/bug_bounty_hunter.md) - AI-powered bug detection (in development)
-
-### Development and Testing
-
-- [Contributing](docs/development/contributing.md) - Guidelines for contributing to P.U.L.S.E.
-- [Architecture](docs/development/architecture.md) - Detailed architecture documentation
-- [Roadmap](docs/development/roadmap.md) - Development roadmap
-- [Testing](docs/tests/README.md) - Testing procedures and scripts
+- [Advanced Features](docs/advanced/) - Documentation for advanced features like AI commit messages and bug detection
+- [Feature Modules](docs/features/) - Documentation for specific features like datetime functionality and offline mode
+- [Integration Details](docs/integrations/) - Documentation for external integrations with GitHub, Notion, and more
 
 ## License
 

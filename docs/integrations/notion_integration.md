@@ -1,16 +1,18 @@
 # Notion Integration
 
-General Pulse offers powerful integration with Notion, allowing you to programmatically create and analyze documents. This document outlines the available features and how to use them.
+P.U.L.S.E. (Prime Uminda's Learning System Engine) offers powerful integration with Notion, allowing you to programmatically create and analyze documents. This document outlines the available features and how to use them.
 
 ## Features
 
 1. **Document Creation**
+
    - Create standard documents
    - Create to-do lists
    - Create journal entries
    - AI-powered content generation
 
 2. **Page Analysis**
+
    - Extract page content and metadata
    - Analyze sentiment of journal entries
    - Identify topics and themes
@@ -71,7 +73,7 @@ python daily_journal.py --url "https://www.notion.so/Your-Journal-ID"
 
 ### Agent Integration
 
-When using the General Pulse agent, you can create documents with natural language:
+When using the P.U.L.S.E. agent, you can create documents with natural language:
 
 ```
 create a to-do list called "Project Milestones"
@@ -136,8 +138,8 @@ todo_content = """
 """
 
 result = notion.create_page(
-    "Weekly Planning", 
-    todo_content, 
+    "Weekly Planning",
+    todo_content,
     template="todo"
 )
 
@@ -193,4 +195,4 @@ if "error" not in analysis:
     print(f"Word count: {analysis.get('word_count')}")
 else:
     print(f"Error: {analysis.get('error')}")
-``` 
+```

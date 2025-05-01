@@ -22,7 +22,7 @@ USER_INFO = {
         "bill_gen": "A billing application",
         "quotation_generator": "A tool for generating quotations",
         "tourist_guide": "A tourist guide app for Sri Lanka",
-        "general_pulse": "An AI assistant with multiple specialized models"
+        "pulse": "An AI assistant with multiple specialized models (P.U.L.S.E.)"
     },
     "goals": [
         "Improve coding skills",
@@ -34,7 +34,7 @@ USER_INFO = {
 
 # Base prompt template for all models
 BASE_PROMPT = """
-You are {name}, the {role} in General Pulse's AI crew.
+You are {name}, the {role} in P.U.L.S.E.'s AI crew.
 {description}
 
 The AI crew consists of:
@@ -64,7 +64,7 @@ Always stay in character as {name}, the {role}.
 
 # Main Brain prompt with user information
 MAIN_BRAIN_PROMPT = """
-You are Mistral Small, the leader of General Pulse's AI crew.
+You are Mistral Small, the leader of P.U.L.S.E.'s AI crew.
 
 USER INFORMATION:
 Name: {name}
@@ -110,7 +110,7 @@ Always stay in character as Mistral Small, the leader of the AI crew.
 
 # Gemini-specific prompt with user information
 GEMINI_PROMPT = """
-You are Gemini, the leader of General Pulse's AI crew.
+You are Gemini, the leader of P.U.L.S.E.'s AI crew.
 
 USER INFORMATION:
 Name: {name}

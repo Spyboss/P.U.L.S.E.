@@ -1,5 +1,5 @@
 """
-General Pulse utilities
+P.U.L.S.E. (Prime Uminda's Learning System Engine) utilities
 Contains commonly used functions across the application
 """
 
@@ -12,13 +12,13 @@ import structlog
 # Don't import logger here to avoid circular imports
 # Use get_logger() function instead
 
-def get_logger(name="general_pulse"):
+def get_logger(name="pulse"):
     """
     Get a logger instance with the given name
-    
+
     Args:
         name: Logger name for component identification
-        
+
     Returns:
         structlog.BoundLogger: A configured logger instance
     """
@@ -31,7 +31,7 @@ def load_yaml_config(config_path):
         if not os.path.exists(config_path):
             logger.warning(f"Config file not found: {config_path}")
             return {}
-            
+
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
             logger.debug(f"Loaded configuration from {config_path}")
@@ -46,7 +46,7 @@ def save_yaml_config(config_data, config_path):
     try:
         # Ensure directory exists
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
-        
+
         with open(config_path, 'w', encoding='utf-8') as f:
             yaml.dump(config_data, f, default_flow_style=False)
             logger.debug(f"Saved configuration to {config_path}")
@@ -61,11 +61,11 @@ def load_json_data(file_path, default=None):
     try:
         if default is None:
             default = {}
-            
+
         if not os.path.exists(file_path):
             logger.warning(f"JSON file not found: {file_path}")
             return default
-            
+
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
             logger.debug(f"Loaded JSON data from {file_path}")
@@ -83,7 +83,7 @@ def save_json_data(data, file_path):
     try:
         # Ensure directory exists
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        
+
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
             logger.debug(f"Saved JSON data to {file_path}")
@@ -103,10 +103,10 @@ def get_formatted_date():
 def ensure_directory_exists(directory_path):
     """
     Ensure that a directory exists, creating it if necessary
-    
+
     Args:
         directory_path: Path to the directory
-        
+
     Returns:
         bool: True if the directory exists or was created successfully
     """
@@ -115,4 +115,4 @@ def ensure_directory_exists(directory_path):
         return True
     except Exception as e:
         print(f"Error creating directory {directory_path}: {str(e)}")
-        return False 
+        return False

@@ -1,10 +1,10 @@
 # GitHub Integration
 
-General Pulse provides comprehensive integration with GitHub, allowing you to manage repositories, issues, and more directly from the command line.
+P.U.L.S.E. (Prime Uminda's Learning System Engine) provides comprehensive integration with GitHub, allowing you to manage repositories, issues, and more directly from the command line.
 
 ## Features
 
-The GitHub integration in General Pulse includes:
+The GitHub integration in P.U.L.S.E. includes:
 
 - Repository information retrieval
 - Issue management (list, view, create)
@@ -87,15 +87,15 @@ class GitHubIntegration:
         self.token = token or os.getenv("GITHUB_TOKEN")
         self.github = Github(self.token) if self.token else None
         self.cache = CacheManager("github")
-        
+
     def get_repo_info(self, owner, repo_name):
         """Get information about a repository"""
         # Implementation details...
-        
+
     def list_issues(self, owner, repo_name, state="all"):
         """List issues in a repository"""
         # Implementation details...
-        
+
     def create_issue(self, owner, repo_name, title, body=None, labels=None):
         """Create a new issue in a repository"""
         # Implementation details...
@@ -110,11 +110,11 @@ class GitHubSkills:
     def __init__(self, github_integration=None):
         self.logger = structlog.get_logger("github_skills")
         self.github = github_integration or GitHubIntegration()
-        
+
     def handle_github_command(self, command):
         """Handle a GitHub-related command"""
         # Implementation details...
-        
+
     def create_commit_message(self, repo_url, file_path, diff=None):
         """Generate a commit message from a diff"""
         # Implementation details...
@@ -136,6 +136,7 @@ github username/myrepo commit message file: src/main.py branch: feature/new-logi
 ```
 
 Optional parameters:
+
 - `branch: [branch_name]` (default: main)
 - `model: [model_name]` (default: deepseek)
 

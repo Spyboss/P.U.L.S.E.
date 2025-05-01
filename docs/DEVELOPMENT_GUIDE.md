@@ -1,10 +1,10 @@
-# General Pulse Developer Guide
+# P.U.L.S.E. Development Guide
 
-This guide is intended for developers who want to understand, modify, or extend General Pulse.
+This document provides comprehensive information for developers working on P.U.L.S.E. (Prime Uminda's Learning System Engine).
 
 ## Architecture Overview
 
-General Pulse follows a modular architecture with the following key components:
+P.U.L.S.E. follows a modular architecture with the following key components:
 
 1. **Pulse Agent**: The main controller that integrates all components
 2. **Model Orchestrator**: Manages multiple AI models
@@ -19,7 +19,7 @@ For a detailed architecture overview, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - Git
 - SQLite
 - (Optional) CUDA-compatible GPU for accelerated inference
@@ -28,21 +28,21 @@ For a detailed architecture overview, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 1. Clone the repository:
 
-   ```
-   git clone https://github.com/yourusername/general-pulse.git
-   cd general-pulse
+   ```bash
+   git clone https://github.com/yourusername/pulse.git
+   cd pulse
    ```
 
 2. Create a virtual environment:
 
-   ```
+   ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. Install dependencies:
 
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
@@ -50,38 +50,187 @@ For a detailed architecture overview, see [ARCHITECTURE.md](ARCHITECTURE.md).
    Create a `.env` file with the following variables:
 
    ```
-   GEMINI_API_KEY=your_gemini_api_key
    OPENROUTER_API_KEY=your_openrouter_api_key
+   GITHUB_TOKEN=your_github_token
+   NOTION_API_KEY=your_notion_api_key
+   MONGODB_URI=your_mongodb_connection_string
    ```
 
 5. Run tests to verify setup:
-   ```
+   ```bash
    python -m unittest discover tests
    ```
 
-## Code Structure
+## Project Structure
 
 ```
-general-pulse/
-├── configs/                 # Configuration files
-│   ├── models.yaml          # Model configurations
-│   └── hardware.yaml        # Hardware optimizations
-├── docs/                    # Documentation
-├── logs/                    # Log files
-├── skills/                  # Core skills
-│   ├── pulse_agent.py       # Main agent class
+P.U.L.S.E./
+├── configs/           # Configuration files
+│   └── models.py      # Model configurations
+├── context/           # Context management
+│   └── history.py     # Conversation history management
+├── data/              # Data storage
+│   ├── vector_db/     # Vector database storage
+│   └── *.db           # SQLite database files
+├── docs/              # Documentation
+│   ├── advanced/      # Advanced feature documentation
+│   ├── development/   # Development documentation
+│   ├── features/      # Feature documentation
+│   ├── integrations/  # Integration documentation
+├── integrations/      # External integrations
+│   └── sync.py        # GitHub-Notion synchronization
+├── logs/              # Log files
+│   └── *.log          # Log files
+├── memory/            # Memory storage
+│   └── tasks.db       # Task memory database
+├── personality/       # Personality engine
+│   ├── charisma.py    # Charisma engine
+│   └── self_awareness.py # Self-awareness module
+├── routing/           # Query routing
+│   └── router.py      # Neural router
+├── scripts/           # Utility scripts
+├── skills/            # Core agent skills
+│   ├── marketplace.py # Skill marketplace
+│   ├── pulse_agent.py # Main agent implementation
 │   └── model_orchestrator.py # Model management
-├── tests/                   # Unit tests
-├── utils/                   # Utility modules
-│   ├── context_manager.py   # Context management
-│   ├── memory_manager.py    # Memory storage
+├── tests/             # Test suite
+│   ├── integrations/  # Integration tests
+│   ├── routing/       # Routing tests
+│   ├── skills/        # Skills tests
+│   ├── tools/         # Tools tests
+│   ├── utils/         # Utility tests
+│   └── test_*.py      # Core tests
+├── tools/             # Integration tools
+│   ├── bug_bounty_hunter.py # Bug bounty hunter
+│   ├── github_integration.py # GitHub integration
+│   └── notion_overplanning_detector.py # Notion overplanning detector
+├── utils/             # Utility functions
+│   ├── context_manager.py # Context management
+│   ├── intent_preprocessor.py # Intent preprocessing
+│   ├── log.py         # Logging utilities
+│   ├── memory.py      # Memory management
+│   ├── neural_router.py # Neural routing
+│   ├── optimization.py # Hardware optimizations
 │   ├── personality_engine.py # Personality traits
-│   ├── optimization.py      # Hardware optimizations
-│   └── intent_handler.py    # Intent recognition
-├── .env                     # Environment variables
-├── pulse.py                 # Main entry point
-└── requirements.txt         # Dependencies
+│   ├── sqlite_utils.py # SQLite utilities
+│   ├── system_utils.py # System utilities
+│   ├── unified_logger.py # Unified logging
+│   └── vector_db.py   # Vector database utilities
+├── pulse.py           # Main entry point
+├── pulse_core.py      # Core functionality
+└── cli_ui_launcher.py # CLI UI launcher
 ```
+
+## Coding Standards
+
+### Python Style Guide
+
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide
+- Use 4 spaces for indentation (no tabs)
+- Maximum line length of 100 characters
+- Use docstrings for all public functions, classes, and methods
+
+### Documentation
+
+- Update documentation for any changes to functionality
+- Use Markdown for documentation files
+- Keep documentation clear, concise, and up-to-date
+
+### Testing
+
+- Write unit tests for all new functionality
+- Ensure all tests pass before submitting a pull request
+- Aim for high test coverage
+
+## Testing
+
+### Running Tests
+
+Run all tests:
+
+```bash
+python -m unittest discover tests
+```
+
+Run a specific test:
+
+```bash
+python -m unittest tests.test_pulse_agent
+```
+
+### Writing Tests
+
+1. Create a new test file in the `tests/` directory
+2. Import the module to test
+3. Create a test class that inherits from `unittest.TestCase`
+4. Write test methods that start with `test_`
+5. Use assertions to verify behavior
+
+Example:
+
+```python
+import unittest
+from utils.context_manager import PulseContext
+
+class TestContextManager(unittest.TestCase):
+    def setUp(self):
+        # Set up test environment
+        self.context = PulseContext()
+
+    def test_add_message(self):
+        # Test adding a message to the context
+        self.context.add_message("user", "Hello")
+        self.context.add_message("assistant", "Hi there")
+
+        messages = self.context.get_messages()
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0]["role"], "user")
+        self.assertEqual(messages[0]["content"], "Hello")
+
+    def tearDown(self):
+        # Clean up after tests
+        pass
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+## Contributing
+
+### Contribution Process
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add or update tests
+5. Update documentation
+6. Submit a pull request
+
+### Pull Request Process
+
+1. Ensure your code passes all tests
+2. Update documentation if necessary
+3. Add your changes to the CHANGELOG.md file
+4. Submit the pull request
+5. Address any feedback from reviewers
+
+## Development Roadmap
+
+### Current Focus
+
+- Improving model routing and delegation
+- Enhancing chat persistence
+- Fixing LanceDB integration issues
+- Improving error handling
+- Enhancing GitHub-Notion sync
+
+### Future Plans
+
+- Skill marketplace implementation
+- Advanced analytics dashboard
+- Enhanced offline capabilities
+- Multi-user support
+- Mobile companion app
 
 ## Key Concepts
 
@@ -212,46 +361,6 @@ def format_response(self, content, context="general", success=True):
         content = f"[New trait effect] {content}"
 ```
 
-## Testing
-
-### Running Tests
-
-Run all tests:
-
-```
-python -m unittest discover tests
-```
-
-Run a specific test:
-
-```
-python -m unittest tests.test_pulse_agent
-```
-
-### Writing Tests
-
-1. Create a new test file in the `tests/` directory
-2. Import the module to test
-3. Create a test class that inherits from `unittest.TestCase`
-4. Write test methods that start with `test_`
-5. Use assertions to verify behavior
-
-Example:
-
-```python
-import unittest
-from utils.context_manager import PulseContext
-
-class TestPulseContext(unittest.TestCase):
-    def setUp(self):
-        self.context = PulseContext(max_length=5, user_id="test_user")
-
-    def test_update(self):
-        self.context.update("Hello", "Hi there!")
-        self.assertEqual(len(self.context.history), 2)
-        self.assertEqual(self.context.history[0]["content"], "Hello")
-```
-
 ## Performance Optimization
 
 ### Memory Optimization
@@ -333,20 +442,13 @@ except Exception as e:
 9. **Stay Within Free Tiers**: Avoid accidental usage of paid API features
 10. **Keep It Simple**: Prefer simple solutions over complex ones
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add or update tests
-5. Update documentation
-6. Submit a pull request
-
 ## Resources
 
 - [Python Documentation](https://docs.python.org/3/)
 - [SQLite Documentation](https://www.sqlite.org/docs.html)
-- [Google Generative AI Documentation](https://ai.google.dev/docs)
 - [OpenRouter Documentation](https://openrouter.ai/docs)
 - [PyTorch Documentation](https://pytorch.org/docs/stable/index.html)
 - [Transformers Documentation](https://huggingface.co/docs/transformers/index)
+- [MongoDB Documentation](https://docs.mongodb.com/)
+- [Notion API Documentation](https://developers.notion.com/)
+- [GitHub API Documentation](https://docs.github.com/en/rest)

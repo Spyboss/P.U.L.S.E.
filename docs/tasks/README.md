@@ -1,6 +1,6 @@
 # Tasks Directory
 
-This directory contains task tracking files for the General Pulse project.
+This directory contains task tracking files for the P.U.L.S.E. (Prime Uminda's Learning System Engine) project.
 
 ## Contents
 
@@ -15,14 +15,17 @@ Example:
 
 ```markdown
 ## Completed Tasks
+
 - [x] Implement basic GitHub integration
 - [x] Add timezone conversion functionality
 
 ## In-Progress Tasks
+
 - [ ] Fix timezone conversion bug
 - [ ] Implement better error handling for GitHub integration
 
 ## Pending Tasks
+
 - [ ] Add support for multiple user profiles
 - [ ] Implement voice input/output capabilities
 ```

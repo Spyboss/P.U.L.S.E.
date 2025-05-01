@@ -1,10 +1,10 @@
-# P.U.L.S.E. Identity System
+# P.U.L.S.E. Identity and Personality System
 
-This document describes the implementation of P.U.L.S.E.'s identity system, which ensures that the assistant maintains its unique identity as P.U.L.S.E. (Prime Uminda's Learning System Engine) rather than identifying as the underlying model (Mistral Small) or its previous name (General Pulse).
+This document provides comprehensive information about P.U.L.S.E.'s identity system and personality engine.
 
-## Overview
+## Identity System Overview
 
-P.U.L.S.E. uses a multi-layered approach to maintain its identity:
+P.U.L.S.E. uses a multi-layered approach to maintain its unique identity as P.U.L.S.E. (Prime Uminda's Learning System Engine) rather than identifying as the underlying model (Mistral Small) or its previous name (General Pulse):
 
 1. **System Prompt Engineering**: Explicit instructions in the system prompt
 2. **Post-Processing Filters**: Regex-based filtering to catch and replace incorrect identifications
@@ -114,17 +114,41 @@ if hasattr(self, 'model_personality') and self.model_personality:
     )
 ```
 
+## Personality System
+
+P.U.L.S.E. has a unique personality inspired by J.A.R.V.I.S. with anime and Sri Lankan cultural references:
+
+### Charisma Engine
+
+The Charisma Engine provides P.U.L.S.E. with an engaging personality:
+
+1. **Anime-Inspired Elements**: Incorporates subtle anime references and expressions
+2. **Sri Lankan Cultural References**: Includes elements of Sri Lankan culture and expressions
+3. **Helpful but Slightly Sarcastic**: Maintains a helpful tone with occasional light sarcasm
+4. **Adaptive Tone**: Adjusts tone based on context and user interaction
+
+### Self-Awareness Module
+
+The Self-Awareness Module allows P.U.L.S.E. to understand and report on its own status:
+
+1. **System Monitoring**: Tracks system resources and performance
+2. **Status Reporting**: Provides detailed status reports when requested
+3. **Capability Awareness**: Understands and communicates its capabilities and limitations
+4. **Error Recognition**: Recognizes when it makes mistakes and attempts to correct them
+
 ## Implementation Details
 
-The identity system is implemented across several files:
+The identity and personality system is implemented across several files:
 
 1. **utils/prompts.py**: Contains the system prompt with identity instructions
-2. **utils/model_personality.py**: Implements the identity filtering and session awareness
-3. **skills/model_orchestrator.py**: Passes session information to the personality engine
+2. **utils/model_personality.py**: Implements the identity filtering and personality formatting
+3. **personality/charisma.py**: Implements the charisma engine
+4. **personality/self_awareness.py**: Implements the self-awareness module
+5. **skills/model_orchestrator.py**: Passes session information to the personality engine
 
 ## Testing
 
-To test the identity system:
+To test the identity and personality system:
 
 1. **Identity Test**:
    - Run `pulse-cli> who are you?` and verify that P.U.L.S.E. identifies itself correctly without mentioning "Mistral Small" or "General Pulse"
@@ -132,6 +156,10 @@ To test the identity system:
 2. **Session Test**:
    - Run multiple queries in succession and verify that only the first response includes a greeting
    - Wait 5+ minutes, then run another query and verify that it includes a greeting (new session)
+
+3. **Personality Test**:
+   - Run queries that would typically elicit personality traits (e.g., jokes, creative tasks)
+   - Verify that responses include appropriate personality elements
 
 ## Future Improvements
 
@@ -146,3 +174,7 @@ To test the identity system:
 3. **Personality Customization**:
    - Add more anime and Sri Lankan cultural references to the personality
    - Allow users to customize the personality traits
+
+4. **Emotion Detection**:
+   - Implement emotion detection to better respond to user emotional states
+   - Adjust personality based on detected user emotions

@@ -1,11 +1,11 @@
-# General Pulse Agent Configuration
+# P.U.L.S.E. Agent Configuration
 
 agent:
-  name: "General Pulse"
+  name: "P.U.L.S.E."
   version: "0.1.0"
   description: "AI Personal Workflow Ops Assistant"
-  brain_model: "gemini"  # The model used for intent recognition and core agent functionality
-  fallback_brain: "claude"  # Fallback model if primary brain fails
+  brain_model: "gemini" # The model used for intent recognition and core agent functionality
+  fallback_brain: "claude" # Fallback model if primary brain fails
 
 # AI Model Integration settings
 models:
@@ -14,21 +14,21 @@ models:
     api_key_env: "CLAUDE_API_KEY"
     endpoint: "https://api.anthropic.com/v1"
     role: "content_generation"
-  
+
   grok:
     enabled: true
     api_key_env: "GROK_API_KEY"
-    endpoint: "https://api.xai.com/v1"  # xAI-specific endpoint
+    endpoint: "https://api.xai.com/v1" # xAI-specific endpoint
     role: "analysis"
     model_name: "grok-1.5"
-  
+
   deepseek:
     enabled: true
     api_key_env: "DEEPSEEK_API_KEY"
-    endpoint: "https://api.deepseek.com"  # Updated DeepSeek endpoint
+    endpoint: "https://api.deepseek.com" # Updated DeepSeek endpoint
     role: "code_generation"
-    model_name: "deepseek-chat"  # DeepSeek-V3 model
-  
+    model_name: "deepseek-chat" # DeepSeek-V3 model
+
   gemini:
     enabled: true
     api_key_env: "GEMINI_API_KEY"
@@ -41,7 +41,7 @@ integrations:
   github:
     enabled: true
     token_env: "GITHUB_TOKEN"
-  
+
   notion:
     enabled: true
     token_env: "NOTION_API_KEY"
@@ -52,9 +52,10 @@ tools:
   bug_bounty_hunter:
     enabled: true
     analysis_model: "deepseek"
-    comment_model: "claude" 
-    supported_extensions: [".py", ".js", ".ts", ".java", ".c", ".cpp", ".cs", ".go", ".rb"]
-  
+    comment_model: "claude"
+    supported_extensions:
+      [".py", ".js", ".ts", ".java", ".c", ".cpp", ".cs", ".go", ".rb"]
+
   overplanning_detector:
     enabled: true
     roast_model: "claude"
@@ -69,10 +70,10 @@ paths:
   memory_dir: "memory"
   skills_dir: "skills"
   tools_dir: "tools"
-  
+
 # Logging configuration
 logging:
   level: "INFO"
-  file: "general_pulse.log"
+  file: "pulse.log"
   max_size_mb: 10
-  backup_count: 3 
+  backup_count: 3

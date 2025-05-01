@@ -1,6 +1,6 @@
 # Data Directory
 
-This directory contains data files used by the General Pulse application.
+This directory contains data files used by the P.U.L.S.E. (Prime Uminda's Learning System Engine) application.
 
 ## Contents
 

@@ -1,5 +1,5 @@
 """
-Pulse Agent - Main agent class for General Pulse
+Pulse Agent - Main agent class for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 Integrates all components and manages the overall system
 """
 
@@ -30,7 +30,7 @@ logger = structlog.get_logger("pulse_agent")
 
 class PulseAgent:
     """
-    Main agent class for General Pulse
+    Main agent class for P.U.L.S.E. (Prime Uminda's Learning System Engine)
     Integrates all components and manages the overall system
     """
 
@@ -49,7 +49,7 @@ class PulseAgent:
         self.user_id = user_id
         self.logger = logger
         self.simulate_responses = simulate_responses
-        self.version = "1.4.1"  # Current version of General Pulse
+        self.version = "1.4.1"  # Current version of P.U.L.S.E.
 
         # Initialize components
         self.logger.info("Initializing Pulse Agent components")

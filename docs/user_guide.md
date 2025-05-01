@@ -1,20 +1,20 @@
 # User Guide
 
-This guide will help you get the most out of General Pulse, your AI Personal Workflow Ops Assistant.
+This guide will help you get the most out of P.U.L.S.E. (Prime Uminda's Learning System Engine), your AI Personal Workflow Ops Assistant.
 
 ## Getting Started
 
-After [installing General Pulse](installation.md), you can start it by running:
+After [installing P.U.L.S.E.](installation.md), you can start it by running:
 
 ```bash
 python main.py
 ```
 
-You'll see the General Pulse banner and a prompt where you can enter commands.
+You'll see the P.U.L.S.E. banner and a prompt where you can enter commands.
 
 ## Basic Commands
 
-General Pulse understands a variety of natural language commands. Here are some examples:
+P.U.L.S.E. understands a variety of natural language commands. Here are some examples:
 
 ### General Queries
 
@@ -62,7 +62,7 @@ create a to-do list in notion called "Project Tasks"
 
 ### Time and Date Commands
 
-General Pulse can provide current time, date, and timezone conversions:
+P.U.L.S.E. can provide current time, date, and timezone conversions:
 
 - `what time is it?` - Shows the current local time
 - `what's the date today?` - Shows the current date
@@ -109,15 +109,29 @@ use deepseek to analyze this code: [code]
 use gemini to generate ideas for [topic]
 ```
 
-### Personality Traits
+### Personality Customization
 
-General Pulse has a personality engine that adapts to your preferences:
+P.U.L.S.E. has a customizable personality that adapts to your preferences:
 
-```
-be more concise in your responses
-be more detailed in your explanations
-be more professional/casual/humorous
-```
+- `show personality`: Show current personality traits
+- `adjust [trait] to [value]`: Adjust a personality trait (0.0 to 1.0)
+  ```
+  adjust informative to 0.8
+  adjust casual to 0.6
+  adjust humor to 0.9
+  ```
+
+Available traits:
+
+- `informative`: How detailed and informative responses are
+- `courageous`: Willingness to tackle difficult topics
+- `positive`: Level of positivity in responses
+- `casual`: How casual vs. formal the tone is
+- `strict`: How strict or lenient the responses are
+- `personal`: How personal vs. impersonal the responses are
+- `honest`: Level of directness and honesty
+- `humor`: Amount of humor in responses
+- `anime_references`: Frequency of anime references
 
 ### Workflow Automation
 
@@ -129,7 +143,7 @@ create a github issue for username/repo titled "Bug Fix" and then add a task to 
 
 ## Tips and Tricks
 
-1. **Use natural language** - General Pulse understands conversational commands
+1. **Use natural language** - P.U.L.S.E. understands conversational commands
 2. **Be specific with locations** - For timezone queries, use specific city names
 3. **Provide context** - When working with GitHub or Notion, provide specific repository or page information
 4. **Check the logs** - If something isn't working, check the logs for more information
@@ -144,7 +158,7 @@ create a github issue for username/repo titled "Bug Fix" and then add a task to 
 
 ### Debug Mode
 
-Run General Pulse in debug mode to see more detailed logs:
+Run P.U.L.S.E. in debug mode to see more detailed logs:
 
 ```bash
 python main.py --debug
@@ -158,6 +172,54 @@ If you want to test without making API calls:
 python main.py --simulate
 ```
 
+## Offline Mode
+
+P.U.L.S.E. can operate offline using local models:
+
+```
+enable offline mode
+```
+
+In offline mode, all queries are routed through Ollama using the Phi model. This allows P.U.L.S.E. to function without an internet connection, using local models for all tasks.
+
+## System Status
+
+Check the system status with:
+
+```
+status
+```
+
+This shows:
+
+- Hardware information (memory, disk, CPU)
+- AI model usage statistics
+- AI crew availability
+- Specialized query types
+- Session information
+
+## Memory Commands
+
+- `search memory [query]`: Search memory for a query
+  ```
+  search memory python
+  ```
+- `search memory`: Show recent memories
+- `save to memory [text]`: Save a memory
+  ```
+  save to memory I prefer dark mode in my code editor
+  ```
+- `save to memory [category]: [data]`: Save categorized data to memory
+  ```
+  save to memory projects: Tourist Guide App
+  save to memory interests: Machine Learning
+  ```
+- `recall [category]`: Recall data from memory
+  ```
+  recall projects
+  recall interests
+  ```
+
 ## Next Steps
 
-Check out the [Configuration Guide](configuration.md) to learn how to customize General Pulse to your needs.
+Check out the [Core Documentation](CORE_DOCUMENTATION.md) to learn more about P.U.L.S.E.'s architecture and capabilities.

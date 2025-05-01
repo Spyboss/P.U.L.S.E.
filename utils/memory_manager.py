@@ -16,7 +16,7 @@ logger = structlog.get_logger("memory_manager")
 
 class PulseMemory:
     """
-    Manages long-term memory storage for General Pulse
+    Manages long-term memory storage for P.U.L.S.E. (Prime Uminda's Learning System Engine)
     Uses SQLite for persistent storage
     """
 

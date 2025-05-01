@@ -5,6 +5,7 @@
 The AI-Driven Commit Messages feature leverages language models to generate descriptive, informative, and slightly snarky commit messages based on code changes. This feature helps developers maintain a clean and informative git history without the mental overhead of writing descriptive commit messages.
 
 ## Implementation Status
+
 ✅ **IMPLEMENTED** - June 2025
 
 ## How It Works
@@ -18,17 +19,19 @@ The AI-Driven Commit Messages feature leverages language models to generate desc
 
 ### Through the Agent Interface
 
-You can use the General Pulse agent to generate commit messages:
+You can use the P.U.L.S.E. agent to generate commit messages:
 
 ```
 github [owner]/[repo] commit message file: [file_path]
 ```
 
 Optional parameters:
+
 - `branch: [branch_name]` (default: main)
 - `model: [model_name]` (default: deepseek)
 
 Example:
+
 ```
 github username/myrepo commit message file: src/main.py branch: feature/new-login
 ```
@@ -42,6 +45,7 @@ python test_ai_commit.py --owner [username] --repo [repo_name] --file [file_path
 ```
 
 For testing with a sample diff:
+
 ```bash
 python test_ai_commit.py --sample
 ```
@@ -54,9 +58,9 @@ python test_ai_commit.py --sample
 --- a/README.md
 +++ b/README.md
 @@ -4,7 +4,9 @@
- 
+
  ## Features
- 
+
 -* Task tracking and management
 +* Comprehensive task tracking and management
 +* AI-driven commit message generation
@@ -83,15 +87,18 @@ Updated README.md to flex our fancy new AI-driven features. Because who writes c
 
 ### Components
 
-1. **GitHubSkills Class**: 
+1. **GitHubSkills Class**:
+
    - `create_commit_message()`: Generates a commit message from a diff
    - `extract_repo_info_from_url()`: Parses GitHub URLs to extract owner and repo
 
 2. **GitHubIntegration Class**:
+
    - `get_repo_info()`: Retrieves repository information
    - `list_issues()`: Lists issues in a repository
 
 3. **ModelInterface Class**:
+
    - Uses OpenRouter to route requests to DeepSeek or other AI models
    - Handles API communication and error fallbacks
 
@@ -102,6 +109,7 @@ Updated README.md to flex our fancy new AI-driven features. Because who writes c
 ### AI Prompt Design
 
 The AI is instructed to generate commit messages that:
+
 1. Clearly describe what changed
 2. Are concise (1-2 lines, max 72 chars per line)
 3. Include a bit of personality/humor
@@ -110,6 +118,7 @@ The AI is instructed to generate commit messages that:
 ### Model Selection
 
 After testing multiple models, DeepSeek was selected as the default model for code-related tasks due to its:
+
 - Strong understanding of code contexts
 - Ability to generate concise yet descriptive messages
 - Appropriate level of humor in responses
@@ -134,11 +143,12 @@ After testing multiple models, DeepSeek was selected as the default model for co
 Based on recent research, there's potential to integrate this feature with the Cursor CLI:
 
 1. **Automated PR Review System**:
+
    - Extend the commit message generation to full PR reviews
    - Use Cursor CLI's `analyze` command to scan PR diffs
    - Generate both technical feedback and style suggestions
-   
+
 2. **In-Editor Commit Message Generation**:
    - Integrate directly with the Cursor IDE
    - Provide commit message suggestions as you stage changes
-   - Allow one-click acceptance of generated messages 
+   - Allow one-click acceptance of generated messages

@@ -1,5 +1,5 @@
 """
-Fix PyTorch and Transformers compatibility issues for General Pulse
+Fix PyTorch and Transformers compatibility issues for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 """
 
 import os
@@ -43,8 +43,8 @@ def install_pytorch():
     try:
         # Install PyTorch CPU version
         subprocess.run([
-            sys.executable, "-m", "pip", "install", 
-            "torch", "torchvision", "torchaudio", 
+            sys.executable, "-m", "pip", "install",
+            "torch", "torchvision", "torchaudio",
             "--index-url", "https://download.pytorch.org/whl/cpu"
         ], check=True)
         print("Successfully installed PyTorch (CPU version)")
@@ -68,7 +68,7 @@ def install_accelerate():
 def test_imports():
     """Test importing PyTorch and Transformers"""
     print("\nTesting imports...")
-    
+
     try:
         import torch
         print(f"PyTorch version: {torch.__version__}")
@@ -76,21 +76,21 @@ def test_imports():
     except ImportError as e:
         print(f"Failed to import PyTorch: {e}")
         return False
-    
+
     try:
         import transformers
         print(f"Transformers version: {transformers.__version__}")
     except ImportError as e:
         print(f"Failed to import Transformers: {e}")
         return False
-    
+
     try:
         import sentence_transformers
         print(f"Sentence-Transformers version: {sentence_transformers.__version__}")
     except ImportError as e:
         print(f"Failed to import Sentence-Transformers: {e}")
         return False
-    
+
     return True
 
 def test_minilm():
@@ -98,16 +98,16 @@ def test_minilm():
     print("\nTesting MiniLM model...")
     try:
         from sentence_transformers import SentenceTransformer
-        
+
         print("Loading MiniLM model...")
         model = SentenceTransformer('all-MiniLM-L6-v2')
         print("MiniLM model loaded successfully!")
-        
+
         # Test encoding a sentence
         sentences = ["This is a test sentence."]
         embeddings = model.encode(sentences)
         print(f"Encoded sentence shape: {embeddings.shape}")
-        
+
         return True
     except Exception as e:
         print(f"Failed to load MiniLM model: {e}")
@@ -116,43 +116,43 @@ def test_minilm():
 def main():
     """Main function"""
     print("=" * 60)
-    print("General Pulse - PyTorch and Transformers Compatibility Fixer")
+    print("P.U.L.S.E. - PyTorch and Transformers Compatibility Fixer")
     print("=" * 60)
-    
+
     # Check Python version
     if not check_python_version():
         print("WARNING: Continuing with unsupported Python version")
-    
+
     # Check pip
     if not check_pip():
         print("ERROR: pip is required to install packages")
         return False
-    
+
     # Install packages
     success = True
     success = success and install_pytorch()
     success = success and install_transformers()
     success = success and install_sentence_transformers()
     success = success and install_accelerate()
-    
+
     if not success:
         print("\nERROR: Failed to install some packages")
         return False
-    
+
     # Test imports
     if not test_imports():
         print("\nERROR: Failed to import some packages")
         return False
-    
+
     # Test MiniLM model
     if not test_minilm():
         print("\nERROR: Failed to load MiniLM model")
         return False
-    
+
     print("\n" + "=" * 60)
-    print("SUCCESS: PyTorch and Transformers are now compatible with General Pulse!")
+    print("SUCCESS: PyTorch and Transformers are now compatible with P.U.L.S.E.!")
     print("=" * 60)
-    
+
     return True
 
 if __name__ == "__main__":

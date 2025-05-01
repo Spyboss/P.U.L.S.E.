@@ -1,5 +1,5 @@
 """
-Model configuration for General Pulse.
+Model configuration for P.U.L.S.E. (Prime Uminda's Learning System Engine).
 
 This file defines the models used by the system and their roles.
 All models must be free-tier, with roles locked in across configurations.
@@ -89,7 +89,7 @@ MODEL_ROLES = {
     },
 
     "main_brain": {
-        "name": "Mistral Small",
+        "name": "P.U.L.S.E.",
         "role": "Default Chat",
         "description": "Primary reasoning and general-purpose model with 24B parameters",
         "strengths": ["complex reasoning", "coding", "long context", "function calling"],

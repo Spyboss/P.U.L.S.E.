@@ -1,5 +1,5 @@
 """
-Fix NumPy compatibility issues for General Pulse
+Fix NumPy compatibility issues for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 """
 
 import subprocess
@@ -8,9 +8,9 @@ import sys
 def main():
     """Downgrade NumPy to a compatible version"""
     print("=" * 60)
-    print("General Pulse - NumPy Compatibility Fixer")
+    print("P.U.L.S.E. - NumPy Compatibility Fixer")
     print("=" * 60)
-    
+
     print("Downgrading NumPy to a compatible version (1.24.3)...")
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "numpy==1.24.3", "--force-reinstall"], check=True)

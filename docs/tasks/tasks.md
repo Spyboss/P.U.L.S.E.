@@ -1,4 +1,4 @@
-# 🧠 GENERAL PULSE - Tasks Tracker
+# 🧠PULSE - Tasks Tracker
 
 ## Project Status
 Last updated: April 14, 2025

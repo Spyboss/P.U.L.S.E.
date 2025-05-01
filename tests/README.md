@@ -12,13 +12,24 @@ This directory contains test files for the P.U.L.S.E. (Prime Uminda's Learning S
 
 ## Core Test Files
 
+- `test_agent.py` - Tests for the P.U.L.S.E. agent
 - `test_ask_code.py` - Tests for the "ask code" command
+- `test_cli_ui.py` - Tests for the CLI UI
 - `test_imports.py` - Tests for import compatibility
+- `test_intent.py` - Tests for intent classification
+- `test_intent_handler.py` - Tests for the intent handler
+- `test_intent_handler_specific.py` - Tests for specific intent handling
 - `test_local_models.py` - Tests for local model loading
+- `test_main_brain.py` - Tests for the Mistral-Small integration
+- `test_minilm.py` - Tests for the MiniLM classifier
+- `test_minilm_intent.py` - Tests for MiniLM intent classification
+- `test_minilm_specific.py` - Tests for specific MiniLM classification
 - `test_model_mappings.py` - Tests for model ID mappings
 - `test_model_routing.py` - Tests for model routing with rich context data
 - `test_models.py` - Tests for model configuration and orchestrator
+- `test_pulse_agent.py` - Tests for the P.U.L.S.E. agent implementation
 - `test_pulse_core.py` - Tests for the P.U.L.S.E. core functionality
+- `test_pulse_debug.py` - Tests for P.U.L.S.E. debugging functionality
 - `test_pulse_timeout.py` - Tests for timeout handling
 - `test_shutdown.py` - Tests for shutdown process
 - `test_simple_shutdown.py` - Tests for simplified shutdown

@@ -1,17 +1,17 @@
-# Model configuration for General Pulse
+# Model configuration for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 # This file defines the models used by the system and their roles
 
 free_models:
-  default_chat: "gemini-2.0-flash-thinking-exp-01-21"  # Direct API, not OpenRouter
-  code_generation: "agentica-org/deepcoder-14b-preview:free"  # Code debugging, optimization
-  documentation: "meta-llama/llama-4-scout:free"  # Writing clear docs
-  troubleshooting: "deepseek/deepseek-r1-zero:free"  # Bug fixes, error handling
-  trend_real_time_updates: "mistralai/mistral-small-24b-instruct-2501:free"  # Market, AI trends
-  content_creation: "meta-llama/llama-3.2-11b-vision-instruct:free"  # Blogs, customer service
-  technical_translation: "meta-llama/llama-3.3-70b-instruct:free"  # Industry jargon docs
-  brainstorming: "nousresearch/nous-hermes-2-mixtral-8x7b-sft:free"  # Startup ideas
-  ethical_ai: "allenai/olmo-7b:free"  # Bias detection
-  low_resource: "microsoft/phi-2:free"  # Backup for older hardware
+  default_chat: "gemini-2.0-flash-thinking-exp-01-21" # Direct API, not OpenRouter
+  code_generation: "agentica-org/deepcoder-14b-preview:free" # Code debugging, optimization
+  documentation: "meta-llama/llama-4-scout:free" # Writing clear docs
+  troubleshooting: "deepseek/deepseek-r1-zero:free" # Bug fixes, error handling
+  trend_real_time_updates: "mistralai/mistral-small-24b-instruct-2501:free" # Market, AI trends
+  content_creation: "meta-llama/llama-3.2-11b-vision-instruct:free" # Blogs, customer service
+  technical_translation: "meta-llama/llama-3.3-70b-instruct:free" # Industry jargon docs
+  brainstorming: "nousresearch/nous-hermes-2-mixtral-8x7b-sft:free" # Startup ideas
+  ethical_ai: "allenai/olmo-7b:free" # Bias detection
+  low_resource: "microsoft/phi-2:free" # Backup for older hardware
 
 # These models should NEVER be used unless explicitly requested and confirmed
 paid_fallbacks:
@@ -24,48 +24,51 @@ model_roles:
     description: "Primary reasoning and general-purpose model"
     strengths: ["complex reasoning", "coding", "multimodal tasks"]
     use_cases: ["default chat", "complex problem-solving", "general queries"]
-    
+
   code:
     description: "Specialized code generation and debugging"
     strengths: ["code optimization", "bug fixing", "algorithm design"]
     use_cases: ["write functions", "debug code", "optimize algorithms"]
-    
+
   docs:
     description: "Documentation and explanation specialist"
     strengths: ["clear explanations", "documentation", "summarization"]
-    use_cases: ["write documentation", "explain concepts", "summarize information"]
-    
+    use_cases:
+      ["write documentation", "explain concepts", "summarize information"]
+
   troubleshoot:
     description: "Problem-solving and troubleshooting specialist"
     strengths: ["error analysis", "debugging", "solution finding"]
     use_cases: ["fix errors", "troubleshoot issues", "solve problems"]
-    
+
   trends:
     description: "Real-time updates and trend analysis"
     strengths: ["trend identification", "market analysis", "current events"]
     use_cases: ["analyze trends", "market updates", "current information"]
-    
+
   content:
     description: "Content creation and creative writing"
     strengths: ["creative writing", "content generation", "storytelling"]
     use_cases: ["write blog posts", "create content", "generate creative text"]
-    
+
   technical:
     description: "Technical translation and complex explanations"
     strengths: ["technical accuracy", "complex explanations", "industry jargon"]
-    use_cases: ["explain technical concepts", "translate jargon", "detailed analysis"]
-    
+    use_cases:
+      ["explain technical concepts", "translate jargon", "detailed analysis"]
+
   brainstorm:
     description: "Idea generation and creative thinking"
     strengths: ["creativity", "idea generation", "brainstorming"]
     use_cases: ["generate ideas", "brainstorm solutions", "creative thinking"]
-    
+
   ethics:
     description: "Ethical AI and bias detection"
     strengths: ["bias detection", "ethical analysis", "fairness"]
     use_cases: ["analyze bias", "ethical considerations", "fairness assessment"]
-    
+
   local:
     description: "Local models for simple queries and offline use"
     strengths: ["low latency", "offline use", "simple queries"]
-    use_cases: ["intent classification", "simple responses", "offline operation"]
+    use_cases:
+      ["intent classification", "simple responses", "offline operation"]
