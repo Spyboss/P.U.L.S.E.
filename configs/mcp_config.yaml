@@ -1,0 +1,91 @@
+# MCP Server Configuration for P.U.L.S.E. (Prime Uminda's Learning System Engine)
+# This file defines the MCP servers used by the system
+
+# MCP server settings
+mcp_servers:
+  enabled: true
+
+  # File System MCP Server
+  filesystem:
+    enabled: true
+    description: "Access and manage local files"
+    command: "node"
+    args:
+      [
+        "C:/Users/UMINDA/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
+        "C:/Users/UMINDA/Desktop/P.U.L.S.E",
+      ]
+    env:
+      DIRECTORIES: "C:/Users/UMINDA/Desktop/P.U.L.S.E" # Adjust this path as needed
+
+  # GitHub MCP Server
+  github:
+    enabled: true
+    description: "Interact with GitHub repositories"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}" # Uses the token from environment variables
+
+  # Brave Search MCP Server
+  brave_search:
+    enabled: true
+    description: "Search the web using Brave Search"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "@modelcontextprotocol/server-brave-search"]
+    env:
+      BRAVE_API_KEY: "${BRAVE_API_KEY}" # You'll need to set this environment variable
+
+  # Google Maps MCP Server
+  google_maps:
+    enabled: true
+    description: "Access location and mapping data"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "@modelcontextprotocol/server-google-maps"]
+    env:
+      GOOGLE_MAPS_API_KEY: "${GOOGLE_MAPS_API_KEY}" # You'll need to set this environment variable
+
+  # PostgreSQL MCP Server
+  postgres:
+    enabled: true
+    description: "Interact with PostgreSQL databases"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "@modelcontextprotocol/server-postgres"]
+    env:
+      DB_HOST: "localhost"
+      DB_USER: "postgres"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}" # You'll need to set this environment variable
+      DB_NAME: "pulse_db"
+
+  # Puppeteer MCP Server
+  puppeteer:
+    enabled: true
+    description: "Automate web browser interactions"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npx.cmd"
+    args: ["-y", "@modelcontextprotocol/server-puppeteer"]
+    env:
+      PUPPETEER_LAUNCH_OPTIONS: '{ "headless": false, "args": [] }'
+      ALLOW_DANGEROUS: "true"
+
+  # Sequential Thinking MCP Server
+  sequential_thinking:
+    enabled: true
+    description: "Enhanced problem-solving capabilities"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "@modelcontextprotocol/server-sequential-thinking"]
+    env: {}
+
+  # Smart Crawler MCP Server
+  smart_crawler:
+    enabled: true
+    description: "Crawl and extract web content"
+    command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+    args: ["exec", "--yes", "mcp-smart-crawler"]
+    env: {}
+
+# MCP Inspector settings
+mcp_inspector:
+  enabled: true
+  command: "C:/Users/UMINDA/AppData/Roaming/npm/npm.cmd"
+  args: ["exec", "--yes", "@modelcontextprotocol/inspector"]
+  port: 8080 # Port for the inspector web interface
