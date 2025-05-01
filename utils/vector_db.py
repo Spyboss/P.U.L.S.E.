@@ -381,8 +381,8 @@ class VectorDatabase:
                         distance_col = "score"
                 else:
                     # Legacy LanceDB API (0.3.x)
-                    # Use field method instead of deprecated field_by_name
-                    query = self.table.search(query_embedding.tolist(), column="vector")
+                    # For LanceDB 0.3.x, we need to use the default parameter without naming it
+                    query = self.table.search(query_embedding.tolist())
 
                     # Apply filter
                     query = query.where(f"user_id = '{user_id}'")
