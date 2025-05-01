@@ -273,79 +273,41 @@ class NeuralRouter:
 
             # Check if the query type appears as a word in the query
             if re.search(r'\b' + query_type + r'\b', query_lower):
-                logger.info(f"Detected keyword '{query_type}' in query, routing to {model}")
+                # For write/content queries, use mistral-small
+                if query_type in ["write", "content", "creative", "general", "simple", "chat"]:
+                    logger.info(f"Detected keyword '{query_type}' in query, routing to mistral-small")
 
-                # Cache the result
-                self.routing_cache[cache_key] = {
-                    "model": model,
-                    "confidence": 0.8,
-                    "timestamp": time.time()
-                }
+                    # Cache the result
+                    self.routing_cache[cache_key] = {
+                        "model": "mistral-small",
+                        "confidence": 0.8,
+                        "timestamp": time.time()
+                    }
 
-                return model, 0.8
+                    return "mistral-small", 0.8
+                else:
+                    logger.info(f"Detected keyword '{query_type}' in query, routing to {model}")
+
+                    # Cache the result
+                    self.routing_cache[cache_key] = {
+                        "model": model,
+                        "confidence": 0.8,
+                        "timestamp": time.time()
+                    }
+
+                    return model, 0.8
 
         # If no specialized model was selected, use Mistral-Small as the default
-        logger.info(f"No specialized model detected, routing to mistral")
+        logger.info(f"No specialized model detected, routing to mistral-small")
 
         # Cache the result
         self.routing_cache[cache_key] = {
-            "model": "mistral",
+            "model": "mistral-small",
             "confidence": 0.7,
             "timestamp": time.time()
         }
 
-        return "mistral", 0.7
-
-        # The code below is kept for reference but not used in the current implementation
-        """
-        # Use Mistral-Small (via OpenRouter) to decide which model to route to
-        try:
-            # Prepare the routing prompt
-            prompt = self._create_routing_prompt(query)
-
-            # Call Mistral-Small via OpenRouter for routing decisions
-            if hasattr(self.model_interface, 'call_openrouter'):
-                model_id = MODEL_IDS["mistral"]
-                response = await self.model_interface.call_openrouter(
-                    model_id=model_id,
-                    query=prompt,
-                    max_tokens=100  # Short response needed
-                )
-            # If the model_interface doesn't have call_openrouter method, try to use call_mistral
-            elif hasattr(self.model_interface, 'call_mistral'):
-                logger.info("Using call_mistral method for routing decision")
-                response = await self.model_interface.call_mistral(
-                    query=prompt,
-                    max_tokens=100  # Short response needed
-                )
-            # Last resort fallback
-            else:
-                logger.error("No routing API method available - model_interface lacks required methods")
-                return "mistral", 0.5
-
-            if response and response.get("success", False):
-                # Parse the response to get the model and confidence
-                model, confidence = self._parse_routing_response(response.get("content", ""))
-
-                # Cache the result
-                self.routing_cache[cache_key] = {
-                    "model": model,
-                    "confidence": confidence,
-                    "timestamp": time.time()
-                }
-
-                logger.info(f"Routed '{query[:30]}...' to '{model}' with confidence {confidence:.2f}")
-                return model, confidence
-            else:
-                # Fallback to mistral if routing fails
-                logger.warning(f"Routing failed, falling back to mistral")
-                return "mistral", 0.5
-
-        except Exception as e:
-            logger.error(f"Error during neural routing: {str(e)}")
-            # Fallback to mistral
-            return "mistral", 0.5
-        """
+        return "mistral-small", 0.7
 
     def _create_routing_prompt(self, query: str) -> str:
         """

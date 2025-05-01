@@ -340,7 +340,7 @@ class AdaptiveRouter:
                 # If confidence is high enough, use the neural router's suggestion
                 if neural_confidence >= 0.7:
                     # Map the neural router's model name to our model configs
-                    if neural_model == "mistral":
+                    if neural_model == "mistral" or neural_model == "mistral-small":
                         neural_model = "mistral-small"
                     elif neural_model in ["minilm", "phi"]:
                         # These are already in our config
@@ -354,7 +354,7 @@ class AdaptiveRouter:
                     else:
                         # Unknown model, ignore
                         logger.warning(f"Unknown model {neural_model} suggested by neural router, ignoring")
-                        neural_model = None
+                        neural_model = "mistral-small"  # Default to mistral-small for unknown models
             except Exception as e:
                 logger.error(f"Error in neural routing: {str(e)}")
                 neural_model = None

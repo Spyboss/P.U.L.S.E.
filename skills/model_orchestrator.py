@@ -124,6 +124,8 @@ class ModelOrchestrator:
         # IMPORTANT: Don't use Gemini through OpenRouter - it's not a valid OpenRouter model
         # Instead, use Mistral-Small for general queries
         self.free_models['general'] = MODEL_IDS['main_brain']  # Use Mistral-Small for general queries
+        self.free_models['simple'] = MODEL_IDS['main_brain']   # Use Mistral-Small for simple queries
+        self.free_models['chat'] = MODEL_IDS['main_brain']     # Use Mistral-Small for chat queries
 
         # Add specific mappings for query types that need special handling
         self.free_models['ethics'] = MODEL_IDS['ethical_ai']  # Use Molmo for ethics
@@ -1189,9 +1191,9 @@ class ModelOrchestrator:
                     query_type = list(self.free_models.keys())[0]  # Use the first available model
 
         # Get the model ID for this query type
-        # Special case for Gemini - redirect to Mistral Small
-        if query_type == "gemini":
-            self.logger.info(f"Redirecting Gemini query type to Mistral Small: {query_type}")
+        # Special case for Gemini or general queries - redirect to Mistral Small
+        if query_type == "gemini" or query_type == "general" or query_type == "simple" or query_type == "chat":
+            self.logger.info(f"Redirecting {query_type} query type to Mistral Small")
             return await self._call_mistral(input_text, context_str)
 
         # Special case for main_brain - use OpenRouter with Mistral Small

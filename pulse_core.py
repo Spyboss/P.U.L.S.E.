@@ -20,6 +20,7 @@ from skills.marketplace import SkillMarketplace
 from integrations.sync import GitHubNotionSync
 from personality.charisma import CharismaEngine
 from utils.intent_preprocessor import QueryPreprocessor
+from tools.mcp_integration import MCPIntegration
 
 # Import existing components
 from skills.pulse_agent import PulseAgent
@@ -61,6 +62,7 @@ class PulseCore:
         self.query_preprocessor = None
         self.pulse_agent = None
         self.model_orchestrator = None
+        self.mcp_integration = None
 
         # Initialize system
         self._init_system()
@@ -112,6 +114,23 @@ class PulseCore:
             # Initialize GitHub-Notion sync
             self.github_notion_sync = GitHubNotionSync()
             logger.info("GitHub-Notion sync initialized")
+
+            # Initialize MCP integration
+            self.mcp_integration = MCPIntegration()
+            logger.info("MCP integration initialized")
+
+            # Start MCP servers if auto-start is enabled
+            from utils import load_yaml_config
+            config = load_yaml_config("configs/agent_config.yaml")
+            mcp_config = config.get('tools', {}).get('mcp_integration', {})
+            if mcp_config.get('enabled', True) and mcp_config.get('auto_start', True):
+                default_servers = mcp_config.get('default_servers', [])
+                if default_servers:
+                    asyncio.create_task(self.mcp_integration.start_servers(default_servers))
+                    logger.info(f"Auto-starting MCP servers: {', '.join(default_servers)}")
+                else:
+                    asyncio.create_task(self.mcp_integration.start_servers())
+                    logger.info("Auto-starting all enabled MCP servers")
 
             # Initialize pulse agent
             self.pulse_agent = PulseAgent(
@@ -870,6 +889,11 @@ class PulseCore:
 
             if self.github_notion_sync:
                 await self.github_notion_sync.close()
+
+            # Shutdown MCP integration
+            if self.mcp_integration:
+                self.mcp_integration.cleanup()
+                logger.info("MCP integration shutdown complete")
 
             # Shutdown model orchestrator
             if self.model_orchestrator:
