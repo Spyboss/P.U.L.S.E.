@@ -1,79 +1,81 @@
-# P.U.L.S.E. Agent Configuration
-
 agent:
-  name: "P.U.L.S.E."
-  version: "0.1.0"
-  description: "AI Personal Workflow Ops Assistant"
-  brain_model: "gemini" # The model used for intent recognition and core agent functionality
-  fallback_brain: "claude" # Fallback model if primary brain fails
-
-# AI Model Integration settings
-models:
-  claude:
-    enabled: true
-    api_key_env: "CLAUDE_API_KEY"
-    endpoint: "https://api.anthropic.com/v1"
-    role: "content_generation"
-
-  grok:
-    enabled: true
-    api_key_env: "GROK_API_KEY"
-    endpoint: "https://api.xai.com/v1" # xAI-specific endpoint
-    role: "analysis"
-    model_name: "grok-1.5"
-
-  deepseek:
-    enabled: true
-    api_key_env: "DEEPSEEK_API_KEY"
-    endpoint: "https://api.deepseek.com" # Updated DeepSeek endpoint
-    role: "code_generation"
-    model_name: "deepseek-chat" # DeepSeek-V3 model
-
-  gemini:
-    enabled: true
-    api_key_env: "GEMINI_API_KEY"
-    endpoint: "https://generativelanguage.googleapis.com/v1beta"
-    role: "agent_brain"
-    model_name: "gemini-1.5-pro"
-
-# Integration settings
+  brain_model: gemini
+  description: AI Personal Workflow Ops Assistant
+  fallback_brain: claude
+  name: P.U.L.S.E.
+  version: 0.1.0
 integrations:
   github:
     enabled: true
-    token_env: "GITHUB_TOKEN"
-
+    token_env: GITHUB_TOKEN
+  mcp:
+    config_path: configs/mcp_config.yaml
+    enabled: true
   notion:
     enabled: true
-    token_env: "NOTION_API_KEY"
-    version_env: "NOTION_VERSION"
-
-# Tool settings
+    token_env: NOTION_API_KEY
+    version_env: NOTION_VERSION
+logging:
+  backup_count: 3
+  file: pulse.log
+  level: INFO
+  max_size_mb: 10
+models:
+  claude:
+    api_key_env: CLAUDE_API_KEY
+    enabled: true
+    endpoint: https://api.anthropic.com/v1
+    role: content_generation
+  deepseek:
+    api_key_env: DEEPSEEK_API_KEY
+    enabled: true
+    endpoint: https://api.deepseek.com
+    model_name: deepseek-chat
+    role: code_generation
+  gemini:
+    api_key_env: GEMINI_API_KEY
+    enabled: true
+    endpoint: https://generativelanguage.googleapis.com/v1beta
+    model_name: gemini-1.5-pro
+    role: agent_brain
+  grok:
+    api_key_env: GROK_API_KEY
+    enabled: true
+    endpoint: https://api.xai.com/v1
+    model_name: grok-1.5
+    role: analysis
+paths:
+  memory_dir: memory
+  skills_dir: skills
+  tasks_file: tasks.md
+  tools_dir: tools
 tools:
   bug_bounty_hunter:
+    analysis_model: deepseek
+    comment_model: claude
     enabled: true
-    analysis_model: "deepseek"
-    comment_model: "claude"
     supported_extensions:
-      [".py", ".js", ".ts", ".java", ".c", ".cpp", ".cs", ".go", ".rb"]
-
-  overplanning_detector:
+    - .py
+    - .js
+    - .ts
+    - .java
+    - .c
+    - .cpp
+    - .cs
+    - .go
+    - .rb
+  mcp_integration:
+    auto_start: false
+    default_servers:
+    - filesystem
+    - github
+    - brave_search
+    - puppeteer
     enabled: true
-    roast_model: "claude"
-    reasoning_model: "deepseek"
+  overplanning_detector:
     daily_task_threshold: 5
-    weekly_task_threshold: 15
+    enabled: true
     priority_conflict_threshold: 3
-
-# File paths for resources
-paths:
-  tasks_file: "tasks.md"
-  memory_dir: "memory"
-  skills_dir: "skills"
-  tools_dir: "tools"
-
-# Logging configuration
-logging:
-  level: "INFO"
-  file: "pulse.log"
-  max_size_mb: 10
-  backup_count: 3
+    reasoning_model: deepseek
+    roast_model: claude
+    weekly_task_threshold: 15
