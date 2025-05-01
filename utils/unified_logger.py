@@ -35,8 +35,9 @@ DEFAULT_LOG_FILE = os.path.join(LOG_DIR, "pulse.log")
 
 # Global log cache to prevent duplicate messages
 _log_cache = {}
-_LOG_CACHE_TTL = 30  # seconds
+_LOG_CACHE_TTL = 60  # seconds - increased to prevent more duplicates
 _LOG_CACHE_COUNTS = {}  # Track counts of repeated messages
+_STARTUP_MESSAGES = set()  # Track startup messages to prevent duplicates
 
 # Generate a unique instance ID for this process
 INSTANCE_ID = str(uuid.uuid4())[:8]
@@ -80,7 +81,7 @@ def configure_logging(log_level=logging.INFO, log_file=DEFAULT_LOG_FILE, console
         # Create console handler if requested
         if console_output:
             console_handler = logging.StreamHandler(sys.stdout)
-            console_handler.setLevel(logging.INFO)  # Console gets INFO and above
+            console_handler.setLevel(logging.WARNING)  # Console only gets WARNING and above
             console_formatter = logging.Formatter('%(asctime)s [%(levelname)-8s] %(message)s')
             console_handler.setFormatter(console_formatter)
             root_logger.addHandler(console_handler)
@@ -220,6 +221,31 @@ class UnifiedLogger:
         Returns:
             True if the message should be logged, False otherwise
         """
+        # Skip common startup messages that tend to be duplicated
+        lower_msg = message.lower()
+
+        # Aggressively filter initialization and startup messages
+        if any(keyword in lower_msg for keyword in [
+            "initialized",
+            "initialization",
+            "starting",
+            "started",
+            "connected to",
+            "optimized",
+            "created or verified",
+            "loaded",
+            "configured"
+        ]):
+            # Create a unique key for this logger, message and level
+            startup_key = f"{self.name}:{message}"
+
+            # If we've seen this startup message before, skip it
+            if startup_key in _STARTUP_MESSAGES:
+                return False
+
+            # Otherwise, mark it as seen and allow it once
+            _STARTUP_MESSAGES.add(startup_key)
+
         # Create a unique key for this logger, message and level
         cache_key = f"{self.name}:{level}:{message}"
 
@@ -233,12 +259,8 @@ class UnifiedLogger:
                 _log_cache[cache_key] = (last_time, count + 1)
                 _LOG_CACHE_COUNTS[cache_key] = count + 1
 
-                # For initialization messages, use a longer TTL to prevent duplicates
-                if "initialized" in message.lower():
-                    return False
-
-                # For other messages, log once every 10 occurrences as a summary
-                if count % 10 == 0:
+                # For error messages, log once every 5 occurrences as a summary
+                if level in ["ERROR", "WARNING"] and count % 5 == 0:
                     self.logger.info(f"Message repeated {count} times: {message}")
 
                 return False
