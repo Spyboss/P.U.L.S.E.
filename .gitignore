@@ -58,6 +58,9 @@ backups/
 data/*.db
 data/*.db-shm
 data/*.db-wal
+data/vector_db/**/_transactions/
+data/vector_db/**/_versions/
+data/vector_db/**/data/
 
 # Backup files
 *_backup.json
