@@ -267,6 +267,20 @@ def print_welcome_message():
     elif current_hour >= 18:
         greeting = "Good evening"
 
+    # Get current system status
+    system_status = get_system_status()
+
+    # Format memory values
+    try:
+        memory_used = float(system_status['memory']['used'].split('GB')[0])
+        memory_total = float(system_status['memory']['total'].split('GB')[0]) if 'total' in system_status['memory'] else memory_used / (system_status['memory']['percent'] / 100)
+        memory_str = f"{memory_used:.1f}/{memory_total:.1f}GB"
+    except:
+        memory_str = system_status['memory']['used']
+
+    # Get CPU usage
+    cpu_percent = system_status['cpu']['percent']
+
     # In a real implementation, you would get actual pending tasks
     # For now, we'll use a placeholder
     pending_tasks = 3
@@ -274,7 +288,7 @@ def print_welcome_message():
     welcome_message = f"""
     ╭──────────────────────────────────────────╮
     │ Prime Uminda's Learning System Engine    │
-    │ ver 2.1 | Memory: 6.1/8GB | CPU: 55%     │
+    │ ver 2.1 | Memory: {memory_str} | CPU: {cpu_percent}%     │
     ╰──────────────────────────────────────────╯
 
     {greeting} Uminda. P.U.L.S.E. systems nominal.
