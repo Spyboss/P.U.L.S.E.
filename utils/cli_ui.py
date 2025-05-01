@@ -5,6 +5,7 @@ Provides a terminal-based UI for system monitoring and model testing
 
 import structlog
 import asyncio
+import sys
 from typing import Dict, Any, List
 
 # Try to import rich for better terminal UI
@@ -18,6 +19,15 @@ try:
     RICH_AVAILABLE = True
 except ImportError:
     RICH_AVAILABLE = False
+
+# Try to import prompt_toolkit for better input handling
+try:
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.styles import Style
+    from prompt_toolkit.history import InMemoryHistory
+    PROMPT_TOOLKIT_AVAILABLE = True
+except ImportError:
+    PROMPT_TOOLKIT_AVAILABLE = False
 
 # Configure logger
 logger = structlog.get_logger("cli_ui")
@@ -36,6 +46,26 @@ class PulseCLIUI:
         """
         self.agent = agent
         self.console = Console() if RICH_AVAILABLE else None
+
+        # Initialize prompt toolkit session if available
+        if PROMPT_TOOLKIT_AVAILABLE:
+            # Define a style for the prompt
+            style = Style.from_dict({
+                'prompt': 'bold cyan',
+            })
+
+            # Create a history object
+            history = InMemoryHistory()
+
+            # Create a prompt session
+            self.prompt_session = PromptSession(
+                history=history,
+                style=style,
+                complete_in_thread=True,
+                complete_while_typing=True
+            )
+        else:
+            self.prompt_session = None
 
     def display_system_vitals(self, system_status: Dict[str, Any]):
         """
@@ -1003,12 +1033,20 @@ class PulseCLIUI:
         # Main loop
         while True:
             try:
-                if RICH_AVAILABLE:
-                    self.console.print("[bold cyan]pulse-cli>[/bold cyan] ", end="")
+                # Get input using prompt_toolkit if available, otherwise use standard input
+                if PROMPT_TOOLKIT_AVAILABLE:
+                    prompt_text = "[bold cyan]pulse-cli>[/bold cyan] " if RICH_AVAILABLE else "pulse-cli> "
+                    command = await self.prompt_session.prompt_async(prompt_text)
+                    command = command.strip().lower()
                 else:
-                    print("\npulse-cli> ", end="")
+                    if RICH_AVAILABLE:
+                        self.console.print("[bold cyan]pulse-cli>[/bold cyan] ", end="")
+                    else:
+                        print("\npulse-cli> ", end="")
 
-                command = input().strip().lower()
+                    # Use standard input with flush to ensure prompt is displayed
+                    sys.stdout.flush()
+                    command = input().strip().lower()
 
                 if command == "exit":
                     break

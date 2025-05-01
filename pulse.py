@@ -83,18 +83,22 @@ async def main():
 ╰──────────────────────────────────────────────────────────╯
         """)
 
+        # Print startup progress
+        print("┌─ Startup Progress ───────────────────────────────────────┐")
+        print("│ [1/6] Loading environment...                             │")
+
     # Apply hardware optimizations
     if debug_mode:
         print("DEBUG: Applying hardware optimizations...")
     else:
-        print("Applying hardware optimizations...")
+        print("│ [2/6] Applying hardware optimizations...                   │")
     optimize_for_hardware()
 
     # Print system status
     if debug_mode:
         print("DEBUG: Getting system status...")
     else:
-        print("Checking system status...")
+        print("│ [3/6] Checking system status...                            │")
     system_status = get_system_status()
 
     # Format memory and CPU values for display
@@ -119,15 +123,15 @@ async def main():
     if debug_mode:
         print(f"DEBUG: System status - Memory: {system_status['memory']['percent']}%, CPU: {system_status['cpu']['percent']}%")
     else:
-        print(f"Memory: {memory_str} ({system_status['memory']['percent']}%)")
-        print(f"CPU: {system_status['cpu']['percent']}% used")
+        print(f"│ ✓ Memory: {memory_str} ({system_status['memory']['percent']}%)          │")
+        print(f"│ ✓ CPU: {system_status['cpu']['percent']}% used                                  │")
 
     # Initialize Pulse Core
     try:
         if debug_mode:
             print("DEBUG: About to initialize Pulse Core...")
         else:
-            print("Initializing enhanced AI components...")
+            print("│ [4/6] Initializing AI components...                        │")
 
         pulse_core = PulseCore(
             user_id=args.user,
@@ -137,7 +141,7 @@ async def main():
         if debug_mode:
             print("DEBUG: Pulse Core initialized successfully!")
         else:
-            print("Enhanced AI components initialized successfully!")
+            print("│ ✓ AI components initialized successfully                   │")
 
         logger.info("Pulse Core initialized")
     except Exception as e:
@@ -147,15 +151,12 @@ async def main():
         logger.error(traceback.format_exc())
         return 1
 
-    # Print welcome message
-    print_welcome_message()
-
     # Initialize CLI UI
     try:
         if debug_mode:
             print("DEBUG: Initializing CLI UI...")
         else:
-            print("Initializing CLI UI...")
+            print("│ [5/6] Initializing CLI UI...                              │")
 
         # Create a more complete adapter for CLI UI to work with PulseCore
         class PulseCoreAdapter:
@@ -180,7 +181,12 @@ async def main():
         if debug_mode:
             print("DEBUG: CLI UI initialized successfully!")
         else:
-            print("CLI UI initialized successfully!")
+            print("│ ✓ CLI UI initialized successfully                         │")
+            print("│ [6/6] Loading welcome message...                          │")
+            print("└─────────────────────────────────────────────────────────────┘")
+
+            # Print welcome message
+            print_welcome_message()
 
         logger.info("CLI UI initialized")
     except Exception as e:
