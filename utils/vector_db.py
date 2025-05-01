@@ -39,12 +39,23 @@ try:
         LANCEDB_VERSION_TUPLE = (0, 3, 0)
         LANCEDB_MODERN = False
 
+    # Check if Vector attribute exists (only in newer versions)
+    try:
+        if hasattr(lancedb, 'Vector'):
+            HAS_LANCEDB_VECTOR = True
+        else:
+            HAS_LANCEDB_VECTOR = False
+            logger.warning("LanceDB Vector class not available in this version")
+    except Exception:
+        HAS_LANCEDB_VECTOR = False
+
     LANCEDB_AVAILABLE = True
 except ImportError:
     LANCEDB_AVAILABLE = False
     LANCEDB_VERSION = None
     LANCEDB_VERSION_TUPLE = (0, 0, 0)
     LANCEDB_MODERN = False
+    HAS_LANCEDB_VECTOR = False
     logger.warning("lancedb not available, vector search will be disabled")
 
 # Constants
@@ -101,6 +112,7 @@ class VectorDatabase:
                 self.encoder = None
 
         # Initialize LanceDB if available and not forced to use SQLite
+        lancedb_initialized = False
         if LANCEDB_AVAILABLE and not self._force_sqlite_fallback:
             try:
                 # Connect to LanceDB
@@ -115,10 +127,15 @@ class VectorDatabase:
                     self._initialize_legacy_lancedb()
 
                 logger.info(f"Initialized LanceDB: {self.db_path}")
+                lancedb_initialized = True
             except Exception as e:
                 logger.error(f"Failed to initialize LanceDB: {str(e)}")
                 self.lancedb = None
                 self.table = None
+
+        # Initialize SQLite fallback if LanceDB initialization failed or forced to use SQLite
+        if self.fallback_to_sqlite and (not lancedb_initialized or self._force_sqlite_fallback):
+            self._initialize_sqlite_fallback()
 
     def _initialize_legacy_lancedb(self) -> None:
         """Initialize LanceDB using legacy API (0.3.x)"""
@@ -182,33 +199,36 @@ class VectorDatabase:
             logger.error(f"Failed to initialize modern LanceDB: {str(e)}")
             raise
 
-        # Fallback to SQLite if LanceDB is not available or forced to use SQLite
-        if self.fallback_to_sqlite and (not LANCEDB_AVAILABLE or self.lancedb is None or self._force_sqlite_fallback):
-            try:
-                from utils.sqlite_utils import optimize_sqlite_db, create_table
+    def _initialize_sqlite_fallback(self) -> None:
+        """Initialize SQLite fallback for vector storage"""
+        try:
+            from utils.sqlite_utils import optimize_sqlite_db, create_table
 
-                # Optimize SQLite database
-                optimize_sqlite_db(self.sqlite_path)
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(os.path.abspath(self.sqlite_path)), exist_ok=True)
 
-                # Create chat_vectors table if it doesn't exist
-                create_table(
-                    db_path=self.sqlite_path,
-                    table_name="chat_vectors",
-                    columns={
-                        "id": "INTEGER",
-                        "user_id": "TEXT",
-                        "chat_id": "INTEGER",
-                        "text": "TEXT",
-                        "vector_blob": "BLOB",  # Binary vector data
-                        "timestamp": "TIMESTAMP"
-                    },
-                    primary_key="id",
-                    indexes=["user_id", "chat_id"]
-                )
+            # Optimize SQLite database
+            optimize_sqlite_db(self.sqlite_path)
 
-                logger.info(f"Initialized SQLite fallback for vector storage: {self.sqlite_path}")
-            except Exception as e:
-                logger.error(f"Failed to initialize SQLite fallback: {str(e)}")
+            # Create chat_vectors table if it doesn't exist
+            create_table(
+                db_path=self.sqlite_path,
+                table_name="chat_vectors",
+                columns={
+                    "id": "INTEGER",
+                    "user_id": "TEXT",
+                    "chat_id": "INTEGER",
+                    "text": "TEXT",
+                    "vector_blob": "BLOB",  # Binary vector data
+                    "timestamp": "TIMESTAMP"
+                },
+                primary_key="id",
+                indexes=["user_id", "chat_id"]
+            )
+
+            logger.info(f"Initialized SQLite fallback for vector storage: {self.sqlite_path}")
+        except Exception as e:
+            logger.error(f"Failed to initialize SQLite fallback: {str(e)}")
 
     def encode_text(self, text: str) -> Optional[np.ndarray]:
         """
@@ -361,14 +381,23 @@ class VectorDatabase:
                         distance_col = "score"
                 else:
                     # Legacy LanceDB API (0.3.x)
-                    # Note: field_by_name is deprecated but still required for 0.3.0
-                    results = (
-                        self.table.search(query_embedding.tolist())
-                        .where(f"user_id = '{user_id}'")
-                        .limit(limit)
-                        .to_arrow()
-                        .to_pandas()
-                    )
+                    # Handle the deprecated field_by_name method
+                    query = self.table.search(query_embedding.tolist())
+
+                    # Apply filter
+                    query = query.where(f"user_id = '{user_id}'")
+
+                    # Apply limit
+                    query = query.limit(limit)
+
+                    # Convert to pandas DataFrame
+                    try:
+                        # First try with to_pandas() method (newer versions)
+                        results = query.to_pandas()
+                    except AttributeError:
+                        # Fall back to to_arrow().to_pandas() for older versions
+                        results = query.to_arrow().to_pandas()
+
                     distance_col = "_distance"
 
                 # Convert to list of dictionaries
