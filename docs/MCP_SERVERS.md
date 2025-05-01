@@ -37,7 +37,7 @@ Example configuration:
 # MCP server settings
 mcp_servers:
   enabled: true
-  
+
   # File System MCP Server
   filesystem:
     enabled: true
@@ -101,19 +101,58 @@ python scripts/tools/mcp_server_manager.py config --server filesystem enabled=tr
 
 MCP servers are automatically used by P.U.L.S.E. when needed. For example, when you ask P.U.L.S.E. to search the web, it will use the Brave Search MCP server. When you ask it to interact with GitHub, it will use the GitHub MCP server.
 
+### Implementation Details
+
+P.U.L.S.E. integrates MCP servers through the following components:
+
+1. **MCPIntegration Tool** (`tools/mcp_integration.py`) - Provides a unified interface for interacting with MCP servers
+2. **MCP Server Manager** (`utils/mcp_manager.py`) - Manages the lifecycle of MCP servers (starting, stopping, etc.)
+3. **MCP Configuration** (`configs/mcp_config.yaml`) - Defines the configuration for each MCP server
+
+The integration follows these principles:
+
+- **Lazy Loading** - MCP servers are only started when needed to conserve resources
+- **Graceful Degradation** - P.U.L.S.E. continues to function even if MCP servers are unavailable
+- **Secure Communication** - All communication with MCP servers is done through a secure channel
+- **Resource Management** - MCP servers are properly cleaned up when no longer needed
+
+### Programmatic Usage
+
+You can use the MCP integration in your own code:
+
+```python
+from tools.mcp_integration import MCPIntegration
+
+# Initialize MCP integration
+mcp = MCPIntegration()
+
+# Start specific servers
+await mcp.start_servers(["filesystem", "github"])
+
+# Check server status
+status = mcp.get_server_status("filesystem")
+print(status)
+
+# Stop servers when done
+await mcp.stop_servers()
+```
+
 ### Example Use Cases
 
 1. **File System MCP Server**
+
    - "Create a new file in my project directory"
    - "List all Python files in the current directory"
    - "Organize my downloads folder by file type"
 
 2. **GitHub MCP Server**
+
    - "Create a new issue in my repository"
    - "Check the status of my pull requests"
    - "Clone a repository to my local machine"
 
 3. **Brave Search MCP Server**
+
    - "Search for the latest news on AI"
    - "Find information about Python programming"
    - "Look up the weather forecast for today"
@@ -131,6 +170,28 @@ If you encounter issues with MCP servers, check the following:
 2. **Configuration** - Verify that the server is properly configured in `configs/mcp_config.yaml`
 3. **Dependencies** - Make sure all required dependencies are installed
 4. **Environment Variables** - Verify that all required environment variables are set
+5. **Node.js Version** - Ensure you have Node.js 16+ installed
+6. **NPM Permissions** - Make sure you have the necessary permissions to install and run npm packages
+
+### Common Issues and Solutions
+
+#### Server Fails to Start
+
+If a server fails to start, check the following:
+
+1. **Log Files** - Check the server's log file in `logs/mcp_servers/[server_name].log`
+2. **Command Path** - Verify that the command path in the configuration is correct
+3. **Environment Variables** - Make sure all required environment variables are set
+4. **Port Conflicts** - Check if another process is using the same port
+
+#### Server Crashes Frequently
+
+If a server crashes frequently, try the following:
+
+1. **Update the Server** - Update to the latest version of the MCP server
+2. **Increase Memory** - Allocate more memory to the server process
+3. **Check Dependencies** - Verify that all dependencies are installed and up to date
+4. **Restart the Server** - Sometimes a simple restart can fix issues
 
 ## Adding New MCP Servers
 
@@ -165,7 +226,27 @@ BRAVE_API_KEY=your_brave_api_key
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 ```
 
+## Performance Considerations
+
+MCP servers can consume significant system resources, especially when running multiple servers simultaneously. Consider the following performance optimizations:
+
+1. **Selective Enabling** - Only enable the MCP servers you actually need
+2. **Lazy Loading** - Use the `auto_start: false` option and start servers only when needed
+3. **Resource Limits** - Set resource limits for MCP servers to prevent them from consuming too much memory or CPU
+4. **Cleanup** - Always stop MCP servers when they are no longer needed
+
+## Security Considerations
+
+MCP servers can pose security risks if not properly configured:
+
+1. **API Keys** - Store API keys securely in environment variables, never in configuration files
+2. **Access Control** - Limit the directories and resources that MCP servers can access
+3. **Sandboxing** - Run MCP servers in a sandboxed environment when possible
+4. **Audit** - Regularly audit MCP server logs for suspicious activity
+
 ## References
 
 - [Model Context Protocol Documentation](https://modelcontextprotocol.github.io/docs/)
 - [MCP GitHub Repository](https://github.com/modelcontextprotocol/mcp)
+- [MCP Servers Repository](https://github.com/modelcontextprotocol/servers)
+- [Top MCP Servers](https://apidog.com/blog/top-10-mcp-servers/)
