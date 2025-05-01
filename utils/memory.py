@@ -72,6 +72,13 @@ class MemoryManager:
 
     def _init_mongodb(self) -> None:
         """Initialize MongoDB connection"""
+        # Disable MongoDB connection to avoid DNS issues
+        logger.info("MongoDB connection disabled, using SQLite fallback")
+        self.client = None
+        self.db = None
+        return
+
+        # The code below is disabled to avoid DNS issues
         try:
             # Get MongoDB URI from environment variables
             mongodb_uri = os.getenv("MONGODB_URI")
@@ -79,11 +86,42 @@ class MemoryManager:
                 logger.warning("MONGODB_URI not found in environment variables, using SQLite fallback")
                 return
 
-            # Create MongoDB client
-            self.client = AsyncIOMotorClient(mongodb_uri)
-            self.db = self.client[self.db_name]
+            # Try standard connection first
+            try:
+                # Create MongoDB client with optimized connection settings
+                self.client = AsyncIOMotorClient(
+                    mongodb_uri,
+                    serverSelectionTimeoutMS=5000,
+                    connectTimeoutMS=5000,
+                    socketTimeoutMS=10000,
+                    maxIdleTimeMS=60000,
+                    retryWrites=True,
+                    retryReads=True,
+                    waitQueueTimeoutMS=5000,
+                    appName="P.U.L.S.E."
+                )
 
-            logger.info(f"Connected to MongoDB Atlas: {self.db_name}")
+                # Test connection with a quick ping
+                self.client.admin.command('ping', serverSelectionTimeoutMS=2000)
+
+                self.db = self.client[self.db_name]
+                logger.info(f"Connected to MongoDB Atlas: {self.db_name}")
+                return
+            except Exception as e:
+                logger.warning(f"Standard MongoDB connection failed: {str(e)}")
+
+            # If standard connection fails, try direct connection
+            from utils.direct_connection import get_mongodb_direct_connection
+            self.client = get_mongodb_direct_connection(mongodb_uri)
+
+            if self.client:
+                self.db = self.client[self.db_name]
+                logger.info(f"Connected to MongoDB Atlas using direct connection: {self.db_name}")
+            else:
+                logger.error("All MongoDB connection attempts failed")
+                self.client = None
+                self.db = None
+
         except (ConnectionFailure, OperationFailure) as e:
             logger.error(f"Failed to connect to MongoDB: {str(e)}")
             self.client = None

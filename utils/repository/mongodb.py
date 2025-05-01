@@ -68,31 +68,176 @@ class MongoDBRepository(Repository[T, str], HealthCheck):
     def _init_mongodb(self) -> None:
         """Initialize MongoDB connection"""
         try:
-            # Check DNS resolution first
-            asyncio.create_task(self._check_dns_resolution())
+            # Check DNS resolution first - but don't wait for it
+            dns_check_task = asyncio.create_task(self._check_dns_resolution())
 
-            # Create MongoDB client with shorter server selection timeout
-            self.client = AsyncIOMotorClient(
-                self.connection_string,
-                serverSelectionTimeoutMS=5000,  # 5 seconds instead of default 30
-                connectTimeoutMS=5000,          # 5 seconds
-                socketTimeoutMS=10000,          # 10 seconds
-                maxIdleTimeMS=30000,            # 30 seconds
-                retryWrites=True,               # Enable retry for write operations
-                retryReads=True                 # Enable retry for read operations
-            )
-            self.db = self.client[self.db_name]
-            self.collection = self.db[self.collection_name]
+            # Try to create a connection with the original connection string
+            try:
+                # Check if we have a cached IP for this hostname
+                from utils.dns_resolver import _dns_cache, get_hostname_from_uri
+                hostname = get_hostname_from_uri(self.connection_string)
 
-            # Create indexes
-            asyncio.create_task(self._create_indexes())
+                # If we have a cached IP, use direct connection
+                if hostname and hostname in _dns_cache:
+                    ip_address, _ = _dns_cache[hostname]
+                    logger.info(f"Using cached IP for MongoDB: {hostname} -> {ip_address}")
 
-            logger.info(f"Connected to MongoDB Atlas: {self.db_name}.{self.collection_name}")
+                    # Extract credentials and database from the connection string
+                    from urllib.parse import urlparse
+                    parsed_uri = urlparse(self.connection_string)
+
+                    # Extract username and password
+                    auth_part = parsed_uri.netloc.split('@')[0]
+                    username = auth_part.split(':')[0]
+                    password = auth_part.split(':')[1] if ':' in auth_part else ''
+
+                    # Create a direct connection string with cached IP
+                    direct_uri = f"mongodb://{username}:{password}@{ip_address}:27017/?retryWrites=true&w=majority"
+
+                    # Create MongoDB client with direct connection
+                    self.client = AsyncIOMotorClient(
+                        direct_uri,
+                        serverSelectionTimeoutMS=5000,    # Increased from 2000
+                        connectTimeoutMS=5000,            # Increased from 2000
+                        socketTimeoutMS=10000,            # Increased from 3000
+                        maxIdleTimeMS=60000,              # 60 seconds
+                        retryWrites=True,                 # Enable retry for write operations
+                        retryReads=True,                  # Enable retry for read operations
+                        waitQueueTimeoutMS=5000,          # Increased from 2000
+                        appName="P.U.L.S.E.",             # Application name for monitoring
+                        directConnection=True,            # Use direct connection
+                        tlsInsecure=True,                 # Allow insecure TLS
+                        tlsAllowInvalidCertificates=True  # Allow invalid certificates
+                    )
+                else:
+                    # Create MongoDB client with optimized connection settings
+                    self.client = AsyncIOMotorClient(
+                        self.connection_string,
+                        serverSelectionTimeoutMS=5000,  # Increased from 2000
+                        connectTimeoutMS=5000,          # Increased from 2000
+                        socketTimeoutMS=10000,          # Increased from 3000
+                        maxIdleTimeMS=60000,            # 60 seconds
+                        retryWrites=True,               # Enable retry for write operations
+                        retryReads=True,                # Enable retry for read operations
+                        waitQueueTimeoutMS=5000,        # Increased from 2000
+                        appName="P.U.L.S.E.",           # Application name for monitoring
+                        directConnection=False,         # Use replica set discovery
+                    maxPoolSize=10,                 # Maximum connection pool size
+                    minPoolSize=1,                  # Minimum connection pool size
+                    maxConnecting=2,                # Maximum number of connections being established
+                    heartbeatFrequencyMS=10000,     # Heartbeat frequency in milliseconds
+                    tlsInsecure=True,               # Allow insecure TLS connections
+                    tlsAllowInvalidCertificates=True  # Allow invalid certificates
+                )
+
+                # Test connection with a quick ping
+                self.client.admin.command('ping', serverSelectionTimeoutMS=2000)
+
+                self.db = self.client[self.db_name]
+                self.collection = self.db[self.collection_name]
+
+                # Create indexes - but don't wait for it
+                index_task = asyncio.create_task(self._create_indexes())
+
+                logger.info(f"Connected to MongoDB Atlas: {self.db_name}.{self.collection_name}")
+                return
+            except Exception as e:
+                logger.warning(f"Failed to connect with original connection string: {str(e)}")
+                # Continue to try with direct connection
+
+            # If the original connection failed, try with direct connection using hardcoded IP
+            try:
+                # Use the direct connection utility
+                from utils.direct_connection import get_mongodb_direct_connection
+
+                # Get direct connection client
+                self.client = get_mongodb_direct_connection(self.connection_string)
+
+                self.db = self.client[self.db_name]
+                self.collection = self.db[self.collection_name]
+
+                # Create indexes - but don't wait for it
+                index_task = asyncio.create_task(self._create_indexes())
+
+                logger.info(f"Connected to MongoDB Atlas using direct connection: {self.db_name}.{self.collection_name}")
+                return
+            except Exception as e:
+                logger.error(f"Failed to connect with direct connection: {str(e)}")
+                # Fall through to error handling
+
+            # If we got here, both connection attempts failed
+            logger.error("All MongoDB connection attempts failed")
+            self.client = None
+            self.db = None
+            self.collection = None
+
+            # Try to reconnect in the background after a delay
+            asyncio.create_task(self._delayed_reconnect())
         except (ConnectionFailure, OperationFailure, ServerSelectionTimeoutError) as e:
             logger.error(f"Failed to connect to MongoDB: {str(e)}")
             self.client = None
             self.db = None
             self.collection = None
+
+            # Try to reconnect in the background after a delay
+            asyncio.create_task(self._delayed_reconnect())
+
+    async def _delayed_reconnect(self, delay: float = 5.0, max_attempts: int = 3) -> None:
+        """
+        Attempt to reconnect to MongoDB after a delay
+
+        Args:
+            delay: Delay in seconds before reconnecting
+            max_attempts: Maximum number of reconnection attempts
+        """
+        for attempt in range(max_attempts):
+            # Wait before reconnecting
+            await asyncio.sleep(delay * (attempt + 1))  # Increasing delay with each attempt
+
+            logger.info(f"Attempting to reconnect to MongoDB (attempt {attempt + 1}/{max_attempts})")
+
+            try:
+                # Create MongoDB client with optimized connection settings
+                self.client = AsyncIOMotorClient(
+                    self.connection_string,
+                    serverSelectionTimeoutMS=3000,
+                    connectTimeoutMS=3000,
+                    socketTimeoutMS=5000,
+                    maxIdleTimeMS=60000,
+                    retryWrites=True,
+                    retryReads=True,
+                    waitQueueTimeoutMS=3000,
+                    appName="P.U.L.S.E.",
+                    directConnection=False,
+                    maxPoolSize=10,
+                    minPoolSize=1,
+                    maxConnecting=2,
+                    heartbeatFrequencyMS=10000
+                )
+
+                # Test connection with ping
+                await self.client.admin.command("ping")
+
+                # Connection successful, initialize database and collection
+                self.db = self.client[self.db_name]
+                self.collection = self.db[self.collection_name]
+
+                # Create indexes
+                await self._create_indexes()
+
+                logger.info(f"Successfully reconnected to MongoDB: {self.db_name}.{self.collection_name}")
+                return
+            except Exception as e:
+                logger.warning(f"Failed to reconnect to MongoDB (attempt {attempt + 1}/{max_attempts}): {str(e)}")
+
+                # Close client if it was created
+                if self.client:
+                    self.client.close()
+                    self.client = None
+                    self.db = None
+                    self.collection = None
+
+        logger.error(f"Failed to reconnect to MongoDB after {max_attempts} attempts")
 
     async def _check_dns_resolution(self) -> None:
         """Check DNS resolution for MongoDB URI"""
@@ -107,6 +252,16 @@ class MongoDBRepository(Repository[T, str], HealthCheck):
                 logger.info(f"MongoDB DNS resolution successful: {dns_result['hostname']} -> {dns_result['ip_address']}")
             else:
                 logger.warning(f"MongoDB DNS resolution failed: {dns_result['message']}")
+
+                # Try with fallback DNS servers
+                from utils.dns_resolver import resolve_with_fallback_dns, get_hostname_from_uri
+                hostname = get_hostname_from_uri(self.connection_string)
+                if hostname:
+                    ip_address = await resolve_with_fallback_dns(hostname)
+                    if ip_address:
+                        logger.info(f"MongoDB DNS resolution successful with fallback DNS: {hostname} -> {ip_address}")
+                    else:
+                        logger.error(f"MongoDB DNS resolution failed with all DNS servers for {hostname}")
         except Exception as e:
             logger.error(f"Error checking MongoDB DNS resolution: {str(e)}")
 
@@ -194,8 +349,8 @@ class MongoDBRepository(Repository[T, str], HealthCheck):
             # If not found, raise error
             raise
 
-    @circuit_breaker(name="mongodb", failure_threshold=3, reset_timeout=30.0)
-    @with_error_handling(source=ErrorSource.MONGODB)
+    @circuit_breaker(name="mongodb", failure_threshold=5, reset_timeout=60.0)
+    @with_error_handling(source=ErrorSource.MONGODB, reraise=False)
     async def find_by_id(self, id: str) -> Optional[T]:
         """
         Find entity by ID
@@ -207,19 +362,30 @@ class MongoDBRepository(Repository[T, str], HealthCheck):
             Entity if found, None otherwise
         """
         if not self.collection:
-            raise ConnectionError("MongoDB collection not initialized")
+            logger.warning(f"MongoDB collection not initialized, using fallback for find_by_id({id})")
+            return None
 
-        # Find document by ID
-        doc = await self.collection.find_one({"_id": id})
+        try:
+            # Find document by ID with timeout
+            doc = await asyncio.wait_for(
+                self.collection.find_one({"_id": id}),
+                timeout=5.0  # 5 second timeout
+            )
 
-        # Return entity if found
-        if doc:
-            return self._document_to_entity(doc)
+            # Return entity if found
+            if doc:
+                return self._document_to_entity(doc)
 
-        return None
+            return None
+        except asyncio.TimeoutError:
+            logger.warning(f"Timeout while finding document by ID: {id}")
+            return None
+        except Exception as e:
+            logger.warning(f"Error finding document by ID: {id}, error: {str(e)}")
+            return None
 
-    @circuit_breaker(name="mongodb", failure_threshold=3, reset_timeout=30.0)
-    @with_error_handling(source=ErrorSource.MONGODB)
+    @circuit_breaker(name="mongodb", failure_threshold=5, reset_timeout=60.0)
+    @with_error_handling(source=ErrorSource.MONGODB, reraise=False)
     async def find_all(self) -> List[T]:
         """
         Find all entities
@@ -228,17 +394,29 @@ class MongoDBRepository(Repository[T, str], HealthCheck):
             List of all entities
         """
         if not self.collection:
-            raise ConnectionError("MongoDB collection not initialized")
+            logger.warning("MongoDB collection not initialized, using fallback for find_all()")
+            return []
 
-        # Find all documents
-        cursor = self.collection.find()
+        try:
+            # Find all documents with timeout
+            entities = []
 
-        # Convert documents to entities
-        entities = []
-        async for doc in cursor:
-            entities.append(self._document_to_entity(doc))
+            # Create cursor
+            cursor = self.collection.find().limit(100)  # Limit to 100 documents for safety
 
-        return entities
+            # Process cursor with timeout
+            try:
+                async with asyncio.timeout(10.0):  # 10 second timeout
+                    async for doc in cursor:
+                        entities.append(self._document_to_entity(doc))
+            except asyncio.TimeoutError:
+                logger.warning("Timeout while processing cursor in find_all()")
+                # Return whatever we've collected so far
+
+            return entities
+        except Exception as e:
+            logger.warning(f"Error in find_all(): {str(e)}")
+            return []
 
     @circuit_breaker(name="mongodb", failure_threshold=3, reset_timeout=30.0)
     @with_error_handling(source=ErrorSource.MONGODB)

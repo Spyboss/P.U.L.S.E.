@@ -213,6 +213,126 @@ My personality is {self.pulse_info['personality']}.
 You can ask me about my purpose, tech stack, architecture, models, capabilities, system, or version.
             """
 
+    def get_model_info(self, model_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Get information about a specific model
+
+        Args:
+            model_name: Name of the model
+
+        Returns:
+            Dictionary with model information or None if not found
+        """
+        # Normalize model name
+        model_name_lower = model_name.lower()
+
+        # Map common variations to canonical names
+        model_name_map = {
+            "mistral": "main_brain",
+            "mistralsmall": "main_brain",
+            "mistral-small": "main_brain",
+            "deepcoder": "code",
+            "deepseek": "troubleshooting",
+            "llamadoc": "documentation",
+            "llama-doc": "documentation",
+            "llamatechnical": "technical",
+            "llama-technical": "technical",
+            "hermes": "brainstorming",
+            "molmo": "ethics",
+            "kimi": "visual_reasoning",
+            "nemotron": "advanced_reasoning",
+            "gemma": "math_chemistry",
+            "dolphin": "script_optimization",
+            "minilm": "intent",
+            "phi": "offline"
+        }
+
+        # Get canonical name if available
+        canonical_name = model_name_map.get(model_name_lower, model_name_lower)
+
+        # Check if model exists in architecture
+        if canonical_name in self.architecture['models']:
+            # Get model description
+            model_desc = self.architecture['models'][canonical_name]
+
+            # Extract model name and ID
+            parts = model_desc.split('(')
+            name = parts[0].strip()
+            model_id = parts[1].strip(')') if len(parts) > 1 else ""
+
+            # Define model information
+            model_info = {
+                "name": name,
+                "id": model_id,
+                "role": self._get_model_role(canonical_name),
+                "strengths": self._get_model_strengths(canonical_name),
+                "use_cases": self._get_model_use_cases(canonical_name)
+            }
+
+            return model_info
+
+        return None
+
+    def _get_model_role(self, model_key: str) -> str:
+        """Get the role of a model"""
+        roles = {
+            "main_brain": "Main Brain",
+            "code": "Code Generation",
+            "troubleshooting": "Troubleshooting",
+            "documentation": "Documentation",
+            "technical": "Technical Translation",
+            "brainstorming": "Brainstorming",
+            "ethics": "Ethical AI",
+            "visual_reasoning": "Visual Reasoning",
+            "advanced_reasoning": "Advanced Reasoning",
+            "math_chemistry": "Math & Chemistry",
+            "script_optimization": "Script Optimization",
+            "intent": "Intent Classification",
+            "offline": "Offline Operation"
+        }
+
+        return roles.get(model_key, "Specialized Tasks")
+
+    def _get_model_strengths(self, model_key: str) -> List[str]:
+        """Get the strengths of a model"""
+        strengths = {
+            "main_brain": ["general knowledge", "balanced reasoning", "instruction following", "chat"],
+            "code": ["code generation", "debugging", "algorithm design", "technical problem-solving"],
+            "troubleshooting": ["error analysis", "debugging", "problem diagnosis", "solution finding"],
+            "documentation": ["clear explanations", "documentation", "concept simplification", "tutorials"],
+            "technical": ["technical writing", "complex concept translation", "technical accuracy"],
+            "brainstorming": ["idea generation", "creative thinking", "exploration", "innovation"],
+            "ethics": ["ethical analysis", "bias detection", "fairness evaluation", "value alignment"],
+            "visual_reasoning": ["visual concepts", "design thinking", "spatial reasoning", "UI/UX"],
+            "advanced_reasoning": ["complex problem-solving", "logical analysis", "multi-step reasoning"],
+            "math_chemistry": ["mathematical computation", "chemical formulas", "scientific reasoning"],
+            "script_optimization": ["code optimization", "script efficiency", "automation", "performance"],
+            "intent": ["fast classification", "command recognition", "intent detection"],
+            "offline": ["local operation", "privacy", "no internet required"]
+        }
+
+        return strengths.get(model_key, ["specialized knowledge", "focused capabilities"])
+
+    def _get_model_use_cases(self, model_key: str) -> List[str]:
+        """Get the use cases of a model"""
+        use_cases = {
+            "main_brain": ["general questions", "conversation", "everyday tasks", "information retrieval"],
+            "code": ["programming help", "code generation", "debugging", "software development"],
+            "troubleshooting": ["error fixing", "problem diagnosis", "technical support", "debugging"],
+            "documentation": ["explaining concepts", "creating documentation", "tutorials", "guides"],
+            "technical": ["technical writing", "complex explanations", "technical translation"],
+            "brainstorming": ["idea generation", "creative projects", "exploration", "innovation"],
+            "ethics": ["ethical analysis", "bias evaluation", "fairness assessment"],
+            "visual_reasoning": ["design concepts", "visual ideas", "UI/UX discussions"],
+            "advanced_reasoning": ["complex problems", "logical puzzles", "multi-step reasoning"],
+            "math_chemistry": ["mathematical problems", "chemical questions", "scientific computation"],
+            "script_optimization": ["code optimization", "performance improvement", "automation"],
+            "intent": ["command classification", "quick responses", "intent detection"],
+            "offline": ["local operation", "privacy-sensitive tasks", "offline work"]
+        }
+
+        return use_cases.get(model_key, ["specialized tasks", "focused applications"])
+
     def get_status(self) -> Dict[str, Any]:
         """
         Get the current system status

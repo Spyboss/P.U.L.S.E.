@@ -10,6 +10,7 @@ import asyncio
 import argparse
 import signal
 import traceback
+import warnings
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -18,6 +19,7 @@ from pulse_core import PulseCore
 from utils.optimization import optimize_for_hardware, get_system_status
 from utils.cli_ui import PulseCLIUI
 from utils.unified_logger import get_logger, configure_logging
+from utils.lancedb_patch import apply_patches as apply_lancedb_patches
 
 # Configure unified logging system
 configure_logging(log_file="logs/pulse.log")
@@ -27,6 +29,15 @@ logger = get_logger("pulse")
 
 # Load environment variables
 load_dotenv()
+
+# Apply LanceDB patches to fix warnings
+apply_lancedb_patches()
+
+# Filter out common DNS timeout warnings to reduce log noise
+warnings.filterwarnings("ignore", message=".*DNS operation timed out.*")
+warnings.filterwarnings("ignore", message=".*resolution lifetime expired.*")
+warnings.filterwarnings("ignore", message=".*ServerSelectionTimeoutError.*")
+warnings.filterwarnings("ignore", message=".*No servers found yet.*")
 
 # Global variables
 pulse_core = None

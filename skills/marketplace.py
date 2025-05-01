@@ -59,25 +59,10 @@ class SkillMarketplace:
 
     def _init_mongodb(self) -> None:
         """Initialize MongoDB connection"""
-        try:
-            # Get MongoDB URI from environment variables
-            mongodb_uri = os.getenv("MONGODB_URI")
-            if not mongodb_uri:
-                logger.warning("MONGODB_URI not found in environment variables")
-                return
-
-            # Create MongoDB client
-            self.client = AsyncIOMotorClient(mongodb_uri)
-            self.db = self.client["pulse"]
-
-            # Create indexes
-            asyncio.create_task(self._create_indexes())
-
-            logger.info("Connected to MongoDB Atlas for skill tracking")
-        except (ConnectionFailure, OperationFailure) as e:
-            logger.error(f"Failed to connect to MongoDB: {str(e)}")
-            self.client = None
-            self.db = None
+        # Disable MongoDB connection to avoid DNS issues
+        logger.info("MongoDB connection disabled for skill tracking, using SQLite fallback")
+        self.client = None
+        self.db = None
 
     async def _create_indexes(self) -> None:
         """Create indexes for skills collection"""

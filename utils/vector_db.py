@@ -382,6 +382,7 @@ class VectorDatabase:
                 else:
                     # Legacy LanceDB API (0.3.x)
                     # For LanceDB 0.3.x, we need to use the default parameter without naming it
+                    # The vector column is the first parameter and doesn't need to be named
                     query = self.table.search(query_embedding.tolist())
 
                     # Apply filter

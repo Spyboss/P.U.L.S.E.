@@ -336,6 +336,16 @@ class CharismaEngine:
             return content
 
         try:
+            # Clean up the content first
+            clean_content = content.strip()
+
+            # Fix self-identification issues
+            clean_content = self._fix_self_identification(clean_content)
+
+            # Remove any "Based on your request:" prefix if present
+            if clean_content.startswith("Based on your request:"):
+                clean_content = clean_content[len("Based on your request:"):].strip()
+
             # Determine emoji based on context and success
             emoji = self._get_emoji_for_context(context_type, success)
 
@@ -357,13 +367,6 @@ class CharismaEngine:
 
             # Format the template
             prefix = template.format(emoji=emoji, user="Uminda")
-
-            # Clean up the content
-            clean_content = content.strip()
-
-            # Remove any "Based on your request:" prefix if present
-            if clean_content.startswith("Based on your request:"):
-                clean_content = clean_content[len("Based on your request:"):].strip()
 
             # Decide whether to add an anime reference
             anime_ref = ""
@@ -395,6 +398,71 @@ class CharismaEngine:
         except Exception as e:
             logger.error(f"Error formatting response: {str(e)}")
             return content
+
+    def _fix_self_identification(self, content: str) -> str:
+        """
+        Fix self-identification issues in the content
+
+        Args:
+            content: Original content
+
+        Returns:
+            Content with fixed self-identification
+        """
+        # Get P.U.L.S.E. information if self-awareness is available
+        pulse_name = "P.U.L.S.E."
+        pulse_full_name = "Prime Uminda's Learning System Engine"
+
+        if self.self_awareness:
+            pulse_name = self.self_awareness.pulse_info.get('name', "P.U.L.S.E.")
+            pulse_full_name = self.self_awareness.pulse_info.get('full_name', "Prime Uminda's Learning System Engine")
+
+        # Common incorrect identifications
+        replacements = [
+            # Fix Mistral identification
+            (r"(?i)I am Mistral", f"I am {pulse_name}"),
+            (r"(?i)I am a Mistral", f"I am {pulse_name}"),
+            (r"(?i)I am Mistral Small", f"I am {pulse_name}"),
+            (r"(?i)I am Mistral-Small", f"I am {pulse_name}"),
+            (r"(?i)I am a Mistral Small", f"I am {pulse_name}"),
+            (r"(?i)I am a Mistral-Small", f"I am {pulse_name}"),
+            (r"(?i)I'm Mistral", f"I'm {pulse_name}"),
+            (r"(?i)I'm a Mistral", f"I'm {pulse_name}"),
+            (r"(?i)I'm Mistral Small", f"I'm {pulse_name}"),
+            (r"(?i)I'm Mistral-Small", f"I'm {pulse_name}"),
+            (r"(?i)I'm a Mistral Small", f"I'm {pulse_name}"),
+            (r"(?i)I'm a Mistral-Small", f"I'm {pulse_name}"),
+            (r"(?i)as Mistral", f"as {pulse_name}"),
+            (r"(?i)as Mistral Small", f"as {pulse_name}"),
+            (r"(?i)as Mistral-Small", f"as {pulse_name}"),
+
+            # Fix generic AI identification
+            (r"(?i)I am an AI assistant", f"I am {pulse_name}, {pulse_full_name}"),
+            (r"(?i)I am an AI language model", f"I am {pulse_name}, {pulse_full_name}"),
+            (r"(?i)I am an artificial intelligence", f"I am {pulse_name}, {pulse_full_name}"),
+            (r"(?i)I'm an AI assistant", f"I'm {pulse_name}, {pulse_full_name}"),
+            (r"(?i)I'm an AI language model", f"I'm {pulse_name}, {pulse_full_name}"),
+            (r"(?i)I'm an artificial intelligence", f"I'm {pulse_name}, {pulse_full_name}"),
+
+            # Fix General Pulse identification (old name)
+            (r"(?i)I am General Pulse", f"I am {pulse_name}"),
+            (r"(?i)I am a General Pulse", f"I am {pulse_name}"),
+            (r"(?i)I'm General Pulse", f"I'm {pulse_name}"),
+            (r"(?i)I'm a General Pulse", f"I'm {pulse_name}"),
+
+            # Fix redundant identification
+            (r"(?i)I am P\.U\.L\.S\.E\., your friendly neighborhood P\.U\.L\.S\.E\. from P\.U\.L\.S\.E\.", f"I am {pulse_name}"),
+            (r"(?i)I'm P\.U\.L\.S\.E\., your friendly neighborhood P\.U\.L\.S\.E\. from P\.U\.L\.S\.E\.", f"I'm {pulse_name}"),
+            (r"(?i)P\.U\.L\.S\.E\. \(P\.U\.L\.S\.E\.\)", f"{pulse_name} ({pulse_full_name})"),
+        ]
+
+        # Apply replacements using regex
+        import re
+        fixed_content = content
+        for pattern, replacement in replacements:
+            fixed_content = re.sub(pattern, replacement, fixed_content)
+
+        return fixed_content
 
     def _get_emoji_for_context(self, context_type: str, success: bool) -> str:
         """

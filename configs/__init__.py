@@ -1,5 +1,5 @@
 """
-Configuration module for General Pulse
+Configuration module for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 Handles loading and managing configuration from various sources
 """
 
@@ -18,7 +18,7 @@ def load_config(config_path=None):
     """
     if config_path is None:
         config_path = DEFAULT_CONFIG_PATH
-    
+
     try:
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
@@ -26,4 +26,4 @@ def load_config(config_path=None):
         return config
     except Exception as e:
         logger.error(f"Error loading configuration: {str(e)}")
-        return {} 
+        return {}

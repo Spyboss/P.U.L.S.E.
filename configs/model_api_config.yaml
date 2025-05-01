@@ -1,4 +1,4 @@
-# Model API Configuration for General Pulse
+# Model API Configuration for P.U.L.S.E. (Prime Uminda's Learning System Engine)
 # Contains settings for all external AI model APIs
 
 # OpenRouter configuration
@@ -20,7 +20,7 @@ models:
     endpoint: "https://api.anthropic.com/v1"
     description: "Claude AI (Anthropic)"
     fallback: "gemini"
-  
+
   grok:
     enabled: true
     api_key_env: "GROK_API_KEY"
@@ -28,7 +28,7 @@ models:
     description: "Grok (xAI)"
     model_name: "grok-1.5"
     fallback: "gemini"
-  
+
   deepseek:
     enabled: true
     api_key_env: "DEEPSEEK_API_KEY"
@@ -36,7 +36,7 @@ models:
     description: "DeepSeek AI"
     model_name: "deepseek-chat"
     fallback: "gemini"
-  
+
   gemini:
     enabled: true
     api_key_env: "GEMINI_API_KEY"
@@ -53,4 +53,4 @@ simulation:
     grok: "Grok's analysis of market trends for: {prompt}"
     deepseek: "DeepSeek's code optimization for: {prompt}"
     gemini: "Gemini's helpful response: {prompt}"
-    default: "AI simulated response to: {prompt}" 
+    default: "AI simulated response to: {prompt}"
