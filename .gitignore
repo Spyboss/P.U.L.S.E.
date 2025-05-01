@@ -28,6 +28,8 @@ env/
 # Logs
 *.log
 logs/*.log
+logs/*.json
+logs/*-audit.json
 test_run.log
 
 # Environment variables
