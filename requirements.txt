@@ -16,6 +16,7 @@ opentelemetry-exporter-otlp>=1.20.0
 opentelemetry-instrumentation>=0.41b0
 backoff>=2.2.1
 circuit-breaker>=1.0.1
+pydantic>=2.0.0  # For data validation and settings management
 
 # API integrations
 google-generativeai>=0.3.1
@@ -29,6 +30,9 @@ pymongo[srv]>=4.6.1
 zstandard>=0.22.0  # For compression
 lancedb==0.3.0  # Vector database for semantic search
 pandas>=2.0.0  # Required for LanceDB operations
+aiosqlite>=0.19.0  # Async SQLite driver
+redis>=5.0.0  # Redis for caching
+aioredis>=2.0.0  # Async Redis client
 
 # NLP and ML
 sentence-transformers>=2.2.2  # For MiniLM intent classification
@@ -45,6 +49,9 @@ prompt_toolkit>=3.0.38
 PyGithub>=1.58.2
 notion-client>=2.0.0
 gitpython>=3.1.0
+
+# MCP Integration
+# Note: MCP servers are installed via npm/npx, not pip
 
 # Testing
 pytest>=7.3.1
