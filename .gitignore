@@ -63,6 +63,7 @@ data/*.db-wal
 data/vector_db/**/_transactions/
 data/vector_db/**/_versions/
 data/vector_db/**/data/
+data/vector_db/**/_latest.manifest
 
 # Backup files
 *_backup.json
